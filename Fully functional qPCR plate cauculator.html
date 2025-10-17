@@ -1,0 +1,1647 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>qPCR Plate Designer</title>
+    <style>
+        :root {
+            --gap: 8px;
+            --header-col: 30px;
+            --well-gap: 2px;
+            --wine: #7B1E3A;
+            --white: #FFFFFF;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #222;
+            background: #fafafa
+        }
+
+        #app {
+            margin: 16px auto;
+            padding: 0 10px;
+            max-width: 1200px;
+            background: #fff
+        }
+
+        .app-title {
+            text-align: center;
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: 0.3px;
+            margin: 16px 0 2px;
+        }
+
+        .app-title span {
+            color: #7B1E3A
+        }
+
+        .app-subtitle {
+            text-align: center;
+            font-size: 13px;
+            color: #555;
+            margin: 0 0 12px
+        }
+
+        h3 {
+            font-size: 16px;
+            margin: 16px 0 8px
+        }
+
+        label {
+            font-size: 14px
+        }
+
+        input,
+        select,
+        textarea,
+        button {
+            font-size: 14px
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: var(--gap);
+            margin-bottom: 16px;
+            padding: 12px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+
+        .meta {
+            display: grid;
+            gap: var(--gap);
+            grid-template-columns: 1fr
+        }
+
+        @media(min-width:820px) {
+            .meta {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .meta textarea {
+                grid-column: 1/-1
+            }
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--gap);
+            align-items: center
+        }
+
+        #addForm input[type="text"] {
+            padding: 6px 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            min-width: 140px
+        }
+
+        #addForm input[type="color"] {
+            height: 30px;
+            width: 42px;
+            padding: 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            background: #fff
+        }
+
+        .small-danger {
+            background: var(--wine);
+            color: #fff;
+            font-weight: 700;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer
+        }
+
+        .small-danger:hover {
+            filter: brightness(0.96)
+        }
+
+        .small-danger:active {
+            filter: brightness(0.92)
+        }
+
+        .sample-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px
+        }
+
+        .sample-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 6px 8px
+        }
+
+        .sample-swatch {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 1px solid #888
+        }
+
+        .sample-row .inline-buttons {
+            margin-left: auto;
+            display: flex;
+            gap: 6px
+        }
+
+        .sample-row .inline-buttons button {
+            padding: 4px 8px;
+            border: 1px solid #ccc;
+            background: #fff;
+            border-radius: 6px;
+            cursor: pointer
+        }
+
+        .sample-row .inline-buttons button:hover {
+            background: #f6f6f6
+        }
+
+        .selector-wrap {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center
+        }
+
+        .selector-pill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: 2px solid #ccc;
+            border-radius: 999px;
+            padding: 6px 10px;
+            background: #fff;
+            cursor: pointer;
+            user-select: none
+        }
+
+        .selector-pill.active {
+            border-color: #000
+        }
+
+        .selector-swatch {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 1px solid #777
+        }
+
+        .selector-name {
+            font-size: 13px
+        }
+
+        /* Plate A grid */
+        .plate-wrap {
+            overflow: auto;
+            padding-bottom: 8px
+        }
+
+        .plate-grid {
+            display: grid;
+            grid-template-columns: var(--header-col) repeat(24, minmax(24px, 1fr)) var(--header-col);
+            gap: var(--well-gap);
+            align-items: stretch;
+            min-width: 600px;
+        }
+
+        .corner {
+            height: 24px
+        }
+
+        .col-header,
+        .row-header {
+            font-size: 12px;
+            text-align: center;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center
+        }
+
+        .well {
+            position: relative;
+            aspect-ratio: 1/1;
+            border: 1px solid #555;
+            border-radius: 4px;
+            cursor: pointer;
+            background: #fff;
+            overflow: hidden
+        }
+
+        .well.split-2 {
+            background: linear-gradient(0deg, var(--c1) 0 100%) left/50% 100% no-repeat, linear-gradient(0deg, var(--c2) 0 100%) right/50% 100% no-repeat;
+        }
+
+        .well.split-3 {
+            background: linear-gradient(0deg, var(--c1) 0 100%) left/50% 100% no-repeat, linear-gradient(0deg, var(--c2) 0 100%) right top/50% 50% no-repeat, linear-gradient(0deg, var(--c3) 0 100%) right bottom/50% 50% no-repeat;
+        }
+
+        .well.split-4 {
+            background: linear-gradient(0deg, var(--c1) 0 100%) left top/50% 50% no-repeat, linear-gradient(0deg, var(--c2) 0 100%) right top/50% 50% no-repeat, linear-gradient(0deg, var(--c3) 0 100%) left bottom/50% 50% no-repeat, linear-gradient(0deg, var(--c4) 0 100%) right bottom/50% 50% no-repeat;
+        }
+
+        .seg-label {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, .75);
+            color: #fff;
+            font-size: 9px;
+            line-height: 14px;
+            text-align: center;
+            pointer-events: none
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 6px 8px;
+            font-size: 13px;
+            vertical-align: top;
+            background: #fff
+        }
+
+        th {
+            background: #f5f7fa;
+            text-align: left
+        }
+
+        .sum-pill {
+            display: inline-block;
+            background: #eef;
+            border: 1px solid #ccd;
+            padding: 2px 8px;
+            border-radius: 999px;
+            margin-right: 6px;
+            font-size: 12px
+        }
+
+        /* Plate B as spreadsheet */
+        #ctTableGrid input {
+            width: 100%;
+            border: none;
+            text-align: center;
+            padding: 4px 2px;
+            outline: none
+        }
+
+        #ctTableGrid input:focus {
+            background: #fffbe6;
+        }
+
+        /* Chart */
+        #chartWrap {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 8px
+        }
+
+        #fcChart {
+            display: block;
+            width: 720px;
+            height: 160px;
+            margin: 0 auto
+        }
+
+        .chart-title {
+            text-align: center;
+            font-weight: 700;
+            margin: 6px 0 6px
+        }
+
+        .note {
+            font-size: 12px;
+            color: #555
+        }
+
+        /* Tiny error toast */
+        #errorToast {
+            position: fixed;
+            right: 12px;
+            bottom: 12px;
+            background: #ffebe9;
+            color: #86181d;
+            border: 1px solid #f1c0c0;
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            display: none;
+            max-width: 60ch
+        }
+
+        /* Legend above Plate A */
+        .legend-title {
+            font-weight: 700;
+            margin: 8px 0 6px
+        }
+
+        #sampleLegend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 16px;
+            align-items: center;
+            padding-bottom: 8px
+        }
+
+        .sample-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 8px;
+            border: 1px solid #e2e2e2;
+            border-radius: 999px;
+            background: #fff
+        }
+
+        .sample-item .sample-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 1px solid #777;
+            display: inline-block
+        }
+
+        .btn-primary {
+            background: #2c82c9;
+            color: #fff;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            letter-spacing: 0.2px
+        }
+
+        .btn-primary:hover {
+            filter: brightness(0.96)
+        }
+
+        .btn-primary:active {
+            filter: brightness(0.92)
+        }
+    </style>
+
+    <!-- Core libraries (stable CDNs) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div class="app-title">qPCR Plate <span>Designer</span></div>
+        <div class="app-subtitle">By mahmood MOHAMMED ALI</div>
+
+        <div class="controls">
+            <h3>Experiment metadata</h3>
+            <div class="meta">
+                <label>Experiment name <input id="metaName" type="text" /></label>
+                <label>Date <input id="metaDate" type="date" /></label>
+                <label style="grid-column:1/-1">Notes <textarea id="metaNotes" rows="3"></textarea></label>
+            </div>
+
+            <h3>Sample setup</h3>
+            <p class="note">Naming convention: Use format "Name_Target_Condition" for auto-extraction (e.g.,
+                "HeLa_CCNA2_IgG").</p>
+            <form id="addForm" class="row" action="javascript:void(0)"
+                onsubmit="event.preventDefault(); handleAddSample();" autocomplete="off">
+                <input id="sampleNameInput" type="text" placeholder="Sample display name (e.g., HeLa_CCNA2_IgG)"
+                    required />
+                <label>Role
+                    <select id="sampleRoleInput">
+                        <option value="Control">Control</option>
+                        <option value="Condition">Condition</option>
+                    </select>
+                </label>
+                <input id="targetInput" type="text" placeholder="Target/Gene (e.g., CCNA2)" required />
+                <input id="conditionNameInput" type="text" placeholder="Condition name (e.g., IgG or H3K27me3)" />
+                <label>Color <input id="sampleColorInput" type="color" value="#2ECC71" /></label>
+                <button id="addSampleBtn" type="button">Add sample</button>
+            </form>
+
+            <div class="sample-list" id="sampleList"></div>
+
+            <h3>Color selection</h3>
+            <div class="selector-wrap" id="colorSelector"></div>
+            <div class="row">
+                <button id="resetButton" type="button" class="small-danger">Reset all wells to white (and clear
+                    Ct)</button>
+            </div>
+
+            <h3>Tools</h3>
+            <div class="toolbar">
+                <button id="undoBtn" type="button">Undo</button>
+                <button id="redoBtn" type="button">Redo</button>
+
+                <select id="partialResetSelect">
+                    <option value="">Partial reset…</option>
+                    <option value="row">Reset row (A–P)</option>
+                    <option value="col">Reset column (1–24)</option>
+                </select>
+                <input id="partialInput" type="text" placeholder="A or 12" style="width:88px" />
+                <button id="partialApplyBtn" type="button">Apply</button>
+            </div>
+        </div>
+
+        <div id="countsRow" class="row" style="padding:0 12px 8px"></div>
+
+        <div class="plate-wrap" id="plateAExportWrap">
+            <h3>Plate A — Assign samples/conditions to wells</h3>
+            <div class="legend-title">Legend</div>
+            <div class="sample-legend" id="sampleLegend"></div>
+            <div class="plate-grid" id="plateGrid"></div>
+        </div>
+
+        <div class="controls">
+            <h3>Master Mix Planner</h3>
+            <table id="mmExtraWells">
+                <thead>
+                    <tr>
+                        <th>Target</th>
+                        <th>Assigned wells</th>
+                        <th>Extra wells</th>
+                        <th>Total wells used</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <span class="note">Each Target uses its own master mix. Totals = per‑well × (Assigned + Extra) for that
+                Target.</span>
+
+            <div class="row" style="margin-top:6px">
+                <input id="reagentName" type="text" placeholder="Reagent name (e.g., SYBR X2)" />
+                <input id="reagentVol" type="number" step="0.1" placeholder="µL / well" style="width:120px" />
+                <button id="addReagentBtn" type="button">Add reagent</button>
+            </div>
+
+            <table id="mmTable">
+                <thead>
+                    <tr id="mmHeadRow1">
+                        <th>Reagent</th>
+                        <th>µL per well</th>
+                        <!-- dynamic target header cells -->
+                        <th></th>
+                    </tr>
+                    <tr id="mmHeadRow2">
+                        <th colspan="2" class="note">Totals per target</th>
+                        <!-- dynamic target names -->
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="mmBody"></tbody>
+                <tfoot id="mmFoot">
+                    <tr id="mmFootPerWell">
+                        <th colspan="2">Total per well (µL)</th>
+                        <!-- filled dynamically -->
+                        <th></th>
+                    </tr>
+                    <tr id="mmFootGrand">
+                        <th colspan="2">Master tube total per target (µL)</th>
+                        <!-- filled dynamically -->
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="plate-wrap">
+            <h3>Plate B — Enter Ct values</h3>
+            <table id="ctTableGrid">
+                <thead id="ctHead"></thead>
+                <tbody id="ctBody"></tbody>
+            </table>
+            <span class="note">Tip: Paste a column or a 2D block from Excel/Sheets. It will fill from the selected
+                cell.</span>
+        </div>
+
+        <div class="controls" id="ctExportWrap">
+            <div id="ctSummarySection">
+                <h3>Ct summary and ΔCt/ΔΔCt</h3>
+                <div class="row">
+                    <label>Control type within target for ΔCt
+                        <input id="controlTypeName" type="text" value="IgG" style="width:120px" />
+                    </label>
+                    <label>Control Target for ΔΔCt
+                        <select id="ctrlTargetSelect"></select>
+                    </label>
+                    <label>Condition for chart
+                        <input id="chartConditionName" type="text" value="me3" style="width:120px" />
+                    </label>
+                    <span class="note">ΔΔCt(Target, condition) = ΔCt(Target, condition) − ΔCt(ControlTarget,
+                        condition).</span>
+                </div>
+
+                <table id="ctDetailTable">
+                    <thead>
+                        <tr>
+                            <th>Target</th>
+                            <th>Sample</th>
+                            <th>Role</th>
+                            <th>Condition</th>
+                            <th>Replicates</th>
+                            <th>Mean Ct</th>
+                            <th>ΔCt</th>
+                            <th>ΔΔCt</th>
+                            <th>FC (2^-ΔΔCt)</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div id="chartWrap" class="controls" style="margin-top:8px">
+                <div class="chart-title">Fold Change chart</div>
+                <canvas id="fcChart" width="720" height="160"></canvas>
+            </div>
+
+            <div class="row" style="gap:12px; margin-top:8px">
+                <button id="exportPlateAJpegBtn" class="btn-primary" type="button">Export Plate A + legend as
+                    JPEG</button>
+                <button id="exportPlateAPdfBtn" class="btn-primary" type="button">Export Plate A + legend as
+                    PDF</button>
+
+                <button id="exportCtJpegBtn" class="btn-primary" type="button">Export Ct summary + chart as
+                    JPEG</button>
+                <button id="exportCtPdfBtn" class="btn-primary" type="button">Export Ct summary + chart as PDF</button>
+
+                <button id="exportJsonBtn" class="btn-primary" type="button">Export full page as JSON</button>
+                <input id="importJsonInput" type="file" accept="application/json" style="display:none" />
+                <button id="importJsonBtn" class="btn-primary" type="button">Import JSON</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="errorToast"></div>
+
+    <!-- html2canvas lazy load (added only when exporting) -->
+    <script>
+        /* ===== Tiny error toast ===== */
+        function showErrorToast(msg) {
+            const el = document.getElementById('errorToast');
+            el.textContent = msg;
+            el.style.display = 'block';
+            setTimeout(() => { el.style.display = 'none'; }, 6000);
+        }
+        window.addEventListener('error', e => {
+            console.error(e.error || e.message);
+            showErrorToast('A script error occurred. See console for details.');
+        });
+
+        /* ===== Constants & State ===== */
+        const TOTAL_ROWS = 16, TOTAL_COLS = 24, MAX_COLORS = 4;
+        const DEFAULT_COLOR = '#FFFFFF';
+        const STORAGE_KEY = "qpcrPlateState_masterfix_v5"; // bump for new features
+
+        const state = {
+            meta: { name: "", date: "", notes: "" },
+            wellsA: [],
+            wellsB: [],
+            selectedColor: null,
+            samples: [],
+            reagents: [],
+            extraWellsPerTarget: {},
+            history: [],
+            redo: []
+        };
+
+        /* ===== Helpers ===== */
+        const rowLetter = r => String.fromCharCode(65 + r);
+        const idx = (r, c) => r * TOTAL_COLS + c;
+        const deepClone = v => JSON.parse(JSON.stringify(v));
+        const fmt1 = n => (isFinite(n) ? (+n).toFixed(1) : "");
+        const fmt2 = n => (isFinite(n) ? (+n).toFixed(2) : "");
+        const fmt3 = n => (isFinite(n) ? (+n).toFixed(3) : "");
+        const getTargets = () => Array.from(new Set(state.samples.map(s => s.target).filter(Boolean))).sort();
+
+        function normalizeCond(s) {
+            if (!s) return '';
+            const x = String(s).trim().toLowerCase();
+            if (x === 'me3' || x === 'h3k27me3' || x === 'k27me3') return 'h3k27me3';
+            if (x === 'ac' || x === 'h3k27ac' || x === 'k27ac') return 'h3k27ac';
+            return x;
+        }
+
+        /* Unique color generation for clones */
+        function randomColorHex() {
+            const h = Math.floor(Math.random() * 360);
+            const s = 70 + Math.floor(Math.random() * 25);
+            const l = 50;
+            function h2rgb(p, q, t) {
+                if (t < 0) t += 1; if (t > 1) t -= 1;
+                if (t < 1 / 6) return p + (q - p) * 6 * t;
+                if (t < 1 / 2) return q;
+                if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+                return p;
+            }
+            const S = s / 100, L = l / 100;
+            const q = L < 0.5 ? L * (1 + S) : L + S - L * S;
+            const p = 2 * L - q;
+            const r = Math.round(h2rgb(p, q, (h / 360) + 1 / 3) * 255);
+            const g = Math.round(h2rgb(p, q, (h / 360)) * 255);
+            const b = Math.round(h2rgb(p, q, (h / 360) - 1 / 3) * 255);
+            return '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase();
+        }
+        function generateUniqueColor() {
+            const used = new Set(state.samples.map(s => (s.color || '').toLowerCase()));
+            for (let tries = 0; tries < 100; tries++) {
+                const c = randomColorHex();
+                if (!used.has(c.toLowerCase())) return c;
+            }
+            return '#' + Math.floor(Math.random() * 0xFFFFFF).toString(16).padStart(6, '0').toUpperCase();
+        }
+
+        /* ===== State management with undo/redo (wells-only) ===== */
+        function loadState() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    Object.assign(state, parsed);
+                    if (!state.wellsA?.length) initEmptyPlate();
+                    if (!state.wellsB?.length) initEmptyCtTable();
+                } else {
+                    initEmptyPlate();
+                    initEmptyCtTable();
+                }
+            } catch (err) {
+                console.error(err);
+                initEmptyPlate();
+                initEmptyCtTable();
+            }
+        }
+        function saveState() {
+            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+            catch (err) { console.error(err); showErrorToast('Failed to save state. Storage might be full.'); }
+        }
+        function pushHistory() {
+            state.history.push(deepClone({ wellsA: state.wellsA, wellsB: state.wellsB }));
+            if (state.history.length > 50) state.history.shift();
+            state.redo = [];
+            updateUndoRedoButtons();
+        }
+        function undo() {
+            if (!state.history.length) return;
+            state.redo.push(deepClone({ wellsA: state.wellsA, wellsB: state.wellsB }));
+            const prev = state.history.pop();
+            state.wellsA = prev.wellsA;
+            state.wellsB = prev.wellsB;
+            saveState();
+            renderPlateA();
+            renderCtTable();
+            updateMasterMixTotals();
+            computeCtTablesAndChart();
+            updateUndoRedoButtons();
+        }
+        function redo() {
+            if (!state.redo.length) return;
+            state.history.push(deepClone({ wellsA: state.wellsA, wellsB: state.wellsB }));
+            const next = state.redo.pop();
+            state.wellsA = next.wellsA;
+            state.wellsB = next.wellsB;
+            saveState();
+            renderPlateA();
+            renderCtTable();
+            updateMasterMixTotals();
+            computeCtTablesAndChart();
+            updateUndoRedoButtons();
+        }
+        function updateUndoRedoButtons() {
+            document.getElementById('undoBtn').disabled = !state.history.length;
+            document.getElementById('redoBtn').disabled = !state.redo.length;
+        }
+
+        /* ===== Initialize plate layouts ===== */
+        function initEmptyPlate() {
+            state.wellsA = [];
+            for (let i = 0; i < TOTAL_ROWS * TOTAL_COLS; i++) {
+                state.wellsA.push({ colors: DEFAULT_COLOR, segmentation: 1 });
+            }
+        }
+        function initEmptyCtTable() {
+            state.wellsB = [];
+            for (let i = 0; i < TOTAL_ROWS * TOTAL_COLS; i++) {
+                state.wellsB.push({ ct: null });
+            }
+        }
+
+        /* ===== Meta fields ===== */
+        document.getElementById('metaName').addEventListener('change', () => {
+            state.meta.name = document.getElementById('metaName').value; saveState();
+        });
+        document.getElementById('metaDate').addEventListener('change', () => {
+            state.meta.date = document.getElementById('metaDate').value; saveState();
+        });
+        document.getElementById('metaNotes').addEventListener('change', () => {
+            state.meta.notes = document.getElementById('metaNotes').value; saveState();
+        });
+
+        /* ===== Plate A functions ===== */
+        function renderPlateA() {
+            const grid = document.getElementById('plateGrid');
+            grid.innerHTML = '';
+
+            // Top row
+            const corner1 = document.createElement('div'); corner1.classList.add('corner'); grid.appendChild(corner1);
+            for (let c = 0; c < TOTAL_COLS; c++) { const header = document.createElement('div'); header.textContent = c + 1; header.classList.add('col-header'); grid.appendChild(header); }
+            const corner2 = document.createElement('div'); corner2.classList.add('corner'); grid.appendChild(corner2);
+
+            for (let r = 0; r < TOTAL_ROWS; r++) {
+                const rowHeader1 = document.createElement('div'); rowHeader1.textContent = rowLetter(r); rowHeader1.classList.add('row-header'); grid.appendChild(rowHeader1);
+
+                for (let c = 0; c < TOTAL_COLS; c++) {
+                    const i = idx(r, c);
+                    const well = document.createElement('div');
+                    well.classList.add('well');
+                    well.dataset.i = i;
+
+                    const w = state.wellsA[i];
+                    if (w) {
+                        const colors = Array.isArray(w.colors) ? w.colors : [w.colors];
+                        const seg = w.segmentation || 1;
+                        if (seg > 1) {
+                            well.classList.add('split-' + seg);
+                            for (let s = 0; s < seg; s++) {
+                                well.style.setProperty('--c' + (s + 1), colors[s] || DEFAULT_COLOR);
+                            }
+                        } else {
+                            well.style.backgroundColor = colors[0] || DEFAULT_COLOR;
+                        }
+                    } else {
+                        well.style.backgroundColor = DEFAULT_COLOR;
+                    }
+
+                    well.addEventListener('click', () => {
+                        const col = state.selectedColor || DEFAULT_COLOR;
+                        pushHistory();
+                        if (col === DEFAULT_COLOR) {
+                            state.wellsA[i].colors = DEFAULT_COLOR;
+                            state.wellsA[i].segmentation = 1;
+                        } else {
+                            const colors = Array.isArray(state.wellsA[i].colors) ? state.wellsA[i].colors : [state.wellsA[i].colors];
+                            const seg = state.wellsA[i].segmentation || 1;
+
+                            if (col === colors[colors.length - 1]) {
+                                colors.pop();
+                                if (colors.length === 0) {
+                                    state.wellsA[i].colors = DEFAULT_COLOR;
+                                    state.wellsA[i].segmentation = 1;
+                                } else {
+                                    state.wellsA[i].colors = colors.length === 1 ? colors[0] : colors;
+                                    state.wellsA[i].segmentation = Math.max(1, colors.length);
+                                }
+                            } else if (seg < MAX_COLORS) {
+                                const newColors = [...colors.filter(c => c !== DEFAULT_COLOR), col];
+                                state.wellsA[i].colors = newColors.length === 1 ? newColors[0] : newColors;
+                                state.wellsA[i].segmentation = newColors.length;
+                            }
+                        }
+                        saveState();
+                        renderPlateA();
+                        updateCounts();
+                        updateMasterMixTotals();
+                    });
+
+                    // Segment labels
+                    if (w && w.segmentation > 1) {
+                        const colors = Array.isArray(w.colors) ? w.colors : [w.colors];
+                        const segPositions = [
+                            { x: 25, y: 50 }, { x: 75, y: 50 }, { x: 75, y: 25 }, { x: 25, y: 25 }
+                        ];
+                        for (let s = 0; s < Math.min(MAX_COLORS, w.segmentation); s++) {
+                            if (s < colors.length && colors[s] !== DEFAULT_COLOR) {
+                                const label = document.createElement('div');
+                                label.classList.add('seg-label');
+                                label.textContent = s + 1;
+                                label.style.left = segPositions[s].x + '%';
+                                label.style.top = segPositions[s].y + '%';
+                                well.appendChild(label);
+                            }
+                        }
+                    }
+
+                    grid.appendChild(well);
+                }
+
+                const rowHeader2 = document.createElement('div'); rowHeader2.textContent = rowLetter(r); rowHeader2.classList.add('row-header'); grid.appendChild(rowHeader2);
+            }
+
+            renderSampleLegend();
+        }
+
+        function renderSampleLegend() {
+            const legendDiv = document.getElementById('sampleLegend');
+            legendDiv.innerHTML = '';
+            state.samples.forEach(s => {
+                const item = document.createElement('div');
+                item.classList.add('sample-item');
+                const dot = document.createElement('span'); dot.classList.add('sample-dot'); dot.style.backgroundColor = s.color;
+                const name = document.createElement('span'); name.textContent = s.name;
+                item.appendChild(dot); item.appendChild(name); legendDiv.appendChild(item);
+            });
+        }
+
+        /* ===== Color replace across Plate A (used when editing sample color) ===== */
+        function replaceColorOnPlate(oldColor, newColor) {
+            const oc = String(oldColor || '').toLowerCase();
+            const nc = newColor;
+            for (let i = 0; i < state.wellsA.length; i++) {
+                const w = state.wellsA[i];
+                if (Array.isArray(w.colors)) {
+                    let changed = false;
+                    for (let s = 0; s < w.colors.length; s++) {
+                        if (String(w.colors[s] || '').toLowerCase() === oc) {
+                            w.colors[s] = nc;
+                            changed = true;
+                        }
+                    }
+                    if (changed && w.segmentation < w.colors.length) {
+                        w.segmentation = w.colors.length;
+                    }
+                } else {
+                    if (String(w.colors || '').toLowerCase() === oc) {
+                        w.colors = nc;
+                    }
+                }
+            }
+        }
+
+        /* ===== Sample Management ===== */
+        function renderSamples() {
+            const sampleList = document.getElementById('sampleList');
+            sampleList.innerHTML = '';
+
+            state.samples.forEach((s, i) => {
+                const row = document.createElement('div');
+                row.classList.add('sample-row');
+
+                const swatch = document.createElement('div');
+                swatch.classList.add('sample-swatch');
+                swatch.style.backgroundColor = s.color;
+
+                const name = document.createElement('div');
+                name.textContent = s.name;
+
+                const target = document.createElement('div');
+                target.textContent = s.target;
+                target.style.marginLeft = '6px';
+                target.style.color = '#666';
+
+                const buttons = document.createElement('div');
+                buttons.classList.add('inline-buttons');
+
+                // Clone (auto-unique color)
+                const cloneBtn = document.createElement('button');
+                cloneBtn.textContent = 'Clone';
+                cloneBtn.title = 'Duplicate this sample';
+                cloneBtn.onclick = () => {
+                    const original = state.samples[i];
+                    if (!original) return;
+                    const copy = { ...deepClone(original), id: Date.now() + Math.random(), name: original.name + ' (copy)' };
+                    copy.color = generateUniqueColor();
+                    state.samples.splice(i + 1, 0, copy);
+                    saveState();
+                    renderSamples();
+                    renderSelector();
+                    renderConfigSelectors();
+                    refreshMasterMix();
+                    updateCounts();
+                };
+
+                // Edit
+                const editBtn = document.createElement('button');
+                editBtn.textContent = 'Edit';
+                editBtn.title = 'Edit this sample';
+                editBtn.onclick = () => {
+                    const s = state.samples[i];
+                    if (!s) return;
+                    const oldColor = s.color;
+
+                    const name = prompt('Sample name:', s.name);
+                    if (name === null) return;
+
+                    const role = prompt('Role (Control or Condition):', s.role || 'Control');
+                    if (role === null) return;
+
+                    const target = prompt('Target/Gene:', s.target || '');
+                    if (target === null) return;
+
+                    const conditionName = prompt('Condition name (e.g., IgG or H3K27me3):', s.conditionName || '');
+                    if (conditionName === null) return;
+
+                    const color = prompt('Color (hex like #2ECC71):', s.color || '#2ECC71');
+                    if (color === null) return;
+
+                    if (!name.trim() || !target.trim()) {
+                        alert('Name and Target are required.');
+                        return;
+                    }
+
+                    s.name = name.trim();
+                    s.role = (role || '').trim();
+                    s.target = target.trim();
+                    s.conditionName = (conditionName || '').trim();
+                    s.color = (color || '').trim();
+
+                    if (oldColor && s.color && String(oldColor).toLowerCase() !== String(s.color).toLowerCase()) {
+                        if (confirm('Update wells on Plate A that use the old color to the new color?')) {
+                            pushHistory();
+                            replaceColorOnPlate(oldColor, s.color);
+                        }
+                    }
+
+                    saveState();
+                    renderSamples();
+                    renderSelector();
+                    renderConfigSelectors();
+                    renderPlateA();
+                    renderCtTable();
+                    refreshMasterMix();
+                    updateCounts();
+                    computeCtTablesAndChart();
+                };
+
+                // Delete
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = '✕';
+                deleteBtn.title = 'Delete this sample';
+                deleteBtn.onclick = () => {
+                    state.samples.splice(i, 1);
+                    saveState();
+                    renderSamples();
+                    renderSelector();
+                    renderConfigSelectors();
+                    renderPlateA();
+                    renderCtTable();
+                    refreshMasterMix();
+                    computeCtTablesAndChart();
+                };
+
+                buttons.appendChild(cloneBtn);
+                buttons.appendChild(editBtn);
+                buttons.appendChild(deleteBtn);
+
+                row.appendChild(swatch);
+                row.appendChild(name);
+                row.appendChild(target);
+                row.appendChild(buttons);
+                sampleList.appendChild(row);
+            });
+        }
+
+        /* ===== Add sample ===== */
+        function handleAddSample(e) {
+            if (e) e.preventDefault();
+            const name = document.getElementById('sampleNameInput').value.trim();
+            const role = document.getElementById('sampleRoleInput').value;
+            const target = document.getElementById('targetInput').value.trim();
+            const conditionName = document.getElementById('conditionNameInput').value.trim();
+            const color = document.getElementById('sampleColorInput').value;
+            if (!name || !target) return;
+
+            state.samples.push({ id: Date.now() + Math.random(), name, role, target, conditionName, color });
+            if (!state.selectedColor) state.selectedColor = color;
+
+            document.getElementById('sampleNameInput').value = '';
+            document.getElementById('conditionNameInput').value = '';
+            document.getElementById('targetInput').value = '';
+
+            saveState();
+            renderSamples();
+            renderSelector();
+            renderConfigSelectors();
+            renderPlateA();
+            renderCtTable();
+            refreshMasterMix();
+            computeCtTablesAndChart();
+        }
+        document.getElementById('addForm').addEventListener('submit', handleAddSample);
+        document.getElementById('addSampleBtn').addEventListener('click', handleAddSample);
+
+        /* ===== Auto-fill Target and Condition from Sample name (Name_Target_Condition) ===== */
+        function parseNameTriplet(sampleName) {
+            const parts = String(sampleName || '').split('_');
+            if (parts.length === 1) return { target: '', condition: '' };
+            if (parts.length === 2) return { target: parts[1], condition: '' };
+            return { target: parts[parts.length - 2], condition: parts[parts.length - 1] };
+        }
+        (function wireSampleNameAutofill() {
+            const nameEl = document.getElementById('sampleNameInput');
+            const targetEl = document.getElementById('targetInput');
+            const condEl = document.getElementById('conditionNameInput');
+            if (!nameEl || !targetEl || !condEl) return;
+
+            nameEl.addEventListener('input', () => {
+                const { target, condition } = parseNameTriplet(nameEl.value);
+                if (document.activeElement !== targetEl) targetEl.value = target;
+                if (document.activeElement !== condEl) condEl.value = condition;
+            });
+        })();
+
+        /* ===== Color selector ===== */
+        function renderSelector() {
+            const selectorDiv = document.getElementById('colorSelector');
+            selectorDiv.innerHTML = '';
+
+            const clearOption = document.createElement('div');
+            clearOption.classList.add('selector-pill');
+            if (state.selectedColor === null || state.selectedColor === DEFAULT_COLOR) {
+                clearOption.classList.add('active');
+            }
+            clearOption.onclick = () => {
+                state.selectedColor = DEFAULT_COLOR;
+                saveState();
+                renderSelector();
+            };
+            const clearSwatch = document.createElement('div'); clearSwatch.classList.add('selector-swatch'); clearSwatch.style.backgroundColor = DEFAULT_COLOR;
+            const clearName = document.createElement('div'); clearName.classList.add('selector-name'); clearName.textContent = 'Clear';
+            clearOption.appendChild(clearSwatch); clearOption.appendChild(clearName); selectorDiv.appendChild(clearOption);
+
+            state.samples.forEach(s => {
+                const option = document.createElement('div');
+                option.classList.add('selector-pill');
+                if (state.selectedColor === s.color) {
+                    option.classList.add('active');
+                }
+                option.onclick = () => {
+                    state.selectedColor = s.color;
+                    saveState();
+                    renderSelector();
+                };
+                const swatch = document.createElement('div'); swatch.classList.add('selector-swatch'); swatch.style.backgroundColor = s.color;
+                const name = document.createElement('div'); name.classList.add('selector-name'); name.textContent = s.name;
+                option.appendChild(swatch); option.appendChild(name);
+                selectorDiv.appendChild(option);
+            });
+        }
+
+        /* ===== Reset buttons ===== */
+        document.getElementById('resetButton').addEventListener('click', () => {
+            if (confirm('Reset all wells to white and clear all Ct values?')) {
+                pushHistory();
+                initEmptyPlate();
+                initEmptyCtTable();
+                saveState();
+                renderPlateA();
+                renderCtTable();
+                updateCounts();
+                updateMasterMixTotals();
+                computeCtTablesAndChart();
+            }
+        });
+
+        document.getElementById('partialApplyBtn').addEventListener('click', () => {
+            const type = document.getElementById('partialResetSelect').value;
+            const input = document.getElementById('partialInput').value.trim().toUpperCase();
+            if (!type || !input) return;
+
+            pushHistory();
+
+            if (type === 'row') {
+                const r = input.charCodeAt(0) - 65;
+                if (r >= 0 && r < TOTAL_ROWS) {
+                    for (let c = 0; c < TOTAL_COLS; c++) {
+                        const i = idx(r, c);
+                        state.wellsA[i] = { colors: DEFAULT_COLOR, segmentation: 1 };
+                        state.wellsB[i] = { ct: null };
+                    }
+                }
+            }
+            else if (type === 'col') {
+                const c = parseInt(input, 10) - 1;
+                if (c >= 0 && c < TOTAL_COLS) {
+                    for (let r = 0; r < TOTAL_ROWS; r++) {
+                        const i = idx(r, c);
+                        state.wellsA[i] = { colors: DEFAULT_COLOR, segmentation: 1 };
+                        state.wellsB[i] = { ct: null };
+                    }
+                }
+            }
+
+            saveState();
+            renderPlateA();
+            renderCtTable();
+            updateCounts();
+            updateMasterMixTotals();
+            computeCtTablesAndChart();
+        });
+
+        /* ===== Well color counting ===== */
+        function calculateCounts() {
+            const countsByTarget = {};
+            const targets = getTargets();
+            targets.forEach(t => countsByTarget[t] = 0);
+
+            for (let i = 0; i < state.wellsA.length; i++) {
+                const w = state.wellsA[i];
+                const colors = Array.isArray(w.colors) ? w.colors : [w.colors];
+                const colorsUsed = colors.filter(c => c !== DEFAULT_COLOR);
+                for (let color of colorsUsed) {
+                    const s = state.samples.find(s => s.color.toLowerCase() === String(color).toLowerCase());
+                    if (s && s.target) countsByTarget[s.target] = (countsByTarget[s.target] || 0) + 1;
+                }
+            }
+            return countsByTarget;
+        }
+
+        function updateCounts() {
+            const countsRow = document.getElementById('countsRow');
+            if (!countsRow) return;
+
+            const bySample = {};
+            for (let i = 0; i < state.wellsA.length; i++) {
+                const w = state.wellsA[i];
+                const colors = Array.isArray(w.colors) ? w.colors : [w.colors];
+                const colorsUsed = colors.filter(c => c !== DEFAULT_COLOR);
+                for (let color of colorsUsed) {
+                    const s = state.samples.find(s => s.color.toLowerCase() === String(color).toLowerCase());
+                    if (s) bySample[s.id] = (bySample[s.id] || 0) + 1;
+                }
+            }
+            countsRow.innerHTML = '<strong>Well counts:</strong> ' + state.samples.map(s => {
+                const n = bySample[s.id] || 0;
+                return `<span class="sum-pill">${s.name}: ${n}</span>`;
+            }).join(' ');
+        }
+
+        /* ===== Master Mix planner ===== */
+        function renderExtraWellsTable() {
+            const countsByTarget = calculateCounts();
+            const tb = document.querySelector('#mmExtraWells tbody'); tb.innerHTML = '';
+            getTargets().forEach(t => {
+                const assigned = countsByTarget[t] || 0;
+                const extra = +state.extraWellsPerTarget[t] || 0;
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+			<td>${t}</td>
+			<td class="assigned" data-target="${t}">${assigned}</td>
+			<td><input type="number" step="1" min="0" value="${extra}" style="width:90px" data-target="${t}" class="extraWellsInput"/></td>
+			<td class="total-used" data-target="${t}">${assigned + extra}</td>
+		`;
+                tb.appendChild(tr);
+            });
+            tb.querySelectorAll('.extraWellsInput').forEach(inp => {
+                inp.oninput = () => {
+                    const t = inp.dataset.target;
+                    const v = Math.max(0, Math.floor(+inp.value || 0));
+                    state.extraWellsPerTarget[t] = v;
+                    saveState(); updateMasterMixTotals();
+                };
+            });
+        }
+
+        function renderReagents() {
+            const head1 = document.getElementById('mmHeadRow1');
+            const head2 = document.getElementById('mmHeadRow2');
+            const body = document.getElementById('mmBody');
+
+            const targets = getTargets();
+
+            head1.innerHTML = '<th>Reagent</th><th>µL per well</th>' + targets.map(() => '<th></th>').join('') + '<th></th>';
+            head2.innerHTML = '<th colspan="2" class="note">Totals per target</th>' + targets.map(t => `<th>${t}</th>`).join('') + '<th></th>';
+
+            body.innerHTML = '';
+            state.reagents.forEach((r, i) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${r.name}</td><td>${fmt1(r.perWell)}</td>`;
+                targets.forEach(() => tr.innerHTML += '<td class="mm-cell"></td>');
+                tr.innerHTML += `<td><button type="button" data-i="${i}" class="delR">✕</button></td>`;
+                body.appendChild(tr);
+            });
+            body.querySelectorAll('.delR').forEach(btn => {
+                btn.onclick = () => {
+                    const i = parseInt(btn.dataset.i, 10);
+                    state.reagents.splice(i, 1); saveState(); renderReagents(); updateMasterMixTotals();
+                };
+            });
+
+            // ensure footers have classed cells we can fill
+            const footPerWell = document.getElementById('mmFootPerWell');
+            const footGrand = document.getElementById('mmFootGrand');
+            footPerWell.innerHTML = '<th colspan="2">Total per well (µL)</th>' + targets.map(() => '<th class="mm-pw"></th>').join('') + '<th></th>';
+            footGrand.innerHTML = '<th colspan="2">Master tube total per target (µL)</th>' + targets.map(() => '<th class="mm-gt"></th>').join('') + '<th></th>';
+        }
+
+        function updateMasterMixTotals() {
+            const countsByTarget = calculateCounts();
+            const targets = getTargets();
+
+            // Update Assigned/Total used
+            targets.forEach(t => {
+                const assignedCell = document.querySelector(`.assigned[data-target="${t}"]`);
+                const totalCell = document.querySelector(`.total-used[data-target="${t}"]`);
+                if (assignedCell) assignedCell.textContent = countsByTarget[t] || 0;
+                if (totalCell) {
+                    const extra = +state.extraWellsPerTarget[t] || 0;
+                    totalCell.textContent = (countsByTarget[t] || 0) + extra;
+                }
+            });
+
+            // Effective wells per target
+            const eff = {}; targets.forEach(t => eff[t] = (countsByTarget[t] || 0) + (+state.extraWellsPerTarget[t] || 0));
+
+            // Per-reagent rows → fill per-target totals, accumulate grand totals
+            const bodyRows = Array.from(document.querySelectorAll('#mmBody tr'));
+            const perTargetGrand = {}; targets.forEach(t => perTargetGrand[t] = 0);
+            bodyRows.forEach((tr, rowIdx) => {
+                const r = state.reagents[rowIdx] || { perWell: 0 };
+                const per = r.perWell || 0;
+                const targetCells = Array.from(tr.querySelectorAll('td.mm-cell'));
+                targets.forEach((t, ti) => {
+                    const tot = per * (eff[t] || 0);
+                    perTargetGrand[t] += tot;
+                    targetCells[ti].textContent = fmt1(tot);
+                });
+            });
+
+            // Footer per-well sum
+            const perWellSum = state.reagents.reduce((a, r) => a + (r.perWell || 0), 0);
+            Array.from(document.querySelectorAll('#mmFootPerWell .mm-pw'))
+                .forEach(cell => cell.textContent = fmt1(perWellSum));
+
+            // Footer per-target grand (µL)
+            const footGTCells = Array.from(document.querySelectorAll('#mmFootGrand .mm-gt'));
+            targets.forEach((t, i) => {
+                if (footGTCells[i]) footGTCells[i].textContent = fmt1(perTargetGrand[t]);
+            });
+        }
+
+        /* ===== Plate B (Ct table with paste) ===== */
+        function renderCtTable() {
+            const thead = document.getElementById('ctHead');
+            const tbody = document.getElementById('ctBody');
+            thead.innerHTML = ''; tbody.innerHTML = '';
+            const trh = document.createElement('tr');
+            trh.appendChild(document.createElement('th'));
+            for (let c = 1; c <= TOTAL_COLS; c++) { const th = document.createElement('th'); th.textContent = c; trh.appendChild(th); }
+            thead.appendChild(trh);
+            for (let r = 0; r < TOTAL_ROWS; r++) {
+                const tr = document.createElement('tr');
+                const rh = document.createElement('th'); rh.textContent = rowLetter(r); tr.appendChild(rh);
+                for (let c = 0; c < TOTAL_COLS; c++) {
+                    const td = document.createElement('td'); const i = idx(r, c);
+                    const inp = document.createElement('input'); inp.type = 'text';
+                    if (state.wellsB[i].ct != null) inp.value = String(state.wellsB[i].ct);
+                    inp.addEventListener('change', () => {
+                        const v = parseFloat(inp.value); state.wellsB[i].ct = isFinite(v) ? v : null; saveState(); computeCtTablesAndChart();
+                    });
+                    inp.addEventListener('paste', (e) => {
+                        e.preventDefault();
+                        const text = (e.clipboardData || window.clipboardData).getData('text'); if (!text) return;
+                        const rows = text.split(/\r?\n/).filter(Boolean);
+                        let rr = r, cc = c;
+                        for (let ri = 0; ri < rows.length && rr < TOTAL_ROWS; ri++) {
+                            const cols = rows[ri].split('\t');
+                            cc = c;
+                            for (let ci = 0; ci < cols.length && cc < TOTAL_COLS; ci++) {
+                                const num = parseFloat(cols[ci].trim());
+                                const at = idx(rr, cc);
+                                state.wellsB[at].ct = isFinite(num) ? num : null;
+                                const cell = document.querySelector(`#ctBody tr:nth-child(${rr + 1}) td:nth-child(${cc + 2}) input`);
+                                if (cell) cell.value = isFinite(num) ? String(num) : '';
+                                cc++;
+                            }
+                            rr++;
+                        }
+                        saveState(); computeCtTablesAndChart();
+                    });
+                    td.appendChild(inp); tr.appendChild(td);
+                }
+                tbody.appendChild(tr);
+            }
+        }
+
+        /* ===== ΔCt / ΔΔCt & Chart ===== */
+        let fcChart = null;
+        function renderConfigSelectors() {
+            const ctrlSel = document.getElementById('ctrlTargetSelect');
+            const targets = getTargets();
+            ctrlSel.innerHTML = targets.map(t => `<option value="${t}">${t}</option>`).join('');
+        }
+
+        ['controlTypeName', 'ctrlTargetSelect', 'chartConditionName'].forEach(id => {
+            document.addEventListener('change', e => {
+                if (e.target && e.target.id === id) computeCtTablesAndChart();
+            });
+            document.addEventListener('input', e => {
+                if (e.target && e.target.id === id) computeCtTablesAndChart();
+            });
+        });
+
+        function computeCtTablesAndChart() {
+            // Map wells to samples by color
+            const buckets = new Map();
+            for (let i = 0; i < state.wellsA.length; i++) {
+                const color = state.wellsA[i].colors;
+                const s = state.samples.find(x => x.color.toLowerCase() === String(color).toLowerCase());
+                const ct = state.wellsB[i]?.ct;
+                if (!s || ct == null || !isFinite(ct)) continue;
+                if (!buckets.has(s.id)) buckets.set(s.id, { vals: [], sample: s });
+                buckets.get(s.id).vals.push(ct);
+            }
+
+            const rows = state.samples.map(s => {
+                const b = buckets.get(s.id); const n = b ? b.vals.length : 0;
+                const mean = n ? b.vals.reduce((a, b) => a + b, 0) / n : null;
+                return { id: s.id, sample: s, n, meanCt: mean, dCt: null, ddCt: null, fc: null };
+            });
+
+            const controlType = (document.getElementById('controlTypeName').value || '').trim().toLowerCase();
+            const ctrlTarget = document.getElementById('ctrlTargetSelect').value || '';
+            const chartCondNorm = normalizeCond((document.getElementById('chartConditionName').value || ''));
+
+            const targets = getTargets();
+            const byTarget = {};
+            const perTargetCondDCt = {};
+
+            // Per-target ΔCt (vs within-target reference of controlType)
+            targets.forEach(t => {
+                const tRows = rows.filter(r => r.sample.target === t);
+                let refRow = null;
+                if (controlType) {
+                    refRow = tRows.find(r => (r.sample.conditionName || '').toLowerCase().includes(controlType)) || null;
+                }
+                if (!refRow) refRow = tRows[0] || null;
+                const refMean = refRow?.meanCt ?? null;
+
+                tRows.forEach(r => {
+                    if (r.meanCt != null && refMean != null) r.dCt = r.meanCt - refMean;
+                });
+
+                const map = {};
+                tRows.forEach(r => {
+                    const cnameNorm = normalizeCond(r.sample.conditionName || '');
+                    if (cnameNorm && r.dCt != null) map[cnameNorm] = r.dCt;
+                });
+                byTarget[t] = tRows;
+                perTargetCondDCt[t] = map;
+            });
+
+            // ΔΔCt across targets
+            const ctrlMap = perTargetCondDCt[ctrlTarget] || {};
+            targets.forEach(t => {
+                byTarget[t].forEach(r => {
+                    const cnameNorm = normalizeCond(r.sample.conditionName || '');
+                    const base = ctrlMap[cnameNorm];
+                    if (r.dCt != null && base != null) {
+                        r.ddCt = r.dCt - base;
+                        r.fc = Math.pow(2, -r.ddCt);
+                    }
+                });
+            });
+
+            // Ct detail table
+            const tb = document.querySelector('#ctDetailTable tbody'); tb.innerHTML = '';
+            targets.forEach(t => {
+                byTarget[t].forEach(r => {
+                    const b = buckets.get(r.sample.id);
+                    const rawVals = (b?.vals || []).map(v => fmt2(v)).join(', ');
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+        <td>${t}</td>
+        <td>${r.sample.name}</td>
+        <td>${r.sample.role}</td>
+        <td>${r.sample.conditionName || ''}</td>
+        <td>${rawVals}</td>
+        <td>${r.meanCt != null ? fmt3(r.meanCt) : ''}</td>
+        <td>${r.dCt != null ? fmt3(r.dCt) : ''}</td>
+        <td>${r.ddCt != null ? fmt3(r.ddCt) : ''}</td>
+        <td>${r.fc != null ? fmt3(r.fc) : ''}</td>
+      `;
+                    tb.appendChild(tr);
+                });
+            });
+
+            // Chart data: use ΔΔCt if available; else ΔCt
+            const labels = []; const data = []; let usingDDCt = false, usingDCt = false;
+            targets.forEach(t => {
+                const r = byTarget[t].find(x => normalizeCond(x.sample.conditionName || '') === chartCondNorm);
+                if (!r) return;
+                if (r.ddCt != null) {
+                    labels.push(t);
+                    data.push(Math.pow(2, -r.ddCt));
+                    usingDDCt = true;
+                } else if (r.dCt != null) {
+                    labels.push(t);
+                    data.push(Math.pow(2, -r.dCt));
+                    usingDCt = true;
+                }
+            });
+
+            let datasetLabel = 'Fold Change (2^-ΔΔCt)';
+            if (usingDCt && !usingDDCt) datasetLabel = 'Fold Change (2^-ΔCt)';
+
+            drawFCChart(labels, data, datasetLabel);
+        }
+
+        function drawFCChart(labels, data, datasetLabel = 'Fold Change (2^-ΔΔCt)') {
+            const canvas = document.getElementById('fcChart');
+            const ctx = canvas.getContext('2d');
+            try {
+                const existing = Chart.getChart ? Chart.getChart(canvas) : (canvas.chart || null);
+                if (existing && typeof existing.destroy === 'function') existing.destroy();
+            } catch (err) { console.warn('Chart destroy skipped:', err); }
+
+            const chart = new Chart(ctx, {
+                type: 'bar',
+                data: { labels, datasets: [{ label: datasetLabel, data, backgroundColor: 'rgba(52, 152, 219, 0.7)', borderColor: '#2c82c9', borderWidth: 1 }] },
+                options: {
+                    responsive: false, maintainAspectRatio: false,
+                    layout: { padding: { top: 0, right: 8, bottom: 0, left: 8 } },
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Fold Change' } },
+                        x: { title: { display: true, text: 'Target' }, ticks: { maxRotation: 0, autoSkip: false } }
+                    }
+                }
+            });
+            window.fcChart = chart;
+        }
+
+        /* ===== html2canvas lazy-load and export helpers ===== */
+        async function ensureHtml2Canvas() {
+            if (window.html2canvas) return;
+            await new Promise((res, rej) => {
+                const s = document.createElement('script');
+                s.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+                s.onload = res; s.onerror = () => rej(new Error('Failed to load html2canvas'));
+                document.head.appendChild(s);
+            });
+        }
+        async function exportElementAsCanvas(el) {
+            await ensureHtml2Canvas();
+            return html2canvas(el, { scale: 2, useCORS: true, backgroundColor: '#ffffff', windowWidth: el.scrollWidth });
+        }
+
+        /* Plate A exports (legend + plate) */
+        document.getElementById('exportPlateAJpegBtn').onclick = async () => {
+            try {
+                const el = document.getElementById('plateAExportWrap');
+                const canvas = await exportElementAsCanvas(el);
+                const a = document.createElement('a');
+                a.href = canvas.toDataURL('image/jpeg', 0.95); a.download = 'plateA_and_legend.jpg'; a.click();
+            } catch (err) { console.error(err); showErrorToast('Export failed. Check console.'); }
+        };
+        document.getElementById('exportPlateAPdfBtn').onclick = async () => {
+            try {
+                const el = document.getElementById('plateAExportWrap');
+                const canvas = await exportElementAsCanvas(el);
+                const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({ orientation: 'l', unit: 'pt', format: 'a4' });
+                const margin = 20, pageW = pdf.internal.pageSize.getWidth(), pageH = pdf.internal.pageSize.getHeight();
+                const img = new Image(); img.src = dataUrl; await new Promise(r => img.onload = r);
+                const maxW = pageW - margin * 2, maxH = pageH - margin * 2;
+                let w = img.width, h = img.height, scale = Math.min(maxW / w, maxH / h);
+                w *= scale; h *= scale;
+                pdf.addImage(dataUrl, 'JPEG', margin + (maxW - w) / 2, margin + (maxH - h) / 2, w, h);
+                pdf.save('plateA_and_legend.pdf');
+            } catch (err) { console.error(err); showErrorToast('Export failed. Check console.'); }
+        };
+
+        /* Ct summary + chart exports */
+        document.getElementById('exportCtJpegBtn').onclick = async () => {
+            try {
+                const el = document.getElementById('ctExportWrap');
+                const canvas = await exportElementAsCanvas(el);
+                const a = document.createElement('a');
+                a.href = canvas.toDataURL('image/jpeg', 0.95); a.download = 'ct_summary_and_chart.jpg'; a.click();
+            } catch (err) { console.error(err); showErrorToast('Export failed. Check console.'); }
+        };
+        document.getElementById('exportCtPdfBtn').onclick = async () => {
+            try {
+                const el = document.getElementById('ctExportWrap');
+                const canvas = await exportElementAsCanvas(el);
+                const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({ orientation: 'p', unit: 'pt', format: 'a4' });
+                const margin = 20, pageW = pdf.internal.pageSize.getWidth(), pageH = pdf.internal.pageSize.getHeight();
+                const img = new Image(); img.src = dataUrl; await new Promise(r => img.onload = r);
+                const maxW = pageW - margin * 2, maxH = pageH - margin * 2;
+                let w = img.width, h = img.height, scale = Math.min(maxW / w, maxH / h);
+                w *= scale; h *= scale;
+                pdf.addImage(dataUrl, 'JPEG', margin + (maxW - w) / 2, margin, w, h);
+                pdf.save('ct_summary_and_chart.pdf');
+            } catch (err) { console.error(err); showErrorToast('Export failed. Check console.'); }
+        };
+
+        /* ===== Export/Import JSON (full page state) ===== */
+        document.getElementById('exportJsonBtn').onclick = () => {
+            try {
+                const payload = {
+                    version: 'v5',
+                    exported_at: new Date().toISOString(),
+                    state: deepClone(state)
+                };
+                const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = (state.meta.name ? state.meta.name.replace(/\s+/g, '_') + '_' : '') + 'qpcr_page_state.json';
+                a.click();
+                setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+            } catch (err) {
+                console.error(err);
+                showErrorToast('JSON export failed.');
+            }
+        };
+        document.getElementById('importJsonBtn').onclick = () => {
+            document.getElementById('importJsonInput').click();
+        };
+        document.getElementById('importJsonInput').addEventListener('change', async (e) => {
+            const file = e.target.files?.[0];
+            if (!file) return;
+            try {
+                const text = await file.text();
+                const payload = JSON.parse(text);
+                const nextState = payload && payload.state ? payload.state : payload;
+                if (!nextState || !Array.isArray(nextState.wellsA) || !Array.isArray(nextState.wellsB)) {
+                    throw new Error('Invalid JSON structure.');
+                }
+                Object.assign(state, nextState);
+                state.history = [];
+                state.redo = [];
+                saveState();
+                renderAll();
+                alert('JSON imported successfully.');
+            } catch (err) {
+                console.error(err);
+                showErrorToast('JSON import failed. Check the file content.');
+            }
+            e.target.value = '';
+        });
+
+        /* ===== Master Mix orchestration ===== */
+        document.getElementById('addReagentBtn').addEventListener('click', () => {
+            const name = document.getElementById('reagentName').value.trim();
+            const perWell = parseFloat(document.getElementById('reagentVol').value);
+            if (!name || !isFinite(perWell)) return;
+
+            state.reagents.push({ name, perWell });
+            document.getElementById('reagentName').value = '';
+            document.getElementById('reagentVol').value = '';
+
+            saveState();
+            renderReagents();
+            updateMasterMixTotals();
+        });
+        function refreshMasterMix() {
+            renderExtraWellsTable();
+            renderReagents();
+            updateMasterMixTotals();
+        }
+
+        /* ===== Init ===== */
+        function renderAll() {
+            document.getElementById('metaName').value = state.meta.name || '';
+            document.getElementById('metaDate').value = state.meta.date || '';
+            document.getElementById('metaNotes').value = state.meta.notes || '';
+            renderSamples();
+            renderSelector();
+            renderConfigSelectors();
+            renderPlateA();
+            renderCtTable();
+            refreshMasterMix();
+            updateCounts();
+            computeCtTablesAndChart();
+            updateUndoRedoButtons();
+        }
+        (function init() {
+            try {
+                loadState();
+                renderAll();
+            } catch (err) {
+                console.error(err);
+                showErrorToast('Initialization error. See console.');
+            }
+        })();
+    </script>
+</body>
+
+</html>
