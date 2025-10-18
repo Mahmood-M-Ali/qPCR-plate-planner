@@ -735,9 +735,12 @@
             updateUndoRedoButtons();
         }
         function updateUndoRedoButtons() {
-            document.getElementById('undoBtn').disabled = !state.history.length;
-            document.getElementById('redoBtn').disabled = !state.redo.length;
-        }
+    const undoBtn = document.getElementById('undoBtn');
+    const redoBtn = document.getElementById('redoBtn');
+
+    if (undoBtn) undoBtn.disabled = !state.history.length;
+    if (redoBtn) redoBtn.disabled = !state.redo.length;
+		}
 
         /* ===== Initialize plate layouts ===== */
         function initEmptyPlate() {
@@ -1665,6 +1668,7 @@
 </body>
 
 </html>
+
 
 
 
