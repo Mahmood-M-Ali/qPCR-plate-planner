@@ -4,6 +4,8 @@
 
 qPCR Plate Designer is a comprehensive web-based tool for planning, executing, and analyzing quantitative PCR (qPCR) experiments. It provides an all-in-one solution for designing 384-well plate layouts, calculating master mix volumes, recording Ct values, and performing ΔΔCt analysis with automated fold-change calculations and visualizations.
 An example file (example-import.json) is included to illustrate expected input structure. Users can import it via the Import JSON button to explore sample metadata, plate layout, and ΔΔCt analysis logic.
+This tool applies the 2^−ΔΔCt method for relative quantification, as described by (Livak & Schmittgen, 2001. DOI:10.1006/meth.2001.1262), adapted for CUT&RUN workflows where qPCR is used to assess enrichment at target loci.
+
 
 License: CC BY-NC 4.0 — Free to use and adapt for non-commercial purposes with attribution.
 
