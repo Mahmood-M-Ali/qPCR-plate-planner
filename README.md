@@ -150,5 +150,7 @@ This represents the relative gene expression or enrichment of epigenetic mark le
 
 **License**
 
-Mahmood Mohammed Ali. *qPCR Plate Planner* (2025). GitHub. University of Grenoble Alpes – Institute of Advanced Bioscience (IAB). DOI: 10.5281/zenodo.17410644. Licensed under CC BY-NC 4.0.
+Mahmood Mohammed Ali. *qPCR Plate Planner* (2025). GitHub. University of Grenoble Alpes – Institute of Advanced Bioscience (IAB). . Licensed under CC BY-NC 4.0.
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17410644.svg)](https://doi.org/10.5281/zenodo.17410644)
+
 
