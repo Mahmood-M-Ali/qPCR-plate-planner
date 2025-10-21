@@ -15,6 +15,7 @@ This tool is designed for molecular biologists and researchers conducting qPCR e
 
 - Multiple target genes
 - Multiple experimental conditions (e.g., different treatments, antibodies, or time points)
+- Multiple experimental groups (e.g., distinct cell lines or treatment conditions co-plated on the same 384-well plate, each requiring independent analysis)
 - Technical replicates across 384-well plates
 - Comparative gene expression analysis using the ΔΔCt method
 - Primarily used to assess the success of CUT&RUN experiments and similar chromatin profiling techniques by quantifying target enrichment
@@ -24,9 +25,9 @@ This tool is designed for molecular biologists and researchers conducting qPCR e
 **1. Sample Management**
 
 - Define samples with automatic parsing of naming convention (Name_Target_Condition)
-- Assign unique colors to each sample for visual identification
-- Edit and clone existing samples
-- Organize samples by target gene, condition, and role (Control/Condition)
+- Assign unique colors to each sample for visual identification (do not assign the same color to multiple samples)
+- Assign groups
+- Organize samples by target gene, condition, role (Control/Condition) and group.
 
 **2. Plate Layout Designer (Plate A)**
 
@@ -72,7 +73,7 @@ This tool is designed for molecular biologists and researchers conducting qPCR e
 
 **Step 1: Define Your Samples**
 
-Create samples using the naming convention Name_Target_Condition (e.g., "HeLa_CCNA2_IgG"). The tool automatically extracts the target gene and condition. Assign each sample a unique color and specify whether it's a control or experimental condition.
+Create samples using the naming convention Name_Target_Condition (e.g., "HeLa_CCNA2_IgG"). The tool automatically extracts the target gene and condition. Assign each sample a unique color and specify whether it's a control or experimental condition and assign a group.
 
 **Step 2: Design Your Plate Layout**
 
@@ -114,9 +115,9 @@ Fold Change = 2^(-ΔΔCt)
 
 This represents the relative gene expression or enrichment of epigenetic mark level, where:
 
-- FC = 1: No change in expression
-- FC > 1: Upregulation
-- FC < 1: Downregulation
+- FC = 1: No change in enrichment/expression
+- FC > 1: Enrichment/Upregulation
+- FC < 1: Less enriched/Downregulation
 
 **Technical Requirements**
 
