@@ -5,8 +5,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>qPCR Plate Designer</title>
-	<meta name="description" content="Modular qPCR plate planner for CUT&RUN, CUT&Tag, and ChIP-qPCR workflows.">
-  	<meta name="keywords" content="qPCR, CUT&RUN, ΔΔCt, plate design, bioinformatics, chromatin, epigenetics">
     <style>
         :root {
             --gap: 8px;
@@ -40,18 +38,11 @@
             font-size: 26px;
             font-weight: 800;
             letter-spacing: 0.3px;
-            margin: 16px 0 2px;
+            margin: 16px 0 14px;
         }
 
         .app-title span {
             color: #7B1E3A
-        }
-
-        .app-subtitle {
-            text-align: center;
-            font-size: 13px;
-            color: #555;
-            margin: 0 0 12px
         }
 
         h3 {
@@ -166,18 +157,7 @@
             gap: 6px
         }
 
-        .sample-row .inline-buttons button {
-            padding: 4px 8px;
-            border: 1px solid #ccc;
-            background: #fff;
-            border-radius: 6px;
-            cursor: pointer
-        }
-
-        .sample-row .inline-buttons button:hover {
-            background: #f6f6f6
-        }
-
+        /* Color selector */
         .selector-wrap {
             display: flex;
             gap: 8px;
@@ -194,7 +174,8 @@
             padding: 6px 10px;
             background: #fff;
             cursor: pointer;
-            user-select: none
+            user-select: none;
+            -webkit-user-select: none
         }
 
         .selector-pill.active {
@@ -212,7 +193,7 @@
             font-size: 13px
         }
 
-        /* Plate A grid */
+        /* Plate A */
         .plate-wrap {
             overflow: auto;
             padding-bottom: 8px
@@ -277,6 +258,7 @@
             pointer-events: none
         }
 
+        /* Tables */
         table {
             border-collapse: collapse;
             width: 100%
@@ -319,15 +301,8 @@
             background: #fffbe6;
         }
 
-        /* Chart */
-        #chartWrap {
-            background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 8px
-        }
-
-        #fcChart {
+        /* Charts */
+        .group-chart {
             display: block;
             width: 720px;
             height: 160px;
@@ -343,21 +318,6 @@
         .note {
             font-size: 12px;
             color: #555
-        }
-
-        /* Tiny error toast */
-        #errorToast {
-            position: fixed;
-            right: 12px;
-            bottom: 12px;
-            background: #ffebe9;
-            color: #86181d;
-            border: 1px solid #f1c0c0;
-            padding: 8px 10px;
-            border-radius: 6px;
-            font-size: 12px;
-            display: none;
-            max-width: 60ch
         }
 
         /* Legend above Plate A */
@@ -410,9 +370,24 @@
         .btn-primary:active {
             filter: brightness(0.92)
         }
+
+        /* Tiny error toast */
+        #errorToast {
+            position: fixed;
+            right: 12px;
+            bottom: 12px;
+            background: #ffebe9;
+            color: #86181d;
+            border: 1px solid #f1c0c0;
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            display: none;
+            max-width: 60ch
+        }
     </style>
 
-    <!-- Core libraries (stable CDNs) -->
+    <!-- Core libs on load: Chart.js and jsPDF (stable from your working version) -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 </head>
@@ -430,60 +405,63 @@
             </div>
 
             <h3>Sample setup</h3>
-            <p class="note">Use format "Sample_Target_Condition" to enable automatic parsing of sample role, target gene, and experimental condition (e.g.,
-                "HeLa_CCNA2_IgG").</p>
+            <p class="note">Naming convention: Use "Name_Target_Condition" for auto-extraction, and set Group to scope
+                analytics.</p>
             <form id="addForm" class="row" action="javascript:void(0)"
-                onsubmit="event.preventDefault(); handleAddSample();" autocomplete="off">
+                onsubmit="event.preventDefault(); handleAddSample();" autocomplete="off" aria-label="Add sample form">
                 <input id="sampleNameInput" type="text" placeholder="Sample display name (e.g., HeLa_CCNA2_IgG)"
-                    required />
+                    required aria-label="Sample display name" />
                 <label>Role
-                    <select id="sampleRoleInput">
+                    <select id="sampleRoleInput" aria-label="Sample role">
                         <option value="Control">Control</option>
                         <option value="Condition">Condition</option>
                     </select>
                 </label>
-                <input id="targetInput" type="text" placeholder="Target/Gene (e.g., CCNA2)" required />
-                <input id="conditionNameInput" type="text" placeholder="Condition name (e.g., IgG or H3K27me3)" />
-                <label>Color <input id="sampleColorInput" type="color" value="#2ECC71" /></label>
+                <input id="targetInput" type="text" placeholder="Target/Gene (e.g., CCNA2)" required
+                    aria-label="Target gene" />
+                <input id="conditionNameInput" type="text" placeholder="Condition name (e.g., IgG or H3K27me3)"
+                    aria-label="Condition name" />
+                <input id="groupNameInput" type="text" placeholder="Group name (e.g., Group 1)" value="Group 1" required
+                    aria-label="Group name" />
+                <label>Color <input id="sampleColorInput" type="color" value="#2ECC71"
+                        aria-label="Sample color" /></label>
                 <button id="addSampleBtn" type="button">Add sample</button>
+                <button id="resetButton" type="button" class="small-danger" style="margin-left:auto">Reset plate to
+                    white (clear Ct)</button>
             </form>
 
-            <div class="sample-list" id="sampleList"></div>
+            <div class="sample-list" id="sampleList" aria-live="polite"></div>
 
             <h3>Color selection</h3>
-            <div class="selector-wrap" id="colorSelector"></div>
-            <div class="row">
-                <button id="resetButton" type="button" class="small-danger">Reset all wells to white (and clear
-                    Ct)</button>
-            </div>
-
-            <h3>Tools</h3>
-            <div class="toolbar">
-               <!-- <button id="undoBtn" type="button">Undo</button> -->
-               <!-- <button id="redoBtn" type="button">Redo</button> -->
-
-                <select id="partialResetSelect">
+            <div class="selector-wrap" id="colorSelector" aria-label="Color selection"></div>
+            <div class="row" style="gap:8px">
+                <label for="partialResetSelect">Partial reset</label>
+                <select id="partialResetSelect" aria-label="Partial reset scope" title="Partial reset scope">
                     <option value="">Partial reset…</option>
                     <option value="row">Reset row (A–P)</option>
                     <option value="col">Reset column (1–24)</option>
                 </select>
-                <input id="partialInput" type="text" placeholder="A or 12" style="width:88px" />
+                <input id="partialInput" type="text" placeholder="A or 12" style="width:88px"
+                    aria-label="Row letter or column number" />
                 <button id="partialApplyBtn" type="button">Apply</button>
+                <button id="undoBtn" type="button">Undo</button>
+                <button id="redoBtn" type="button">Redo</button>
             </div>
         </div>
 
         <div id="countsRow" class="row" style="padding:0 12px 8px"></div>
 
+        <!-- Plate A export wrapper: legend + plate together -->
         <div class="plate-wrap" id="plateAExportWrap">
             <h3>Plate A — Assign samples/conditions to wells</h3>
             <div class="legend-title">Legend</div>
             <div class="sample-legend" id="sampleLegend"></div>
-            <div class="plate-grid" id="plateGrid"></div>
+            <div class="plate-grid" id="plateGrid" aria-label="Plate A grid"></div>
         </div>
 
         <div class="controls">
             <h3>Master Mix Planner</h3>
-            <table id="mmExtraWells">
+            <table id="mmExtraWells" aria-label="Master Mix extra wells per target">
                 <thead>
                     <tr>
                         <th>Target</th>
@@ -498,22 +476,22 @@
                 Target.</span>
 
             <div class="row" style="margin-top:6px">
-                <input id="reagentName" type="text" placeholder="Reagent name (e.g., SYBR X2)" />
-                <input id="reagentVol" type="number" step="0.1" placeholder="µL / well" style="width:120px" />
+                <input id="reagentName" type="text" placeholder="Reagent name (e.g., SYBR X2)"
+                    aria-label="Reagent name" />
+                <input id="reagentVol" type="number" step="0.1" placeholder="µL / well" style="width:120px"
+                    aria-label="Microliters per well" />
                 <button id="addReagentBtn" type="button">Add reagent</button>
             </div>
 
-            <table id="mmTable">
+            <table id="mmTable" aria-label="Master Mix totals">
                 <thead>
                     <tr id="mmHeadRow1">
                         <th>Reagent</th>
                         <th>µL per well</th>
-                        <!-- dynamic target header cells -->
                         <th></th>
                     </tr>
                     <tr id="mmHeadRow2">
                         <th colspan="2" class="note">Totals per target</th>
-                        <!-- dynamic target names -->
                         <th></th>
                     </tr>
                 </thead>
@@ -521,12 +499,10 @@
                 <tfoot id="mmFoot">
                     <tr id="mmFootPerWell">
                         <th colspan="2">Total per well (µL)</th>
-                        <!-- filled dynamically -->
                         <th></th>
                     </tr>
                     <tr id="mmFootGrand">
                         <th colspan="2">Master tube total per target (µL)</th>
-                        <!-- filled dynamically -->
                         <th></th>
                     </tr>
                 </tfoot>
@@ -535,7 +511,7 @@
 
         <div class="plate-wrap">
             <h3>Plate B — Enter Ct values</h3>
-            <table id="ctTableGrid">
+            <table id="ctTableGrid" aria-label="Plate B Ct table">
                 <thead id="ctHead"></thead>
                 <tbody id="ctBody"></tbody>
             </table>
@@ -543,66 +519,43 @@
                 cell.</span>
         </div>
 
+        <!-- Ct analytics: All groups stacked inside this wrapper for single export -->
         <div class="controls" id="ctExportWrap">
-            <div id="ctSummarySection">
-                <h3>Ct summary and ΔCt/ΔΔCt</h3>
-                <div class="row">
-                    <label>Control type within target for ΔCt
-                        <input id="controlTypeName" type="text" value="IgG" style="width:120px" />
-                    </label>
-                    <label>Control Target for ΔΔCt
-                        <select id="ctrlTargetSelect"></select>
-                    </label>
-                    <label>Condition for chart
-                        <input id="chartConditionName" type="text" value="me3" style="width:120px" />
-                    </label>
-                    <span class="note">ΔΔCt(Target, condition) = ΔCt(Target, condition) − ΔCt(ControlTarget,
-                        condition).</span>
-                </div>
-
-                <table id="ctDetailTable">
-                    <thead>
-                        <tr>
-                            <th>Target</th>
-                            <th>Sample</th>
-                            <th>Role</th>
-                            <th>Condition</th>
-                            <th>Replicates</th>
-                            <th>Mean Ct</th>
-                            <th>ΔCt</th>
-                            <th>ΔΔCt</th>
-                            <th>FC (2^-ΔΔCt)</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+            <h3>Ct summary and ΔCt/ΔΔCt — All Groups</h3>
+            <div id="groupsHeader" class="row" style="gap:8px; margin-bottom:6px">
+                <input id="newGroupName" type="text" placeholder="New group name" style="width:160px"
+                    aria-label="New group name" />
+                <button id="addGroupBtn" type="button">Add Group</button>
+                <span class="note">Each panel below is computed only from samples in that group.</span>
             </div>
+            <div id="groupsPanels"></div>
 
-            <div id="chartWrap" class="controls" style="margin-top:8px">
-                <div class="chart-title">Fold Change chart</div>
-                <canvas id="fcChart" width="720" height="160"></canvas>
-            </div>
-
-            <div class="row" style="gap:12px; margin-top:8px">
+            <!-- Export & JSON buttons + Hard Reset -->
+            <div class="row" style="gap:12px; margin-top:8px; flex-wrap:wrap">
                 <button id="exportPlateAJpegBtn" class="btn-primary" type="button">Export Plate A + legend as
                     JPEG</button>
                 <button id="exportPlateAPdfBtn" class="btn-primary" type="button">Export Plate A + legend as
                     PDF</button>
 
-                <button id="exportCtJpegBtn" class="btn-primary" type="button">Export Ct summary + chart as
+                <button id="exportCtJpegBtn" class="btn-primary" type="button">Export Ct summary (all groups) as
                     JPEG</button>
-                <button id="exportCtPdfBtn" class="btn-primary" type="button">Export Ct summary + chart as PDF</button>
+                <button id="exportCtPdfBtn" class="btn-primary" type="button">Export Ct summary (all groups) as
+                    PDF</button>
 
                 <button id="exportJsonBtn" class="btn-primary" type="button">Export full page as JSON</button>
-                <input id="importJsonInput" type="file" accept="application/json" style="display:none" />
-                <button id="importJsonBtn" class="btn-primary" type="button">Import JSON</button>
+                <input id="importJsonInput" type="file" accept="application/json" style="display:none"
+                    title="Import JSON" aria-label="Import JSON file input" />
+                <button id="importJsonBtn" class="btn-primary" type="button" aria-controls="importJsonInput">Import
+                    JSON</button>
+
+                <button id="hardResetBtn" class="small-danger" type="button"
+                    title="Delete all data and reset the page">Hard reset (delete all)</button>
             </div>
         </div>
     </div>
 
-    <div id="errorToast"></div>
+    <div id="errorToast" role="alert"></div>
 
-    <!-- html2canvas lazy load (added only when exporting) -->
     <script>
         /* ===== Tiny error toast ===== */
         function showErrorToast(msg) {
@@ -619,7 +572,7 @@
         /* ===== Constants & State ===== */
         const TOTAL_ROWS = 16, TOTAL_COLS = 24, MAX_COLORS = 4;
         const DEFAULT_COLOR = '#FFFFFF';
-        const STORAGE_KEY = "qpcrPlateState_masterfix_v5"; // bump for new features
+        const STORAGE_KEY = "qpcrPlateState_groups_v1"; // version with groups + hard reset
 
         const state = {
             meta: { name: "", date: "", notes: "" },
@@ -629,6 +582,10 @@
             samples: [],
             reagents: [],
             extraWellsPerTarget: {},
+            groups: [], // [{id, name}]
+            groupSettings: {
+                // [groupId]: { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3' }
+            },
             history: [],
             redo: []
         };
@@ -650,98 +607,6 @@
             return x;
         }
 
-        /* Unique color generation for clones */
-        function randomColorHex() {
-            const h = Math.floor(Math.random() * 360);
-            const s = 70 + Math.floor(Math.random() * 25);
-            const l = 50;
-            function h2rgb(p, q, t) {
-                if (t < 0) t += 1; if (t > 1) t -= 1;
-                if (t < 1 / 6) return p + (q - p) * 6 * t;
-                if (t < 1 / 2) return q;
-                if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-                return p;
-            }
-            const S = s / 100, L = l / 100;
-            const q = L < 0.5 ? L * (1 + S) : L + S - L * S;
-            const p = 2 * L - q;
-            const r = Math.round(h2rgb(p, q, (h / 360) + 1 / 3) * 255);
-            const g = Math.round(h2rgb(p, q, (h / 360)) * 255);
-            const b = Math.round(h2rgb(p, q, (h / 360) - 1 / 3) * 255);
-            return '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase();
-        }
-        function generateUniqueColor() {
-            const used = new Set(state.samples.map(s => (s.color || '').toLowerCase()));
-            for (let tries = 0; tries < 100; tries++) {
-                const c = randomColorHex();
-                if (!used.has(c.toLowerCase())) return c;
-            }
-            return '#' + Math.floor(Math.random() * 0xFFFFFF).toString(16).padStart(6, '0').toUpperCase();
-        }
-
-        /* ===== State management with undo/redo (wells-only) ===== */
-        function loadState() {
-            try {
-                const saved = localStorage.getItem(STORAGE_KEY);
-                if (saved) {
-                    const parsed = JSON.parse(saved);
-                    Object.assign(state, parsed);
-                    if (!state.wellsA?.length) initEmptyPlate();
-                    if (!state.wellsB?.length) initEmptyCtTable();
-                } else {
-                    initEmptyPlate();
-                    initEmptyCtTable();
-                }
-            } catch (err) {
-                console.error(err);
-                initEmptyPlate();
-                initEmptyCtTable();
-            }
-        }
-        function saveState() {
-            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
-            catch (err) { console.error(err); showErrorToast('Failed to save state. Storage might be full.'); }
-        }
-        function pushHistory() {
-            state.history.push(deepClone({ wellsA: state.wellsA, wellsB: state.wellsB }));
-            if (state.history.length > 50) state.history.shift();
-            state.redo = [];
-            updateUndoRedoButtons();
-        }
-        function undo() {
-            if (!state.history.length) return;
-            state.redo.push(deepClone({ wellsA: state.wellsA, wellsB: state.wellsB }));
-            const prev = state.history.pop();
-            state.wellsA = prev.wellsA;
-            state.wellsB = prev.wellsB;
-            saveState();
-            renderPlateA();
-            renderCtTable();
-            updateMasterMixTotals();
-            computeCtTablesAndChart();
-            updateUndoRedoButtons();
-        }
-        function redo() {
-            if (!state.redo.length) return;
-            state.history.push(deepClone({ wellsA: state.wellsA, wellsB: state.wellsB }));
-            const next = state.redo.pop();
-            state.wellsA = next.wellsA;
-            state.wellsB = next.wellsB;
-            saveState();
-            renderPlateA();
-            renderCtTable();
-            updateMasterMixTotals();
-            computeCtTablesAndChart();
-            updateUndoRedoButtons();
-        }
-        function updateUndoRedoButtons() {
-    const undoBtn = document.getElementById('undoBtn');
-    const redoBtn = document.getElementById('redoBtn');
-
-    if (undoBtn) undoBtn.disabled = !state.history.length;
-    if (redoBtn) redoBtn.disabled = !state.redo.length;
-		}
-
         /* ===== Initialize plate layouts ===== */
         function initEmptyPlate() {
             state.wellsA = [];
@@ -756,6 +621,84 @@
             }
         }
 
+        /* ===== Storage ===== */
+        function saveState() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            } catch (err) {
+                console.error(err);
+                showErrorToast('Failed to save state. Storage might be full.');
+            }
+        }
+        function loadState() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    Object.assign(state, parsed);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+            // Ensure wells exist
+            if (!state.wellsA?.length) initEmptyPlate();
+            if (!state.wellsB?.length) initEmptyCtTable();
+
+            // Migrate for groups if missing
+            if (!Array.isArray(state.groups) || state.groups.length === 0) {
+                state.groups = [{ id: 'g1', name: 'Group 1' }];
+                // Assign existing samples to Group 1 if they lack group
+                state.samples.forEach(s => { if (!('group' in s)) s.group = 'Group 1'; });
+            }
+            // Ensure groupSettings entries
+            state.groups.forEach(g => {
+                if (!state.groupSettings[g.id]) {
+                    state.groupSettings[g.id] = { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3' };
+                }
+            });
+        }
+
+        /* ===== History (undo/redo) ===== */
+        function pushHistory() {
+            state.history.push(deepClone({
+                wellsA: state.wellsA, wellsB: state.wellsB, samples: state.samples, reagents: state.reagents,
+                extraWellsPerTarget: state.extraWellsPerTarget, groups: state.groups, groupSettings: state.groupSettings
+            }));
+            if (state.history.length > 50) state.history.shift();
+            state.redo = [];
+            updateUndoRedoButtons();
+        }
+        function undo() {
+            if (!state.history.length) return;
+            state.redo.push(deepClone({
+                wellsA: state.wellsA, wellsB: state.wellsB, samples: state.samples, reagents: state.reagents,
+                extraWellsPerTarget: state.extraWellsPerTarget, groups: state.groups, groupSettings: state.groupSettings
+            }));
+            const prev = state.history.pop();
+            Object.assign(state, prev);
+            saveState();
+            renderAll();
+            updateUndoRedoButtons();
+        }
+        function redo() {
+            if (!state.redo.length) return;
+            state.history.push(deepClone({
+                wellsA: state.wellsA, wellsB: state.wellsB, samples: state.samples, reagents: state.reagents,
+                extraWellsPerTarget: state.extraWellsPerTarget, groups: state.groups, groupSettings: state.groupSettings
+            }));
+            const next = state.redo.pop();
+            Object.assign(state, next);
+            saveState();
+            renderAll();
+            updateUndoRedoButtons();
+        }
+        function updateUndoRedoButtons() {
+            const undoBtn = document.getElementById('undoBtn');
+            const redoBtn = document.getElementById('redoBtn');
+            if (undoBtn) undoBtn.disabled = !state.history.length;
+            if (redoBtn) redoBtn.disabled = !state.redo.length;
+        }
+
         /* ===== Meta fields ===== */
         document.getElementById('metaName').addEventListener('change', () => {
             state.meta.name = document.getElementById('metaName').value; saveState();
@@ -767,18 +710,40 @@
             state.meta.notes = document.getElementById('metaNotes').value; saveState();
         });
 
-        /* ===== Plate A functions ===== */
+        /* ===== Sample add helpers ===== */
+        function parseNameTriplet(sampleName) {
+            const parts = String(sampleName || '').split('_');
+            if (parts.length === 1) return { target: '', condition: '' };
+            if (parts.length === 2) return { target: parts[1], condition: '' };
+            return { target: parts[parts.length - 2], condition: parts[parts.length - 1] };
+        }
+        document.getElementById('sampleNameInput').addEventListener('input', () => {
+            const nameEl = document.getElementById('sampleNameInput');
+            const targetEl = document.getElementById('targetInput');
+            const condEl = document.getElementById('conditionNameInput');
+            const { target, condition } = parseNameTriplet(nameEl.value);
+            if (document.activeElement !== targetEl) targetEl.value = target;
+            if (document.activeElement !== condEl) condEl.value = condition;
+        });
+
+        /* ===== Plate A ===== */
         function renderPlateA() {
             const grid = document.getElementById('plateGrid');
             grid.innerHTML = '';
 
             // Top row
-            const corner1 = document.createElement('div'); corner1.classList.add('corner'); grid.appendChild(corner1);
-            for (let c = 0; c < TOTAL_COLS; c++) { const header = document.createElement('div'); header.textContent = c + 1; header.classList.add('col-header'); grid.appendChild(header); }
-            const corner2 = document.createElement('div'); corner2.classList.add('corner'); grid.appendChild(corner2);
+            grid.appendChild(document.createElement('div')).classList.add('corner');
+            for (let c = 0; c < TOTAL_COLS; c++) {
+                const header = document.createElement('div');
+                header.classList.add('col-header'); header.textContent = c + 1;
+                grid.appendChild(header);
+            }
+            grid.appendChild(document.createElement('div')).classList.add('corner');
 
             for (let r = 0; r < TOTAL_ROWS; r++) {
-                const rowHeader1 = document.createElement('div'); rowHeader1.textContent = rowLetter(r); rowHeader1.classList.add('row-header'); grid.appendChild(rowHeader1);
+                const rowHeader1 = document.createElement('div');
+                rowHeader1.classList.add('row-header'); rowHeader1.textContent = rowLetter(r);
+                grid.appendChild(rowHeader1);
 
                 for (let c = 0; c < TOTAL_COLS; c++) {
                     const i = idx(r, c);
@@ -787,19 +752,16 @@
                     well.dataset.i = i;
 
                     const w = state.wellsA[i];
-                    if (w) {
-                        const colors = Array.isArray(w.colors) ? w.colors : [w.colors];
-                        const seg = w.segmentation || 1;
-                        if (seg > 1) {
-                            well.classList.add('split-' + seg);
-                            for (let s = 0; s < seg; s++) {
-                                well.style.setProperty('--c' + (s + 1), colors[s] || DEFAULT_COLOR);
-                            }
-                        } else {
-                            well.style.backgroundColor = colors[0] || DEFAULT_COLOR;
+                    const colors = Array.isArray(w.colors) ? w.colors : [w.colors];
+                    const seg = w.segmentation || 1;
+
+                    if (seg > 1) {
+                        well.classList.add('split-' + seg);
+                        for (let s = 0; s < seg; s++) {
+                            well.style.setProperty('--c' + (s + 1), colors[s] || DEFAULT_COLOR);
                         }
                     } else {
-                        well.style.backgroundColor = DEFAULT_COLOR;
+                        well.style.backgroundColor = colors[0] || DEFAULT_COLOR;
                     }
 
                     well.addEventListener('click', () => {
@@ -831,206 +793,118 @@
                         renderPlateA();
                         updateCounts();
                         updateMasterMixTotals();
+                        renderAllGroups(); // live update groups
                     });
 
-                    // Segment labels
+                    // Seg labels
                     if (w && w.segmentation > 1) {
-                        const colors = Array.isArray(w.colors) ? w.colors : [w.colors];
                         const segPositions = [
                             { x: 25, y: 50 }, { x: 75, y: 50 }, { x: 75, y: 25 }, { x: 25, y: 25 }
                         ];
                         for (let s = 0; s < Math.min(MAX_COLORS, w.segmentation); s++) {
-                            if (s < colors.length && colors[s] !== DEFAULT_COLOR) {
-                                const label = document.createElement('div');
-                                label.classList.add('seg-label');
-                                label.textContent = s + 1;
-                                label.style.left = segPositions[s].x + '%';
-                                label.style.top = segPositions[s].y + '%';
-                                well.appendChild(label);
-                            }
+                            const label = document.createElement('div');
+                            label.classList.add('seg-label'); label.textContent = s + 1;
+                            label.style.left = segPositions[s].x + '%';
+                            label.style.top = segPositions[s].y + '%';
+                            well.appendChild(label);
                         }
                     }
 
                     grid.appendChild(well);
                 }
 
-                const rowHeader2 = document.createElement('div'); rowHeader2.textContent = rowLetter(r); rowHeader2.classList.add('row-header'); grid.appendChild(rowHeader2);
+                const rowHeader2 = document.createElement('div');
+                rowHeader2.classList.add('row-header'); rowHeader2.textContent = rowLetter(r);
+                grid.appendChild(rowHeader2);
             }
 
             renderSampleLegend();
         }
-
         function renderSampleLegend() {
             const legendDiv = document.getElementById('sampleLegend');
             legendDiv.innerHTML = '';
             state.samples.forEach(s => {
                 const item = document.createElement('div');
                 item.classList.add('sample-item');
-                const dot = document.createElement('span'); dot.classList.add('sample-dot'); dot.style.backgroundColor = s.color;
-                const name = document.createElement('span'); name.textContent = s.name;
-                item.appendChild(dot); item.appendChild(name); legendDiv.appendChild(item);
+                const dot = document.createElement('span');
+                dot.classList.add('sample-dot'); dot.style.backgroundColor = s.color;
+                const name = document.createElement('span'); name.textContent = s.name + (s.group ? ` [${s.group}]` : '');
+                item.appendChild(dot); item.appendChild(name);
+                legendDiv.appendChild(item);
             });
-        }
-
-        /* ===== Color replace across Plate A (used when editing sample color) ===== */
-        function replaceColorOnPlate(oldColor, newColor) {
-            const oc = String(oldColor || '').toLowerCase();
-            const nc = newColor;
-            for (let i = 0; i < state.wellsA.length; i++) {
-                const w = state.wellsA[i];
-                if (Array.isArray(w.colors)) {
-                    let changed = false;
-                    for (let s = 0; s < w.colors.length; s++) {
-                        if (String(w.colors[s] || '').toLowerCase() === oc) {
-                            w.colors[s] = nc;
-                            changed = true;
-                        }
-                    }
-                    if (changed && w.segmentation < w.colors.length) {
-                        w.segmentation = w.colors.length;
-                    }
-                } else {
-                    if (String(w.colors || '').toLowerCase() === oc) {
-                        w.colors = nc;
-                    }
-                }
-            }
         }
 
         /* ===== Sample Management ===== */
         function renderSamples() {
             const sampleList = document.getElementById('sampleList');
             sampleList.innerHTML = '';
-
             state.samples.forEach((s, i) => {
                 const row = document.createElement('div');
                 row.classList.add('sample-row');
 
                 const swatch = document.createElement('div');
-                swatch.classList.add('sample-swatch');
-                swatch.style.backgroundColor = s.color;
+                swatch.classList.add('sample-swatch'); swatch.style.backgroundColor = s.color;
 
-                const name = document.createElement('div');
-                name.textContent = s.name;
-
-                const target = document.createElement('div');
-                target.textContent = s.target;
-                target.style.marginLeft = '6px';
-                target.style.color = '#666';
+                const details = document.createElement('div');
+                details.textContent = `${s.name} — Target: ${s.target} — Cond: ${s.conditionName || ''} — Role: ${s.role} — Group: ${s.group || ''}`;
+                details.style.minWidth = '320px';
 
                 const buttons = document.createElement('div');
                 buttons.classList.add('inline-buttons');
 
-                // Clone (auto-unique color)
-                const cloneBtn = document.createElement('button');
-                cloneBtn.textContent = 'Clone';
-                cloneBtn.title = 'Duplicate this sample';
-                cloneBtn.onclick = () => {
-                    const original = state.samples[i];
-                    if (!original) return;
-                    const copy = { ...deepClone(original), id: Date.now() + Math.random(), name: original.name + ' (copy)' };
-                    copy.color = generateUniqueColor();
-                    state.samples.splice(i + 1, 0, copy);
-                    saveState();
-                    renderSamples();
-                    renderSelector();
-                    renderConfigSelectors();
-                    refreshMasterMix();
-                    updateCounts();
+                // Quick group change
+                const groupSel = document.createElement('select');
+                groupSel.setAttribute('aria-label', 'Change sample group');
+                const groupNames = Array.from(new Set(state.groups.map(g => g.name)));
+                groupNames.forEach(n => {
+                    const opt = document.createElement('option');
+                    opt.value = n; opt.textContent = n; if (s.group === n) opt.selected = true;
+                    groupSel.appendChild(opt);
+                });
+                groupSel.onchange = () => {
+                    s.group = groupSel.value;
+                    saveState(); renderSamples(); renderAllGroups();
                 };
 
-                // Edit
-                const editBtn = document.createElement('button');
-                editBtn.textContent = 'Edit';
-                editBtn.title = 'Edit this sample';
-                editBtn.onclick = () => {
-                    const s = state.samples[i];
-                    if (!s) return;
-                    const oldColor = s.color;
-
-                    const name = prompt('Sample name:', s.name);
-                    if (name === null) return;
-
-                    const role = prompt('Role (Control or Condition):', s.role || 'Control');
-                    if (role === null) return;
-
-                    const target = prompt('Target/Gene:', s.target || '');
-                    if (target === null) return;
-
-                    const conditionName = prompt('Condition name (e.g., IgG or H3K27me3):', s.conditionName || '');
-                    if (conditionName === null) return;
-
-                    const color = prompt('Color (hex like #2ECC71):', s.color || '#2ECC71');
-                    if (color === null) return;
-
-                    if (!name.trim() || !target.trim()) {
-                        alert('Name and Target are required.');
-                        return;
-                    }
-
-                    s.name = name.trim();
-                    s.role = (role || '').trim();
-                    s.target = target.trim();
-                    s.conditionName = (conditionName || '').trim();
-                    s.color = (color || '').trim();
-
-                    if (oldColor && s.color && String(oldColor).toLowerCase() !== String(s.color).toLowerCase()) {
-                        if (confirm('Update wells on Plate A that use the old color to the new color?')) {
-                            pushHistory();
-                            replaceColorOnPlate(oldColor, s.color);
-                        }
-                    }
-
-                    saveState();
-                    renderSamples();
-                    renderSelector();
-                    renderConfigSelectors();
-                    renderPlateA();
-                    renderCtTable();
-                    refreshMasterMix();
-                    updateCounts();
-                    computeCtTablesAndChart();
-                };
-
-                // Delete
-                const deleteBtn = document.createElement('button');
-                deleteBtn.textContent = '✕';
-                deleteBtn.title = 'Delete this sample';
-                deleteBtn.onclick = () => {
+                const delBtn = document.createElement('button');
+                delBtn.textContent = '✕';
+                delBtn.title = 'Delete sample';
+                delBtn.onclick = () => {
                     state.samples.splice(i, 1);
                     saveState();
-                    renderSamples();
-                    renderSelector();
-                    renderConfigSelectors();
-                    renderPlateA();
-                    renderCtTable();
-                    refreshMasterMix();
-                    computeCtTablesAndChart();
+                    renderSamples(); renderSelector(); renderPlateA(); renderCtTable(); refreshMasterMix(); updateCounts(); renderAllGroups();
                 };
 
-                buttons.appendChild(cloneBtn);
-                buttons.appendChild(editBtn);
-                buttons.appendChild(deleteBtn);
+                buttons.appendChild(groupSel);
+                buttons.appendChild(delBtn);
 
                 row.appendChild(swatch);
-                row.appendChild(name);
-                row.appendChild(target);
+                row.appendChild(details);
                 row.appendChild(buttons);
                 sampleList.appendChild(row);
             });
         }
-
-        /* ===== Add sample ===== */
         function handleAddSample(e) {
             if (e) e.preventDefault();
             const name = document.getElementById('sampleNameInput').value.trim();
             const role = document.getElementById('sampleRoleInput').value;
             const target = document.getElementById('targetInput').value.trim();
             const conditionName = document.getElementById('conditionNameInput').value.trim();
+            const groupName = document.getElementById('groupNameInput').value.trim() || 'Group 1';
             const color = document.getElementById('sampleColorInput').value;
             if (!name || !target) return;
 
-            state.samples.push({ id: Date.now() + Math.random(), name, role, target, conditionName, color });
+            pushHistory();
+
+            // ensure group exists (by name)
+            let group = state.groups.find(g => g.name === groupName);
+            if (!group) {
+                group = { id: 'g' + (Date.now() + Math.random()), name: groupName };
+                state.groups.push(group);
+                state.groupSettings[group.id] = { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3' };
+            }
+
+            state.samples.push({ id: Date.now() + Math.random(), name, role, target, conditionName, color, group: group.name });
             if (!state.selectedColor) state.selectedColor = color;
 
             document.getElementById('sampleNameInput').value = '';
@@ -1040,69 +914,38 @@
             saveState();
             renderSamples();
             renderSelector();
-            renderConfigSelectors();
             renderPlateA();
             renderCtTable();
             refreshMasterMix();
-            computeCtTablesAndChart();
+            updateCounts();
+            renderAllGroups();
         }
         document.getElementById('addForm').addEventListener('submit', handleAddSample);
         document.getElementById('addSampleBtn').addEventListener('click', handleAddSample);
-
-        /* ===== Auto-fill Target and Condition from Sample name (Name_Target_Condition) ===== */
-        function parseNameTriplet(sampleName) {
-            const parts = String(sampleName || '').split('_');
-            if (parts.length === 1) return { target: '', condition: '' };
-            if (parts.length === 2) return { target: parts[1], condition: '' };
-            return { target: parts[parts.length - 2], condition: parts[parts.length - 1] };
-        }
-        (function wireSampleNameAutofill() {
-            const nameEl = document.getElementById('sampleNameInput');
-            const targetEl = document.getElementById('targetInput');
-            const condEl = document.getElementById('conditionNameInput');
-            if (!nameEl || !targetEl || !condEl) return;
-
-            nameEl.addEventListener('input', () => {
-                const { target, condition } = parseNameTriplet(nameEl.value);
-                if (document.activeElement !== targetEl) targetEl.value = target;
-                if (document.activeElement !== condEl) condEl.value = condition;
-            });
-        })();
 
         /* ===== Color selector ===== */
         function renderSelector() {
             const selectorDiv = document.getElementById('colorSelector');
             selectorDiv.innerHTML = '';
 
+            // Clear option
             const clearOption = document.createElement('div');
             clearOption.classList.add('selector-pill');
-            if (state.selectedColor === null || state.selectedColor === DEFAULT_COLOR) {
-                clearOption.classList.add('active');
-            }
-            clearOption.onclick = () => {
-                state.selectedColor = DEFAULT_COLOR;
-                saveState();
-                renderSelector();
-            };
+            if (state.selectedColor === null || state.selectedColor === DEFAULT_COLOR) clearOption.classList.add('active');
+            clearOption.onclick = () => { state.selectedColor = DEFAULT_COLOR; saveState(); renderSelector(); };
             const clearSwatch = document.createElement('div'); clearSwatch.classList.add('selector-swatch'); clearSwatch.style.backgroundColor = DEFAULT_COLOR;
             const clearName = document.createElement('div'); clearName.classList.add('selector-name'); clearName.textContent = 'Clear';
             clearOption.appendChild(clearSwatch); clearOption.appendChild(clearName); selectorDiv.appendChild(clearOption);
 
+            // Samples
             state.samples.forEach(s => {
                 const option = document.createElement('div');
                 option.classList.add('selector-pill');
-                if (state.selectedColor === s.color) {
-                    option.classList.add('active');
-                }
-                option.onclick = () => {
-                    state.selectedColor = s.color;
-                    saveState();
-                    renderSelector();
-                };
+                if (state.selectedColor === s.color) option.classList.add('active');
+                option.onclick = () => { state.selectedColor = s.color; saveState(); renderSelector(); };
                 const swatch = document.createElement('div'); swatch.classList.add('selector-swatch'); swatch.style.backgroundColor = s.color;
                 const name = document.createElement('div'); name.classList.add('selector-name'); name.textContent = s.name;
-                option.appendChild(swatch); option.appendChild(name);
-                selectorDiv.appendChild(option);
+                option.appendChild(swatch); option.appendChild(name); selectorDiv.appendChild(option);
             });
         }
 
@@ -1117,10 +960,9 @@
                 renderCtTable();
                 updateCounts();
                 updateMasterMixTotals();
-                computeCtTablesAndChart();
+                renderAllGroups();
             }
         });
-
         document.getElementById('partialApplyBtn').addEventListener('click', () => {
             const type = document.getElementById('partialResetSelect').value;
             const input = document.getElementById('partialInput').value.trim().toUpperCase();
@@ -1137,8 +979,7 @@
                         state.wellsB[i] = { ct: null };
                     }
                 }
-            }
-            else if (type === 'col') {
+            } else if (type === 'col') {
                 const c = parseInt(input, 10) - 1;
                 if (c >= 0 && c < TOTAL_COLS) {
                     for (let r = 0; r < TOTAL_ROWS; r++) {
@@ -1154,15 +995,15 @@
             renderCtTable();
             updateCounts();
             updateMasterMixTotals();
-            computeCtTablesAndChart();
+            renderAllGroups();
         });
+        document.getElementById('undoBtn').addEventListener('click', undo);
+        document.getElementById('redoBtn').addEventListener('click', redo);
 
-        /* ===== Well color counting ===== */
+        /* ===== Well color counting (for Master Mix) ===== */
         function calculateCounts() {
             const countsByTarget = {};
-            const targets = getTargets();
-            targets.forEach(t => countsByTarget[t] = 0);
-
+            const targets = getTargets(); targets.forEach(t => countsByTarget[t] = 0);
             for (let i = 0; i < state.wellsA.length; i++) {
                 const w = state.wellsA[i];
                 const colors = Array.isArray(w.colors) ? w.colors : [w.colors];
@@ -1174,7 +1015,6 @@
             }
             return countsByTarget;
         }
-
         function updateCounts() {
             const countsRow = document.getElementById('countsRow');
             if (!countsRow) return;
@@ -1195,7 +1035,7 @@
             }).join(' ');
         }
 
-        /* ===== Master Mix planner ===== */
+        /* ===== Master Mix Planner ===== */
         function renderExtraWellsTable() {
             const countsByTarget = calculateCounts();
             const tb = document.querySelector('#mmExtraWells tbody'); tb.innerHTML = '';
@@ -1206,7 +1046,7 @@
                 tr.innerHTML = `
 			<td>${t}</td>
 			<td class="assigned" data-target="${t}">${assigned}</td>
-			<td><input type="number" step="1" min="0" value="${extra}" style="width:90px" data-target="${t}" class="extraWellsInput"/></td>
+			<td><input type="number" step="1" min="0" value="${extra}" style="width:90px" data-target="${t}" class="extraWellsInput" aria-label="Extra wells for ${t}"/></td>
 			<td class="total-used" data-target="${t}">${assigned + extra}</td>
 		`;
                 tb.appendChild(tr);
@@ -1220,11 +1060,12 @@
                 };
             });
         }
-
         function renderReagents() {
             const head1 = document.getElementById('mmHeadRow1');
             const head2 = document.getElementById('mmHeadRow2');
             const body = document.getElementById('mmBody');
+            const footPerWell = document.getElementById('mmFootPerWell');
+            const footGrand = document.getElementById('mmFootGrand');
 
             const targets = getTargets();
 
@@ -1234,30 +1075,21 @@
             body.innerHTML = '';
             state.reagents.forEach((r, i) => {
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td>${r.name}</td><td>${fmt1(r.perWell)}</td>`;
-                targets.forEach(() => tr.innerHTML += '<td class="mm-cell"></td>');
-                tr.innerHTML += `<td><button type="button" data-i="${i}" class="delR">✕</button></td>`;
+                tr.innerHTML = `<td>${r.name}</td><td>${fmt1(r.perWell)}</td>` + targets.map(() => '<td class="mm-cell"></td>').join('') + `<td><button type="button" data-i="${i}" class="delR" aria-label="Delete reagent ${r.name}">✕</button></td>`;
                 body.appendChild(tr);
             });
             body.querySelectorAll('.delR').forEach(btn => {
-                btn.onclick = () => {
-                    const i = parseInt(btn.dataset.i, 10);
-                    state.reagents.splice(i, 1); saveState(); renderReagents(); updateMasterMixTotals();
-                };
+                btn.onclick = () => { const i = parseInt(btn.dataset.i, 10); state.reagents.splice(i, 1); saveState(); renderReagents(); updateMasterMixTotals(); };
             });
 
-            // ensure footers have classed cells we can fill
-            const footPerWell = document.getElementById('mmFootPerWell');
-            const footGrand = document.getElementById('mmFootGrand');
             footPerWell.innerHTML = '<th colspan="2">Total per well (µL)</th>' + targets.map(() => '<th class="mm-pw"></th>').join('') + '<th></th>';
             footGrand.innerHTML = '<th colspan="2">Master tube total per target (µL)</th>' + targets.map(() => '<th class="mm-gt"></th>').join('') + '<th></th>';
         }
-
         function updateMasterMixTotals() {
             const countsByTarget = calculateCounts();
             const targets = getTargets();
 
-            // Update Assigned/Total used
+            // Update Assigned/Total used in extra table
             targets.forEach(t => {
                 const assignedCell = document.querySelector(`.assigned[data-target="${t}"]`);
                 const totalCell = document.querySelector(`.total-used[data-target="${t}"]`);
@@ -1271,9 +1103,10 @@
             // Effective wells per target
             const eff = {}; targets.forEach(t => eff[t] = (countsByTarget[t] || 0) + (+state.extraWellsPerTarget[t] || 0));
 
-            // Per-reagent rows → fill per-target totals, accumulate grand totals
+            // Reagent per-target totals and footers
             const bodyRows = Array.from(document.querySelectorAll('#mmBody tr'));
             const perTargetGrand = {}; targets.forEach(t => perTargetGrand[t] = 0);
+
             bodyRows.forEach((tr, rowIdx) => {
                 const r = state.reagents[rowIdx] || { perWell: 0 };
                 const per = r.perWell || 0;
@@ -1285,36 +1118,42 @@
                 });
             });
 
-            // Footer per-well sum
             const perWellSum = state.reagents.reduce((a, r) => a + (r.perWell || 0), 0);
-            Array.from(document.querySelectorAll('#mmFootPerWell .mm-pw'))
-                .forEach(cell => cell.textContent = fmt1(perWellSum));
+            Array.from(document.querySelectorAll('#mmFootPerWell .mm-pw')).forEach(cell => cell.textContent = fmt1(perWellSum));
 
-            // Footer per-target grand (µL)
             const footGTCells = Array.from(document.querySelectorAll('#mmFootGrand .mm-gt'));
-            targets.forEach((t, i) => {
-                if (footGTCells[i]) footGTCells[i].textContent = fmt1(perTargetGrand[t]);
-            });
+            targets.forEach((t, i) => { if (footGTCells[i]) footGTCells[i].textContent = fmt1(perTargetGrand[t]); });
         }
+        document.getElementById('addReagentBtn').addEventListener('click', () => {
+            const name = document.getElementById('reagentName').value.trim();
+            const perWell = parseFloat(document.getElementById('reagentVol').value);
+            if (!name || !isFinite(perWell)) return;
+            state.reagents.push({ name, perWell });
+            document.getElementById('reagentName').value = ''; document.getElementById('reagentVol').value = '';
+            saveState(); renderReagents(); updateMasterMixTotals();
+        });
+        function refreshMasterMix() { renderExtraWellsTable(); renderReagents(); updateMasterMixTotals(); }
 
         /* ===== Plate B (Ct table with paste) ===== */
         function renderCtTable() {
             const thead = document.getElementById('ctHead');
             const tbody = document.getElementById('ctBody');
             thead.innerHTML = ''; tbody.innerHTML = '';
+
             const trh = document.createElement('tr');
             trh.appendChild(document.createElement('th'));
             for (let c = 1; c <= TOTAL_COLS; c++) { const th = document.createElement('th'); th.textContent = c; trh.appendChild(th); }
             thead.appendChild(trh);
+
             for (let r = 0; r < TOTAL_ROWS; r++) {
                 const tr = document.createElement('tr');
                 const rh = document.createElement('th'); rh.textContent = rowLetter(r); tr.appendChild(rh);
                 for (let c = 0; c < TOTAL_COLS; c++) {
                     const td = document.createElement('td'); const i = idx(r, c);
-                    const inp = document.createElement('input'); inp.type = 'text';
+                    const inp = document.createElement('input'); inp.type = 'text'; inp.setAttribute('aria-label', `Ct ${rowLetter(r)}${c + 1}`);
                     if (state.wellsB[i].ct != null) inp.value = String(state.wellsB[i].ct);
                     inp.addEventListener('change', () => {
-                        const v = parseFloat(inp.value); state.wellsB[i].ct = isFinite(v) ? v : null; saveState(); computeCtTablesAndChart();
+                        const v = parseFloat(inp.value); state.wellsB[i].ct = isFinite(v) ? v : null; saveState(); renderAllGroupsDebounced();
                     });
                     inp.addEventListener('paste', (e) => {
                         e.preventDefault();
@@ -1334,7 +1173,7 @@
                             }
                             rr++;
                         }
-                        saveState(); computeCtTablesAndChart();
+                        saveState(); renderAllGroupsDebounced();
                     });
                     td.appendChild(inp); tr.appendChild(td);
                 }
@@ -1342,62 +1181,174 @@
             }
         }
 
-        /* ===== ΔCt / ΔΔCt & Chart ===== */
-        let fcChart = null;
-        function renderConfigSelectors() {
-            const ctrlSel = document.getElementById('ctrlTargetSelect');
-            const targets = getTargets();
-            ctrlSel.innerHTML = targets.map(t => `<option value="${t}">${t}</option>`).join('');
+        /* ===== Groups: data, UI, and analytics ===== */
+        function ensureDefaultGroup() {
+            if (state.groups.length === 0) {
+                state.groups.push({ id: 'g1', name: 'Group 1' });
+                state.groupSettings['g1'] = { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3' };
+            }
+            // if any sample has no group, assign to "Group 1"
+            state.samples.forEach(s => { if (!s.group) s.group = 'Group 1'; });
         }
-
-        ['controlTypeName', 'ctrlTargetSelect', 'chartConditionName'].forEach(id => {
-            document.addEventListener('change', e => {
-                if (e.target && e.target.id === id) computeCtTablesAndChart();
-            });
-            document.addEventListener('input', e => {
-                if (e.target && e.target.id === id) computeCtTablesAndChart();
-            });
+        document.getElementById('addGroupBtn').addEventListener('click', () => {
+            const name = document.getElementById('newGroupName').value.trim();
+            if (!name) return;
+            if (state.groups.find(g => g.name === name)) return alert('Group already exists.');
+            const gid = 'g' + (Date.now() + Math.random());
+            state.groups.push({ id: gid, name });
+            state.groupSettings[gid] = { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3' };
+            document.getElementById('newGroupName').value = '';
+            saveState(); renderAllGroups();
         });
 
-        function computeCtTablesAndChart() {
-            // Map wells to samples by color
-            const buckets = new Map();
+        // Build panels
+        function renderAllGroups() {
+            ensureDefaultGroup();
+            const container = document.getElementById('groupsPanels');
+            container.innerHTML = '';
+
+            // One panel per group, stacked
+            state.groups.forEach(group => {
+                const panel = document.createElement('div');
+                panel.classList.add('controls');
+                panel.dataset.groupId = group.id;
+
+                // Header + controls unique per group
+                const set = state.groupSettings[group.id] || { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3' };
+                const targetsInGroup = getTargetsInGroup(group.name);
+
+                panel.innerHTML = `
+			<h3>Ct summary and ΔCt/ΔΔCt — Group: ${group.name}</h3>
+			<div class="row" data-group-id="${group.id}">
+				<label>Control type within target for ΔCt
+					<input type="text" class="ctrl-type" value="${set.controlType || ''}" style="width:120px" aria-label="Control type for ΔCt"/>
+				</label>
+				<label>Control Target for ΔΔCt
+					<select class="ctrl-target" aria-label="Control Target for ΔΔCt">
+						${targetsInGroup.map(t => `<option value="${t}" ${set.ctrlTarget === t ? 'selected' : ''}>${t}</option>`).join('')}
+					</select>
+				</label>
+				<label>Condition for chart
+					<input type="text" class="chart-cond" value="${set.chartCond || ''}" style="width:120px" aria-label="Condition for chart"/>
+				</label>
+				<span class="note">ΔΔCt(Target, condition) = ΔCt(Target, condition) − ΔCt(ControlTarget, condition).</span>
+			</div>
+			<table class="ct-detail" aria-label="Ct detail table for ${group.name}">
+				<thead>
+					<tr>
+						<th>Target</th>
+						<th>Sample</th>
+						<th>Role</th>
+						<th>Condition</th>
+						<th>Raw Ct values</th>
+						<th>Mean Ct</th>
+						<th>ΔCt</th>
+						<th>ΔΔCt</th>
+						<th>FC (2^-ΔΔCt)</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+			<div class="controls" style="margin-top:8px">
+				<div class="chart-title">Fold Change chart — ${group.name}</div>
+				<canvas class="group-chart" width="720" height="160" aria-label="Fold Change chart for ${group.name}"></canvas>
+			</div>
+		`;
+
+                container.appendChild(panel);
+            });
+
+            // Bind inputs and compute per-group
+            bindGroupInputsAndCompute();
+        }
+        function getTargetsInGroup(groupName) {
+            // targets from samples in that group
+            return Array.from(new Set(
+                state.samples.filter(s => s.group === groupName).map(s => s.target).filter(Boolean)
+            )).sort();
+        }
+        function bindGroupInputsAndCompute() {
+            // Update settings on change and recompute
+            document.querySelectorAll('#groupsPanels .row[data-group-id]').forEach(row => {
+                const gid = row.dataset.groupId;
+                const ctrlTypeEl = row.querySelector('.ctrl-type');
+                const ctrlTargetEl = row.querySelector('.ctrl-target');
+                const chartCondEl = row.querySelector('.chart-cond');
+
+                const update = () => {
+                    state.groupSettings[gid] = state.groupSettings[gid] || { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3' };
+                    state.groupSettings[gid].controlType = ctrlTypeEl.value;
+                    state.groupSettings[gid].ctrlTarget = ctrlTargetEl.value;
+                    state.groupSettings[gid].chartCond = chartCondEl.value;
+                    saveState();
+                    computeGroup(gid);
+                };
+
+                ctrlTypeEl.addEventListener('input', update);
+                ctrlTypeEl.addEventListener('change', update);
+                ctrlTargetEl.addEventListener('change', update);
+                chartCondEl.addEventListener('input', update);
+                chartCondEl.addEventListener('change', update);
+            });
+
+            // Initial compute for all
+            state.groups.forEach(g => computeGroup(g.id));
+        }
+
+        function computeGroup(groupId) {
+            const group = state.groups.find(g => g.id === groupId);
+            if (!group) return;
+            const groupName = group.name;
+            const settings = state.groupSettings[groupId] || { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3' };
+            const controlType = String(settings.controlType || '').trim().toLowerCase();
+            const ctrlTarget = settings.ctrlTarget || '';
+            const chartCondNorm = normalizeCond(settings.chartCond || '');
+
+            // Map color -> sample for this group only
+            const colorToSample = new Map(
+                state.samples
+                    .filter(s => s.group === groupName)
+                    .map(s => [s.color.toLowerCase(), s])
+            );
+
+            // Buckets of CTs per sample in this group based on Plate A color mapping
+            const buckets = new Map(); // sampleId -> { vals:[], sample }
             for (let i = 0; i < state.wellsA.length; i++) {
-                const color = state.wellsA[i].colors;
-                const s = state.samples.find(x => x.color.toLowerCase() === String(color).toLowerCase());
-                const ct = state.wellsB[i]?.ct;
-                if (!s || ct == null || !isFinite(ct)) continue;
-                if (!buckets.has(s.id)) buckets.set(s.id, { vals: [], sample: s });
-                buckets.get(s.id).vals.push(ct);
+                const w = state.wellsA[i];
+                const wellColors = Array.isArray(w.colors) ? w.colors : [w.colors];
+                const ctVal = state.wellsB[i]?.ct;
+                if (ctVal == null || !isFinite(ctVal)) continue;
+
+                for (const col of wellColors) {
+                    if (!col || col === DEFAULT_COLOR) continue;
+                    const s = colorToSample.get(String(col).toLowerCase());
+                    if (!s) continue;
+                    if (!buckets.has(s.id)) buckets.set(s.id, { vals: [], sample: s });
+                    buckets.get(s.id).vals.push(ctVal);
+                }
             }
 
-            const rows = state.samples.map(s => {
+            // Prepare rows for this group: all samples in group, with means
+            const groupSamples = state.samples.filter(s => s.group === groupName);
+            const rows = groupSamples.map(s => {
                 const b = buckets.get(s.id); const n = b ? b.vals.length : 0;
                 const mean = n ? b.vals.reduce((a, b) => a + b, 0) / n : null;
                 return { id: s.id, sample: s, n, meanCt: mean, dCt: null, ddCt: null, fc: null };
             });
 
-            const controlType = (document.getElementById('controlTypeName').value || '').trim().toLowerCase();
-            const ctrlTarget = document.getElementById('ctrlTargetSelect').value || '';
-            const chartCondNorm = normalizeCond((document.getElementById('chartConditionName').value || ''));
-
-            const targets = getTargets();
-            const byTarget = {};
-            const perTargetCondDCt = {};
-
-            // Per-target ΔCt (vs within-target reference of controlType)
+            // Compute ΔCt within each target (in this group)
+            const targets = Array.from(new Set(groupSamples.map(s => s.target).filter(Boolean))).sort();
+            const byTarget = {}; const perTargetCondDCt = {};
             targets.forEach(t => {
                 const tRows = rows.filter(r => r.sample.target === t);
                 let refRow = null;
                 if (controlType) {
-                    refRow = tRows.find(r => (r.sample.conditionName || '').toLowerCase().includes(controlType)) || null;
+                    refRow = tRows.find(r => (String(r.sample.conditionName || '').toLowerCase()).includes(controlType)) || null;
                 }
                 if (!refRow) refRow = tRows[0] || null;
                 const refMean = refRow?.meanCt ?? null;
 
-                tRows.forEach(r => {
-                    if (r.meanCt != null && refMean != null) r.dCt = r.meanCt - refMean;
-                });
+                tRows.forEach(r => { if (r.meanCt != null && refMean != null) r.dCt = r.meanCt - refMean; });
 
                 const map = {};
                 tRows.forEach(r => {
@@ -1408,10 +1359,10 @@
                 perTargetCondDCt[t] = map;
             });
 
-            // ΔΔCt across targets
+            // ΔΔCt across targets using selected control target in this group
             const ctrlMap = perTargetCondDCt[ctrlTarget] || {};
             targets.forEach(t => {
-                byTarget[t].forEach(r => {
+                (byTarget[t] || []).forEach(r => {
                     const cnameNorm = normalizeCond(r.sample.conditionName || '');
                     const base = ctrlMap[cnameNorm];
                     if (r.dCt != null && base != null) {
@@ -1421,52 +1372,40 @@
                 });
             });
 
-            // Ct detail table
-            const tb = document.querySelector('#ctDetailTable tbody'); tb.innerHTML = '';
+            // Render table
+            const panel = document.querySelector(`#groupsPanels .controls[data-group-id="${groupId}"]`);
+            if (!panel) return;
+            const tb = panel.querySelector('table.ct-detail tbody');
+            tb.innerHTML = '';
             targets.forEach(t => {
-                byTarget[t].forEach(r => {
-                    const b = buckets.get(r.sample.id);
-                    const rawVals = (b?.vals || []).map(v => fmt2(v)).join(', ');
+                (byTarget[t] || []).forEach(r => {
+                    const rawVals = (buckets.get(r.sample.id)?.vals || []).map(v => fmt2(v)).join(', ');
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-        <td>${t}</td>
-        <td>${r.sample.name}</td>
-        <td>${r.sample.role}</td>
-        <td>${r.sample.conditionName || ''}</td>
-        <td>${rawVals}</td>
-        <td>${r.meanCt != null ? fmt3(r.meanCt) : ''}</td>
-        <td>${r.dCt != null ? fmt3(r.dCt) : ''}</td>
-        <td>${r.ddCt != null ? fmt3(r.ddCt) : ''}</td>
-        <td>${r.fc != null ? fmt3(r.fc) : ''}</td>
-      `;
+			 <td>${t}</td>
+			 <td>${r.sample.name}</td>
+			 <td>${r.sample.role}</td>
+			 <td>${r.sample.conditionName || ''}</td>
+			 <td>${rawVals}</td>
+			 <td>${r.meanCt != null ? fmt3(r.meanCt) : ''}</td>
+			 <td>${r.dCt != null ? fmt3(r.dCt) : ''}</td>
+			 <td>${r.ddCt != null ? fmt3(r.ddCt) : ''}</td>
+			 <td>${r.fc != null ? fmt3(r.fc) : ''}</td>
+		 `;
                     tb.appendChild(tr);
                 });
             });
 
-            // Chart data: use ΔΔCt if available; else ΔCt
-            const labels = []; const data = []; let usingDDCt = false, usingDCt = false;
+            // Render chart per group: one bar per target for chosen condition
+            const labels = []; const data = [];
             targets.forEach(t => {
-                const r = byTarget[t].find(x => normalizeCond(x.sample.conditionName || '') === chartCondNorm);
-                if (!r) return;
-                if (r.ddCt != null) {
-                    labels.push(t);
-                    data.push(Math.pow(2, -r.ddCt));
-                    usingDDCt = true;
-                } else if (r.dCt != null) {
-                    labels.push(t);
-                    data.push(Math.pow(2, -r.dCt));
-                    usingDCt = true;
-                }
+                const r = (byTarget[t] || []).find(x => normalizeCond(x.sample.conditionName || '') === chartCondNorm);
+                if (r && r.fc != null) { labels.push(t); data.push(r.fc); }
             });
-
-            let datasetLabel = 'Fold Change (2^-ΔΔCt)';
-            if (usingDCt && !usingDDCt) datasetLabel = 'Fold Change (2^-ΔCt)';
-
-            drawFCChart(labels, data, datasetLabel);
+            drawGroupChart(panel.querySelector('canvas.group-chart'), labels, data);
         }
 
-        function drawFCChart(labels, data, datasetLabel = 'Fold Change (2^-ΔΔCt)') {
-            const canvas = document.getElementById('fcChart');
+        function drawGroupChart(canvas, labels, data) {
             const ctx = canvas.getContext('2d');
             try {
                 const existing = Chart.getChart ? Chart.getChart(canvas) : (canvas.chart || null);
@@ -1475,7 +1414,7 @@
 
             const chart = new Chart(ctx, {
                 type: 'bar',
-                data: { labels, datasets: [{ label: datasetLabel, data, backgroundColor: 'rgba(52, 152, 219, 0.7)', borderColor: '#2c82c9', borderWidth: 1 }] },
+                data: { labels, datasets: [{ label: 'Fold Change (2^-ΔΔCt)', data, backgroundColor: 'rgba(52, 152, 219, 0.7)', borderColor: '#2c82c9', borderWidth: 1 }] },
                 options: {
                     responsive: false, maintainAspectRatio: false,
                     layout: { padding: { top: 0, right: 8, bottom: 0, left: 8 } },
@@ -1486,10 +1425,17 @@
                     }
                 }
             });
-            window.fcChart = chart;
+            canvas._chart = chart;
         }
 
-        /* ===== html2canvas lazy-load and export helpers ===== */
+        /* Debounced recompute for bulk paste */
+        let rafToken = null;
+        function renderAllGroupsDebounced() {
+            if (rafToken) cancelAnimationFrame(rafToken);
+            rafToken = requestAnimationFrame(() => { rafToken = null; renderAllGroups(); });
+        }
+
+        /* ===== Export helpers (html2canvas lazy load) ===== */
         async function ensureHtml2Canvas() {
             if (window.html2canvas) return;
             await new Promise((res, rej) => {
@@ -1504,7 +1450,7 @@
             return html2canvas(el, { scale: 2, useCORS: true, backgroundColor: '#ffffff', windowWidth: el.scrollWidth });
         }
 
-        /* Plate A exports (legend + plate) */
+        /* Exports */
         document.getElementById('exportPlateAJpegBtn').onclick = async () => {
             try {
                 const el = document.getElementById('plateAExportWrap');
@@ -1530,13 +1476,12 @@
             } catch (err) { console.error(err); showErrorToast('Export failed. Check console.'); }
         };
 
-        /* Ct summary + chart exports */
         document.getElementById('exportCtJpegBtn').onclick = async () => {
             try {
                 const el = document.getElementById('ctExportWrap');
                 const canvas = await exportElementAsCanvas(el);
                 const a = document.createElement('a');
-                a.href = canvas.toDataURL('image/jpeg', 0.95); a.download = 'ct_summary_and_chart.jpg'; a.click();
+                a.href = canvas.toDataURL('image/jpeg', 0.95); a.download = 'ct_summary_all_groups.jpg'; a.click();
             } catch (err) { console.error(err); showErrorToast('Export failed. Check console.'); }
         };
         document.getElementById('exportCtPdfBtn').onclick = async () => {
@@ -1552,18 +1497,14 @@
                 let w = img.width, h = img.height, scale = Math.min(maxW / w, maxH / h);
                 w *= scale; h *= scale;
                 pdf.addImage(dataUrl, 'JPEG', margin + (maxW - w) / 2, margin, w, h);
-                pdf.save('ct_summary_and_chart.pdf');
+                pdf.save('ct_summary_all_groups.pdf');
             } catch (err) { console.error(err); showErrorToast('Export failed. Check console.'); }
         };
 
-        /* ===== Export/Import JSON (full page state) ===== */
+        /* ===== Export/Import JSON ===== */
         document.getElementById('exportJsonBtn').onclick = () => {
             try {
-                const payload = {
-                    version: 'v5',
-                    exported_at: new Date().toISOString(),
-                    state: deepClone(state)
-                };
+                const payload = { version: 'groups_v1', exported_at: new Date().toISOString(), state: deepClone(state) };
                 const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
                 const a = document.createElement('a');
                 a.href = URL.createObjectURL(blob);
@@ -1585,10 +1526,17 @@
                 const text = await file.text();
                 const payload = JSON.parse(text);
                 const nextState = payload && payload.state ? payload.state : payload;
+                // Basic validation
                 if (!nextState || !Array.isArray(nextState.wellsA) || !Array.isArray(nextState.wellsB)) {
                     throw new Error('Invalid JSON structure.');
                 }
                 Object.assign(state, nextState);
+                // ensure groupSettings for all groups
+                state.groups = state.groups || [{ id: 'g1', name: 'Group 1' }];
+                state.groupSettings = state.groupSettings || {};
+                state.groups.forEach(g => {
+                    if (!state.groupSettings[g.id]) state.groupSettings[g.id] = { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3' };
+                });
                 state.history = [];
                 state.redo = [];
                 saveState();
@@ -1601,39 +1549,71 @@
             e.target.value = '';
         });
 
-        /* ===== Master Mix orchestration ===== */
-        document.getElementById('addReagentBtn').addEventListener('click', () => {
-            const name = document.getElementById('reagentName').value.trim();
-            const perWell = parseFloat(document.getElementById('reagentVol').value);
-            if (!name || !isFinite(perWell)) return;
+        /* ===== HARD RESET: wipe all data with confirmation ===== */
+        document.getElementById('hardResetBtn').addEventListener('click', () => {
+            const msg = [
+                'This will reset the entire page.',
+                'All samples, wells, Ct values, reagents, groups, and settings will be deleted.',
+                'This cannot be undone.',
+                'Continue?'
+            ].join('\n');
+            if (!confirm(msg)) return;
 
-            state.reagents.push({ name, perWell });
-            document.getElementById('reagentName').value = '';
-            document.getElementById('reagentVol').value = '';
+            try {
+                // 1) Clear persistent storage
+                localStorage.removeItem(STORAGE_KEY);
 
-            saveState();
-            renderReagents();
-            updateMasterMixTotals();
+                // 2) Clear in-memory state
+                state.meta = { name: "", date: "", notes: "" };
+                state.wellsA = [];
+                state.wellsB = [];
+                state.selectedColor = null;
+                state.samples = [];
+                state.reagents = [];
+                state.extraWellsPerTarget = {};
+                state.groups = [];
+                state.groupSettings = {};
+                state.history = [];
+                state.redo = [];
+
+                // 3) Re-initialize a clean baseline
+                initEmptyPlate();
+                initEmptyCtTable();
+
+                // Provide a default Group 1 so the UI is usable immediately
+                state.groups = [{ id: 'g1', name: 'Group 1' }];
+                state.groupSettings['g1'] = { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3' };
+
+                saveState();
+
+                // 4) Re-render the entire app
+                renderAll();
+
+                // Optional: focus first input
+                const nameEl = document.getElementById('sampleNameInput');
+                if (nameEl) nameEl.focus();
+
+                alert('Page has been reset.');
+            } catch (err) {
+                console.error(err);
+                showErrorToast('Hard reset failed. See console for details.');
+            }
         });
-        function refreshMasterMix() {
-            renderExtraWellsTable();
-            renderReagents();
-            updateMasterMixTotals();
-        }
 
         /* ===== Init ===== */
         function renderAll() {
+            // meta
             document.getElementById('metaName').value = state.meta.name || '';
             document.getElementById('metaDate').value = state.meta.date || '';
             document.getElementById('metaNotes').value = state.meta.notes || '';
+
             renderSamples();
             renderSelector();
-            renderConfigSelectors();
             renderPlateA();
             renderCtTable();
             refreshMasterMix();
             updateCounts();
-            computeCtTablesAndChart();
+            renderAllGroups();
             updateUndoRedoButtons();
         }
         (function init() {
@@ -1646,36 +1626,6 @@
             }
         })();
     </script>
-	
-	<footer style="
-  margin-top: 40px;
-  font-size: 12px;
-  color: #555;
-  text-align: center;
-  border-top: 1px solid #ccc;
-  padding: 12px 16px;
-  line-height: 1.5;
-  background-color: #f9f9f9;
-">
-  <strong>© 2025 Mahmood Mohammed Ali</strong><br>
-  Licensed under 
-  <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" style="color:#7B1E3A; text-decoration: none;">
-    CC BY-NC 4.0
-  </a> — Non-commercial use only.<br>
-  <em>Cite as:</em> Mahmood Mohammed Ali. <strong>qPCR Plate Planner</strong> (2025). GitHub.
-</footer>
-
 </body>
 
 </html>
-
-
-
-
-
-
-
-
-
-
-
