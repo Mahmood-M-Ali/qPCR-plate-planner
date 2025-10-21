@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use qPCR Plate Planner, please cite it using the metadata below."
+title: "qPCR Plate Planner"
+version: "1.0.0"
+date-released: 2025-10-22
+authors:
+  - family-names: "MOAHMMED ALI"
+    given-names: "Mahmood"
+    affiliation: "University of Grenoble Alpes – Institute of Advanced Bioscience (IAB)"
+    orcid: "https://orcid.org/0009-0002-6885-0936"
+license: "CC-BY-NC-4.0"
+repository-code: "https://github.com/Mahmood-M-Ali/qPCR-plate-planner"
+doi: "10.5281/zenodo.17410644"
