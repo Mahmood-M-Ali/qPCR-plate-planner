@@ -64,6 +64,7 @@
         .controls {
             display: flex;
             flex-direction: column;
+            -gap: var(--gap);
             gap: var(--gap);
             margin-bottom: 16px;
             padding: 12px;
@@ -385,6 +386,11 @@
             display: none;
             max-width: 60ch
         }
+
+        /* Hide elements during export capture */
+        .capturing .no-export {
+            display: none !important;
+        }
     </style>
 
     <!-- Core libs on load: Chart.js and jsPDF (stable from your working version) -->
@@ -523,15 +529,12 @@
         <div class="controls" id="ctExportWrap">
             <h3>Ct summary and ΔCt/ΔΔCt — All Groups</h3>
             <div id="groupsHeader" class="row" style="gap:8px; margin-bottom:6px">
-                <input id="newGroupName" type="text" placeholder="New group name" style="width:160px"
-                    aria-label="New group name" />
-                <button id="addGroupBtn" type="button">Add Group</button>
                 <span class="note">Each panel below is computed only from samples in that group.</span>
             </div>
             <div id="groupsPanels"></div>
 
-            <!-- Export & JSON buttons + Hard Reset -->
-            <div class="row" style="gap:12px; margin-top:8px; flex-wrap:wrap">
+            <!-- Export & JSON buttons + Hard Reset (mark as no-export so they won't appear in captures) -->
+            <div class="row no-export" style="gap:12px; margin-top:8px; flex-wrap:wrap">
                 <button id="exportPlateAJpegBtn" class="btn-primary" type="button">Export Plate A + legend as
                     JPEG</button>
                 <button id="exportPlateAPdfBtn" class="btn-primary" type="button">Export Plate A + legend as
@@ -1190,16 +1193,6 @@
             // if any sample has no group, assign to "Group 1"
             state.samples.forEach(s => { if (!s.group) s.group = 'Group 1'; });
         }
-        document.getElementById('addGroupBtn').addEventListener('click', () => {
-            const name = document.getElementById('newGroupName').value.trim();
-            if (!name) return;
-            if (state.groups.find(g => g.name === name)) return alert('Group already exists.');
-            const gid = 'g' + (Date.now() + Math.random());
-            state.groups.push({ id: gid, name });
-            state.groupSettings[gid] = { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3' };
-            document.getElementById('newGroupName').value = '';
-            saveState(); renderAllGroups();
-        });
 
         // Build panels
         function renderAllGroups() {
@@ -1382,16 +1375,16 @@
                     const rawVals = (buckets.get(r.sample.id)?.vals || []).map(v => fmt2(v)).join(', ');
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-			 <td>${t}</td>
-			 <td>${r.sample.name}</td>
-			 <td>${r.sample.role}</td>
-			 <td>${r.sample.conditionName || ''}</td>
-			 <td>${rawVals}</td>
-			 <td>${r.meanCt != null ? fmt3(r.meanCt) : ''}</td>
-			 <td>${r.dCt != null ? fmt3(r.dCt) : ''}</td>
-			 <td>${r.ddCt != null ? fmt3(r.ddCt) : ''}</td>
-			 <td>${r.fc != null ? fmt3(r.fc) : ''}</td>
-		 `;
+				<td>${t}</td>
+				<td>${r.sample.name}</td>
+				<td>${r.sample.role}</td>
+				<td>${r.sample.conditionName || ''}</td>
+				<td>${rawVals}</td>
+				<td>${r.meanCt != null ? fmt3(r.meanCt) : ''}</td>
+				<td>${r.dCt != null ? fmt3(r.dCt) : ''}</td>
+				<td>${r.ddCt != null ? fmt3(r.ddCt) : ''}</td>
+				<td>${r.fc != null ? fmt3(r.fc) : ''}</td>
+			`;
                     tb.appendChild(tr);
                 });
             });
@@ -1450,54 +1443,69 @@
             return html2canvas(el, { scale: 2, useCORS: true, backgroundColor: '#ffffff', windowWidth: el.scrollWidth });
         }
 
+        /* Toggle capture mode to hide .no-export elements */
+        async function withHiddenForExport(cb) {
+            document.body.classList.add('capturing');
+            try { return await cb(); }
+            finally { document.body.classList.remove('capturing'); }
+        }
+
         /* Exports */
         document.getElementById('exportPlateAJpegBtn').onclick = async () => {
             try {
-                const el = document.getElementById('plateAExportWrap');
-                const canvas = await exportElementAsCanvas(el);
-                const a = document.createElement('a');
-                a.href = canvas.toDataURL('image/jpeg', 0.95); a.download = 'plateA_and_legend.jpg'; a.click();
+                await withHiddenForExport(async () => {
+                    const el = document.getElementById('plateAExportWrap');
+                    const canvas = await exportElementAsCanvas(el);
+                    const a = document.createElement('a');
+                    a.href = canvas.toDataURL('image/jpeg', 0.95); a.download = 'plateA_and_legend.jpg'; a.click();
+                });
             } catch (err) { console.error(err); showErrorToast('Export failed. Check console.'); }
         };
         document.getElementById('exportPlateAPdfBtn').onclick = async () => {
             try {
-                const el = document.getElementById('plateAExportWrap');
-                const canvas = await exportElementAsCanvas(el);
-                const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF({ orientation: 'l', unit: 'pt', format: 'a4' });
-                const margin = 20, pageW = pdf.internal.pageSize.getWidth(), pageH = pdf.internal.pageSize.getHeight();
-                const img = new Image(); img.src = dataUrl; await new Promise(r => img.onload = r);
-                const maxW = pageW - margin * 2, maxH = pageH - margin * 2;
-                let w = img.width, h = img.height, scale = Math.min(maxW / w, maxH / h);
-                w *= scale; h *= scale;
-                pdf.addImage(dataUrl, 'JPEG', margin + (maxW - w) / 2, margin + (maxH - h) / 2, w, h);
-                pdf.save('plateA_and_legend.pdf');
+                await withHiddenForExport(async () => {
+                    const el = document.getElementById('plateAExportWrap');
+                    const canvas = await exportElementAsCanvas(el);
+                    const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF({ orientation: 'l', unit: 'pt', format: 'a4' });
+                    const margin = 20, pageW = pdf.internal.pageSize.getWidth(), pageH = pdf.internal.pageSize.getHeight();
+                    const img = new Image(); img.src = dataUrl; await new Promise(r => img.onload = r);
+                    const maxW = pageW - margin * 2, maxH = pageH - margin * 2;
+                    let w = img.width, h = img.height, scale = Math.min(maxW / w, maxH / h);
+                    w *= scale; h *= scale;
+                    pdf.addImage(dataUrl, 'JPEG', margin + (maxW - w) / 2, margin + (maxH - h) / 2, w, h);
+                    pdf.save('plateA_and_legend.pdf');
+                });
             } catch (err) { console.error(err); showErrorToast('Export failed. Check console.'); }
         };
 
         document.getElementById('exportCtJpegBtn').onclick = async () => {
             try {
-                const el = document.getElementById('ctExportWrap');
-                const canvas = await exportElementAsCanvas(el);
-                const a = document.createElement('a');
-                a.href = canvas.toDataURL('image/jpeg', 0.95); a.download = 'ct_summary_all_groups.jpg'; a.click();
+                await withHiddenForExport(async () => {
+                    const el = document.getElementById('ctExportWrap');
+                    const canvas = await exportElementAsCanvas(el);
+                    const a = document.createElement('a');
+                    a.href = canvas.toDataURL('image/jpeg', 0.95); a.download = 'ct_summary_all_groups.jpg'; a.click();
+                });
             } catch (err) { console.error(err); showErrorToast('Export failed. Check console.'); }
         };
         document.getElementById('exportCtPdfBtn').onclick = async () => {
             try {
-                const el = document.getElementById('ctExportWrap');
-                const canvas = await exportElementAsCanvas(el);
-                const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF({ orientation: 'p', unit: 'pt', format: 'a4' });
-                const margin = 20, pageW = pdf.internal.pageSize.getWidth(), pageH = pdf.internal.pageSize.getHeight();
-                const img = new Image(); img.src = dataUrl; await new Promise(r => img.onload = r);
-                const maxW = pageW - margin * 2, maxH = pageH - margin * 2;
-                let w = img.width, h = img.height, scale = Math.min(maxW / w, maxH / h);
-                w *= scale; h *= scale;
-                pdf.addImage(dataUrl, 'JPEG', margin + (maxW - w) / 2, margin, w, h);
-                pdf.save('ct_summary_all_groups.pdf');
+                await withHiddenForExport(async () => {
+                    const el = document.getElementById('ctExportWrap');
+                    const canvas = await exportElementAsCanvas(el);
+                    const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF({ orientation: 'p', unit: 'pt', format: 'a4' });
+                    const margin = 20, pageW = pdf.internal.pageSize.getWidth(), pageH = pdf.internal.pageSize.getHeight();
+                    const img = new Image(); img.src = dataUrl; await new Promise(r => img.onload = r);
+                    const maxW = pageW - margin * 2, maxH = pageH - margin * 2;
+                    let w = img.width, h = img.height, scale = Math.min(maxW / w, maxH / h);
+                    w *= scale; h *= scale;
+                    pdf.addImage(dataUrl, 'JPEG', margin + (maxW - w) / 2, margin, w, h);
+                    pdf.save('ct_summary_all_groups.pdf');
+                });
             } catch (err) { console.error(err); showErrorToast('Export failed. Check console.'); }
         };
 
@@ -1508,7 +1516,7 @@
                 const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
                 const a = document.createElement('a');
                 a.href = URL.createObjectURL(blob);
-                a.download = (state.meta.name ? state.meta.name.replace(/\s+/g, '_') + '_' : '') + 'qpcr_page_state.json';
+                a.download = (state.meta.name ? state.meta.name.replace(/\s+/g, '') + '' : '') + 'qpcr_page_state.json';
                 a.click();
                 setTimeout(() => URL.revokeObjectURL(a.href), 5000);
             } catch (err) {
