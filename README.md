@@ -8,8 +8,17 @@ This tool applies the 2^−ΔΔCt method for relative quantification, as describ
 
 Beyond CUT&RUN: While originally designed for CUT&RUN ΔΔCt workflows, qPCR Plate Designer is adaptable to a wide range of qPCR-based experiments—including gene expression analysis, ChIP-qPCR, CUT&Tag, and drug response profiling—where comparative quantification are performed.
 
-
 License: CC BY-NC 4.0 — Free to use and adapt for non-commercial purposes with attribution.
+
+**Quick Start**
+To explore the tool immediately and learn how it works:
+
+1-Open the live interface: https://mahmood-m-ali.github.io/qPCR-plate-planner/
+
+2-Click "Import JSON" and select example-import.json from the repository
+
+3-Review sample metadata, plate layout, and ΔΔCt analysis logic in action
+
 
 **What is this tool for?**
 
