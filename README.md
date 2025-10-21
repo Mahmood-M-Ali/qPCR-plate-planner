@@ -6,6 +6,8 @@ qPCR Plate Designer is a comprehensive web-based tool for planning, executing, a
 An example file (example-import.json) is included to illustrate expected input structure. Users can import it via the Import JSON button to explore sample metadata, plate layout, and ΔΔCt analysis logic.
 This tool applies the 2^−ΔΔCt method for relative quantification, as described by (Livak & Schmittgen, 2001. DOI:10.1006/meth.2001.1262), adapted for CUT&RUN workflows where qPCR is used to assess enrichment at target loci.
 
+Beyond CUT&RUN While originally designed for CUT&RUN ΔΔCt workflows, qPCR Plate Designer is adaptable to a wide range of qPCR-based experiments—including gene expression analysis, ChIP-qPCR, CUT&Tag, and drug response profiling—where comparative quantification are performed.
+
 
 License: CC BY-NC 4.0 — Free to use and adapt for non-commercial purposes with attribution.
 
