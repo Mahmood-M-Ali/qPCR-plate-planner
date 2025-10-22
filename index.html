@@ -2,1227 +2,1255 @@
 <html lang="en">
 
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>qPCR Plate Planner</title>
-<style>
-	:root {
-		--gap: 8px;
-		--header-col: 30px;
-		--well-gap: 2px;
-		--wine: #7B1E3A;
-		--white: #FFFFFF;
-	}
-	* { box-sizing: border-box }
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>qPCR Plate Planner</title>
+	<style>
+		:root {
+			--gap: 8px;
+			--header-col: 30px;
+			--well-gap: 2px;
+			--wine: #7B1E3A;
+			--white: #FFFFFF;
+		}
 
-	body {
-		font-family: Arial, sans-serif;
-		margin: 0;
-		padding: 0;
-		color: #222;
-		background: #fafafa
-	}
+		* {
+			box-sizing: border-box
+		}
 
-	#app {
-		margin: 16px auto;
-		padding: 0 10px;
-		max-width: 1200px;
-		background: #fff
-	}
+		body {
+			font-family: Arial, sans-serif;
+			margin: 0;
+			padding: 0;
+			color: #222;
+			background: #fafafa
+		}
 
-	.app-title {
-		text-align: center;
-		font-size: 26px;
-		font-weight: 800;
-		letter-spacing: 0.3px;
-		margin: 16px 0 14px;
-	}
+		#app {
+			margin: 16px auto;
+			padding: 0 10px;
+			max-width: 1200px;
+			background: #fff
+		}
 
-	.app-title span {
-		color: #7B1E3A
-	}
+		.app-title {
+			text-align: center;
+			font-size: 26px;
+			font-weight: 800;
+			letter-spacing: 0.3px;
+			margin: 16px 0 14px;
+		}
 
-	h3 {
-		font-size: 16px;
-		margin: 16px 0 8px
-	}
+		.app-title span {
+			color: #7B1E3A
+		}
 
-	label {
-		font-size: 14px
-	}
+		h3 {
+			font-size: 16px;
+			margin: 16px 0 8px
+		}
 
-	input,
-	select,
-	textarea,
-	button {
-		font-size: 14px
-	}
+		label {
+			font-size: 14px
+		}
 
-	.controls {
-		display: flex;
-		flex-direction: column;
-		-gap: var(--gap);
-		gap: var(--gap);
-		margin-bottom: 16px;
-		padding: 12px;
-		background: #f5f5f5;
-		border-radius: 8px;
-	}
+		input,
+		select,
+		textarea,
+		button {
+			font-size: 14px
+		}
 
-	.meta {
-		display: grid;
-		gap: var(--gap);
-		grid-template-columns: 1fr
-	}
+		.controls {
+			display: flex;
+			flex-direction: column;
+			-gap: var(--gap);
+			gap: var(--gap);
+			margin-bottom: 16px;
+			padding: 12px;
+			background: #f5f5f5;
+			border-radius: 8px;
+		}
 
-	@media(min-width:820px) {
 		.meta {
-			grid-template-columns: 1fr 1fr
+			display: grid;
+			gap: var(--gap);
+			grid-template-columns: 1fr
 		}
 
-		.meta textarea {
-			grid-column: 1/-1
+		@media(min-width:820px) {
+			.meta {
+				grid-template-columns: 1fr 1fr
+			}
+
+			.meta textarea {
+				grid-column: 1/-1
+			}
 		}
-	}
 
-	.row {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--gap);
-		align-items: center
-	}
+		.row {
+			display: flex;
+			flex-wrap: wrap;
+			gap: var(--gap);
+			align-items: center
+		}
 
-	#addForm input[type="text"] {
-		padding: 6px 8px;
-		border: 1px solid #ccc;
-		border-radius: 6px;
-		min-width: 140px
-	}
+		#addForm input[type="text"] {
+			padding: 6px 8px;
+			border: 1px solid #ccc;
+			border-radius: 6px;
+			min-width: 140px
+		}
 
-	#addForm input[type="color"] {
-		height: 30px;
-		width: 42px;
-		padding: 0;
-		border: 1px solid #ccc;
-		border-radius: 6px;
-		background: #fff
-	}
+		#addForm input[type="color"] {
+			height: 30px;
+			width: 42px;
+			padding: 0;
+			border: 1px solid #ccc;
+			border-radius: 6px;
+			background: #fff
+		}
 
-	.small-danger {
-		background: var(--wine);
-		color: #fff;
-		font-weight: 700;
-		padding: 8px 12px;
-		border: none;
-		border-radius: 8px;
-		cursor: pointer
-	}
+		.small-danger {
+			background: var(--wine);
+			color: #fff;
+			font-weight: 700;
+			padding: 8px 12px;
+			border: none;
+			border-radius: 8px;
+			cursor: pointer
+		}
 
-	.small-danger:hover {
-		filter: brightness(0.96)
-	}
+		.small-danger:hover {
+			filter: brightness(0.96)
+		}
 
-	.small-danger:active {
-		filter: brightness(0.92)
-	}
+		.small-danger:active {
+			filter: brightness(0.92)
+		}
 
-	.sample-list {
-		display: flex;
-		flex-direction: column;
-		gap: 6px
-	}
+		.sample-list {
+			display: flex;
+			flex-direction: column;
+			gap: 6px
+		}
 
-	.sample-row {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		background: #fff;
-		border: 1px solid #ddd;
-		border-radius: 6px;
-		padding: 6px 8px
-	}
+		.sample-row {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			background: #fff;
+			border: 1px solid #ddd;
+			border-radius: 6px;
+			padding: 6px 8px
+		}
 
-	.sample-swatch {
-		width: 16px;
-		height: 16px;
-		border-radius: 50%;
-		border: 1px solid #888
-	}
+		.sample-swatch {
+			width: 16px;
+			height: 16px;
+			border-radius: 50%;
+			border: 1px solid #888
+		}
 
-	.sample-row .inline-buttons {
-		margin-left: auto;
-		display: flex;
-		gap: 6px
-	}
+		.sample-row .inline-buttons {
+			margin-left: auto;
+			display: flex;
+			gap: 6px
+		}
 
-	/* Color selector */
-	.selector-wrap {
-		display: flex;
-		gap: 8px;
-		flex-wrap: wrap;
-		align-items: center
-	}
+		/* Color selector */
+		.selector-wrap {
+			display: flex;
+			gap: 8px;
+			flex-wrap: wrap;
+			align-items: center
+		}
 
-	.selector-pill {
-		display: flex;
-		align-items: center;
-		gap: 6px;
-		border: 2px solid #ccc;
-		border-radius: 999px;
-		padding: 6px 10px;
-		background: #fff;
-		cursor: pointer;
-		user-select: none;
-		-webkit-user-select: none
-	}
+		.selector-pill {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			border: 2px solid #ccc;
+			border-radius: 999px;
+			padding: 6px 10px;
+			background: #fff;
+			cursor: pointer;
+			user-select: none;
+			-webkit-user-select: none
+		}
 
-	.selector-pill.active {
-		border-color: #000
-	}
+		.selector-pill.active {
+			border-color: #000
+		}
 
-	.selector-swatch {
-		width: 16px;
-		height: 16px;
-		border-radius: 50%;
-		border: 1px solid #777
-	}
+		.selector-swatch {
+			width: 16px;
+			height: 16px;
+			border-radius: 50%;
+			border: 1px solid #777
+		}
 
-	.selector-name {
-		font-size: 13px
-	}
+		.selector-name {
+			font-size: 13px
+		}
 
-	/* Plate A */
-	.plate-wrap {
-		overflow: auto;
-		padding-bottom: 8px
-	}
+		/* Plate A */
+		.plate-wrap {
+			overflow: auto;
+			padding-bottom: 8px
+		}
 
-	.plate-grid {
-		display: grid;
-		grid-template-columns: var(--header-col) repeat(24, minmax(24px, 1fr)) var(--header-col);
-		gap: var(--well-gap);
-		align-items: stretch;
-		min-width: 600px;
-	}
+		.plate-grid {
+			display: grid;
+			grid-template-columns: var(--header-col) repeat(24, minmax(24px, 1fr)) var(--header-col);
+			gap: var(--well-gap);
+			align-items: stretch;
+			min-width: 600px;
+		}
 
-	.corner {
-		height: 24px
-	}
+		.corner {
+			height: 24px
+		}
 
-	.col-header,
-	.row-header {
-		font-size: 12px;
-		text-align: center;
-		color: #333;
-		display: flex;
-		align-items: center;
-		justify-content: center
-	}
+		.col-header,
+		.row-header {
+			font-size: 12px;
+			text-align: center;
+			color: #333;
+			display: flex;
+			align-items: center;
+			justify-content: center
+		}
 
-	.well {
-		position: relative;
-		aspect-ratio: 1/1;
-		border: 1px solid #555;
-		border-radius: 4px;
-		cursor: pointer;
-		background: #fff;
-		overflow: hidden
-	}
+		.well {
+			position: relative;
+			aspect-ratio: 1/1;
+			border: 1px solid #555;
+			border-radius: 4px;
+			cursor: pointer;
+			background: #fff;
+			overflow: hidden
+		}
 
-	.well.split-2 {
-		background: linear-gradient(0deg, var(--c1) 0 100%) left/50% 100% no-repeat, linear-gradient(0deg, var(--c2) 0 100%) right/50% 100% no-repeat;
-	}
+		.well.split-2 {
+			background: linear-gradient(0deg, var(--c1) 0 100%) left/50% 100% no-repeat, linear-gradient(0deg, var(--c2) 0 100%) right/50% 100% no-repeat;
+		}
 
-	.well.split-3 {
-		background: linear-gradient(0deg, var(--c1) 0 100%) left/50% 100% no-repeat, linear-gradient(0deg, var(--c2) 0 100%) right top/50% 50% no-repeat, linear-gradient(0deg, var(--c3) 0 100%) right bottom/50% 50% no-repeat;
-	}
+		.well.split-3 {
+			background: linear-gradient(0deg, var(--c1) 0 100%) left/50% 100% no-repeat, linear-gradient(0deg, var(--c2) 0 100%) right top/50% 50% no-repeat, linear-gradient(0deg, var(--c3) 0 100%) right bottom/50% 50% no-repeat;
+		}
 
-	.well.split-4 {
-		background: linear-gradient(0deg, var(--c1) 0 100%) left top/50% 50% no-repeat, linear-gradient(0deg, var(--c2) 0 100%) right top/50% 50% no-repeat, linear-gradient(0deg, var(--c3) 0 100%) left bottom/50% 50% no-repeat, linear-gradient(0deg, var(--c4) 0 100%) right bottom/50% 50% no-repeat;
-	}
+		.well.split-4 {
+			background: linear-gradient(0deg, var(--c1) 0 100%) left top/50% 50% no-repeat, linear-gradient(0deg, var(--c2) 0 100%) right top/50% 50% no-repeat, linear-gradient(0deg, var(--c3) 0 100%) left bottom/50% 50% no-repeat, linear-gradient(0deg, var(--c4) 0 100%) right bottom/50% 50% no-repeat;
+		}
 
-	.seg-label {
-		position: absolute;
-		top: 50%;
-		transform: translate(-50%, -50%);
-		width: 14px;
-		height: 14px;
-		border-radius: 50%;
-		background: rgba(0, 0, 0, .75);
-		color: #fff;
-		font-size: 9px;
-		line-height: 14px;
-		text-align: center;
-		pointer-events: none
-	}
+		.seg-label {
+			position: absolute;
+			top: 50%;
+			transform: translate(-50%, -50%);
+			width: 14px;
+			height: 14px;
+			border-radius: 50%;
+			background: rgba(0, 0, 0, .75);
+			color: #fff;
+			font-size: 9px;
+			line-height: 14px;
+			text-align: center;
+			pointer-events: none
+		}
 
-	/* Tables */
-	table {
-		border-collapse: collapse;
-		width: 100%
-	}
+		/* Tables */
+		table {
+			border-collapse: collapse;
+			width: 100%
+		}
 
-	th,
-	td {
-		border: 1px solid #ddd;
-		padding: 6px 8px;
-		font-size: 13px;
-		vertical-align: top;
-		background: #fff
-	}
+		th,
+		td {
+			border: 1px solid #ddd;
+			padding: 6px 8px;
+			font-size: 13px;
+			vertical-align: top;
+			background: #fff
+		}
 
-	th {
-		background: #f5f7fa;
-		text-align: left
-	}
+		th {
+			background: #f5f7fa;
+			text-align: left
+		}
 
-	.sum-pill {
-		display: inline-block;
-		background: #eef;
-		border: 1px solid #ccd;
-		padding: 2px 8px;
-		border-radius: 999px;
-		margin-right: 6px;
-		font-size: 12px
-	}
+		.sum-pill {
+			display: inline-block;
+			background: #eef;
+			border: 1px solid #ccd;
+			padding: 2px 8px;
+			border-radius: 999px;
+			margin-right: 6px;
+			font-size: 12px
+		}
 
-	/* Plate B as spreadsheet */
-	#ctTableGrid input {
-		width: 100%;
-		border: none;
-		text-align: center;
-		padding: 4px 2px;
-		outline: none
-	}
+		/* Plate B as spreadsheet */
+		#ctTableGrid input {
+			width: 100%;
+			border: none;
+			text-align: center;
+			padding: 4px 2px;
+			outline: none
+		}
 
-	#ctTableGrid input:focus {
-		background: #fffbe6;
-	}
+		#ctTableGrid input:focus {
+			background: #fffbe6;
+		}
 
-	/* Charts */
-	.group-chart {
-		display: block;
-		width: 720px;
-		height: 160px;
-		margin: 0 auto
-	}
+		/* Charts */
+		.group-chart {
+			display: block;
+			width: 720px;
+			height: 160px;
+			margin: 0 auto
+		}
 
-	.chart-title {
-		text-align: center;
-		font-weight: 700;
-		margin: 6px 0 6px
-	}
+		.chart-title {
+			text-align: center;
+			font-weight: 700;
+			margin: 6px 0 6px
+		}
 
-	.note {
-		font-size: 12px;
-		color: #555
-	}
+		.note {
+			font-size: 12px;
+			color: #555
+		}
 
-	/* Legend above Plate A */
-	.legend-title {
-		font-weight: 700;
-		margin: 8px 0 6px
-	}
+		/* Legend above Plate A */
+		.legend-title {
+			font-weight: 700;
+			margin: 8px 0 6px
+		}
 
-	#sampleLegend {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 10px 16px;
-		align-items: center;
-		padding-bottom: 8px
-	}
+		#sampleLegend {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px 16px;
+			align-items: center;
+			padding-bottom: 8px
+		}
 
-	.sample-item {
-		display: inline-flex;
-		align-items: center;
-		gap: 6px;
-		padding: 4px 8px;
-		border: 1px solid #e2e2e2;
-		border-radius: 999px;
-		background: #fff
-	}
+		.sample-item {
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			padding: 4px 8px;
+			border: 1px solid #e2e2e2;
+			border-radius: 999px;
+			background: #fff
+		}
 
-	.sample-item .sample-dot {
-		width: 14px;
-		height: 14px;
-		border-radius: 50%;
-		border: 1px solid #777;
-		display: inline-block
-	}
+		.sample-item .sample-dot {
+			width: 14px;
+			height: 14px;
+			border-radius: 50%;
+			border: 1px solid #777;
+			display: inline-block
+		}
 
-	.btn-primary {
-		background: #2c82c9;
-		color: #fff;
-		border: none;
-		padding: 10px 14px;
-		border-radius: 8px;
-		cursor: pointer;
-		font-weight: 700;
-		letter-spacing: 0.2px
-	}
+		.btn-primary {
+			background: #2c82c9;
+			color: #fff;
+			border: none;
+			padding: 10px 14px;
+			border-radius: 8px;
+			cursor: pointer;
+			font-weight: 700;
+			letter-spacing: 0.2px
+		}
 
-	.btn-primary:hover {
-		filter: brightness(0.96)
-	}
+		.btn-primary:hover {
+			filter: brightness(0.96)
+		}
 
-	.btn-primary:active {
-		filter: brightness(0.92)
-	}
+		.btn-primary:active {
+			filter: brightness(0.92)
+		}
 
-	/* Tiny error toast */
-	#errorToast {
-		position: fixed;
-		right: 12px;
-		bottom: 12px;
-		background: #ffebe9;
-		color: #86181d;
-		border: 1px solid #f1c0c0;
-		padding: 8px 10px;
-		border-radius: 6px;
-		font-size: 12px;
-		display: none;
-		max-width: 60ch
-	}
+		/* Tiny error toast */
+		#errorToast {
+			position: fixed;
+			right: 12px;
+			bottom: 12px;
+			background: #ffebe9;
+			color: #86181d;
+			border: 1px solid #f1c0c0;
+			padding: 8px 10px;
+			border-radius: 6px;
+			font-size: 12px;
+			display: none;
+			max-width: 60ch
+		}
 
-	/* Hide elements during export capture */
-	.capturing .no-export {
-		display: none !important;
-	}
-</style>
+		/* Hide elements during export capture */
+		.capturing .no-export {
+			display: none !important;
+		}
 
-<!-- Core libs on load: Chart.js and jsPDF (stable from your working version) -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+		/* Metadata export box */
+		.meta-export {
+			font-size: 14px;
+			color: #222;
+			border: 1px solid #ddd;
+			border-radius: 8px;
+			padding: 10px 12px;
+			background: #fff;
+			margin-bottom: 10px;
+		}
+
+		.meta-export .title {
+			font-weight: 700;
+			margin-bottom: 4px
+		}
+
+		.meta-export .kv {
+			margin-right: 12px
+		}
+
+		.meta-export .notes {
+			margin-top: 6px;
+			white-space: pre-wrap
+		}
+	</style>
+
+	<!-- Core libs on load: Chart.js and jsPDF (stable from your working version) -->
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 </head>
 
 <body>
-<div id="app">
-	<div class="app-title">qPCR Plate <span>Planner</span></div>
+	<div id="app">
+		<div class="app-title">qPCR Plate <span>Planner</span></div>
 
-	<div class="controls">
-		<h3>Experiment metadata</h3>
-		<div class="meta">
-			<label>Experiment name <input id="metaName" type="text" /></label>
-			<label>Date <input id="metaDate" type="date" /></label>
-			<label style="grid-column:1/-1">Notes <textarea id="metaNotes" rows="3"></textarea></label>
-		</div>
+		<div class="controls">
+			<h3>Experiment metadata</h3>
+			<div class="meta">
+				<label>Experiment name <input id="metaName" type="text" /></label>
+				<label>Date <input id="metaDate" type="date" /></label>
+				<label style="grid-column:1/-1">Notes <textarea id="metaNotes" rows="3"></textarea></label>
+			</div>
 
-		<h3>Sample setup</h3>
-		<p class="note">Naming convention: Use "Name_Target_Condition" for auto-extraction, and set Group to scope
-		analytics.</p>
-		<form id="addForm" class="row" action="javascript:void(0)"
-			onsubmit="event.preventDefault(); handleAddSample();" autocomplete="off" aria-label="Add sample form">
-			<input id="sampleNameInput" type="text" placeholder="Sample display name (e.g., HeLa_CCNA2_IgG)"
-				required aria-label="Sample display name" />
-			<label>Role
-				<select id="sampleRoleInput" aria-label="Sample role">
-					<option value="Control">Control</option>
-					<option value="Condition">Condition</option>
+			<h3>Sample setup</h3>
+			<p class="note">Naming convention: Use "Name_Target_Condition" for auto-extraction, and set Group to scope
+				analytics.</p>
+			<form id="addForm" class="row" action="javascript:void(0)"
+				onsubmit="event.preventDefault(); handleAddSample();" autocomplete="off" aria-label="Add sample form">
+				<input id="sampleNameInput" type="text" placeholder="Sample display name (e.g., HeLa_CCNA2_IgG)"
+					required aria-label="Sample display name" />
+				<label>Role
+					<select id="sampleRoleInput" aria-label="Sample role">
+						<option value="Control">Control</option>
+						<option value="Condition">Condition</option>
+					</select>
+				</label>
+				<input id="targetInput" type="text" placeholder="Target/Gene (e.g., CCNA2)" required
+					aria-label="Target gene" />
+				<input id="conditionNameInput" type="text" placeholder="Condition name (e.g., IgG or H3K27me3)"
+					aria-label="Condition name" />
+				<input id="groupNameInput" type="text" placeholder="Group name (e.g., Group 1)" value="Group 1" required
+					aria-label="Group name" />
+				<label>Color <input id="sampleColorInput" type="color" value="#2ECC71"
+						aria-label="Sample color" /></label>
+				<button id="addSampleBtn" type="button">Add sample</button>
+				<button id="resetButton" type="button" class="small-danger" style="margin-left:auto">Reset plate to
+					white (clear Ct)</button>
+			</form>
+
+			<div class="sample-list" id="sampleList" aria-live="polite"></div>
+
+			<h3>Color selection</h3>
+			<div class="selector-wrap" id="colorSelector" aria-label="Color selection"></div>
+			<div class="row" style="gap:8px">
+				<label for="partialResetSelect">Partial reset</label>
+				<select id="partialResetSelect" aria-label="Partial reset scope" title="Partial reset scope">
+					<option value="">Partial reset…</option>
+					<option value="row">Reset row (A–P)</option>
+					<option value="col">Reset column (1–24)</option>
 				</select>
-			</label>
-			<input id="targetInput" type="text" placeholder="Target/Gene (e.g., CCNA2)" required
-				aria-label="Target gene" />
-			<input id="conditionNameInput" type="text" placeholder="Condition name (e.g., IgG or H3K27me3)"
-				aria-label="Condition name" />
-			<input id="groupNameInput" type="text" placeholder="Group name (e.g., Group 1)" value="Group 1" required
-				aria-label="Group name" />
-			<label>Color <input id="sampleColorInput" type="color" value="#2ECC71"
-				aria-label="Sample color" /></label>
-			<button id="addSampleBtn" type="button">Add sample</button>
-			<button id="resetButton" type="button" class="small-danger" style="margin-left:auto">Reset plate to
-				white (clear Ct)</button>
-		</form>
+				<input id="partialInput" type="text" placeholder="A or 12" style="width:88px"
+					aria-label="Row letter or column number" />
+				<button id="partialApplyBtn" type="button">Apply</button>
+				<button id="undoBtn" type="button">Undo</button>
+				<button id="redoBtn" type="button">Redo</button>
+			</div>
+		</div>
 
-		<div class="sample-list" id="sampleList" aria-live="polite"></div>
+		<div id="countsRow" class="row" style="padding:0 12px 8px"></div>
 
-		<h3>Color selection</h3>
-		<div class="selector-wrap" id="colorSelector" aria-label="Color selection"></div>
-		<div class="row" style="gap:8px">
-			<label for="partialResetSelect">Partial reset</label>
-			<select id="partialResetSelect" aria-label="Partial reset scope" title="Partial reset scope">
-				<option value="">Partial reset…</option>
-				<option value="row">Reset row (A–P)</option>
-				<option value="col">Reset column (1–24)</option>
-			</select>
-			<input id="partialInput" type="text" placeholder="A or 12" style="width:88px"
-				aria-label="Row letter or column number" />
-			<button id="partialApplyBtn" type="button">Apply</button>
-			<button id="undoBtn" type="button">Undo</button>
-			<button id="redoBtn" type="button">Redo</button>
+		<!-- Plate A export wrapper: legend + plate together -->
+		<div class="plate-wrap" id="plateAExportWrap">
+			<h3>Plate A — Assign samples/conditions to wells</h3>
+			<div class="legend-title">Legend</div>
+			<div class="sample-legend" id="sampleLegend"></div>
+			<div class="plate-grid" id="plateGrid" aria-label="Plate A grid"></div>
+		</div>
+
+		<div class="controls">
+			<h3>Master Mix Planner</h3>
+			<table id="mmExtraWells" aria-label="Master Mix extra wells per target">
+				<thead>
+					<tr>
+						<th>Target</th>
+						<th>Assigned wells</th>
+						<th>Extra wells</th>
+						<th>Total wells used</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+			<span class="note">Each Target uses its own master mix. Totals = per‑well × (Assigned + Extra) for that
+				Target.</span>
+
+			<div class="row" style="margin-top:6px">
+				<input id="reagentName" type="text" placeholder="Reagent name (e.g., SYBR X2)"
+					aria-label="Reagent name" />
+				<input id="reagentVol" type="number" step="0.1" placeholder="µL / well" style="width:120px"
+					aria-label="Microliters per well" />
+				<button id="addReagentBtn" type="button">Add reagent</button>
+			</div>
+
+			<table id="mmTable" aria-label="Master Mix totals">
+				<thead>
+					<tr id="mmHeadRow1">
+						<th>Reagent</th>
+						<th>µL per well</th>
+						<th></th>
+					</tr>
+					<tr id="mmHeadRow2">
+						<th colspan="2" class="note">Totals per target</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody id="mmBody"></tbody>
+				<tfoot id="mmFoot">
+					<tr id="mmFootPerWell">
+						<th colspan="2">Total per well (µL)</th>
+						<th></th>
+					</tr>
+					<tr id="mmFootGrand">
+						<th colspan="2">Master tube total per target (µL)</th>
+						<th></th>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+
+		<div class="plate-wrap">
+			<h3>Plate B — Enter Ct values</h3>
+			<table id="ctTableGrid" aria-label="Plate B Ct table">
+				<thead id="ctHead"></thead>
+				<tbody id="ctBody"></tbody>
+			</table>
+			<span class="note">Tip: Paste a column or a 2D block from Excel/Sheets. It will fill from the selected
+				cell.</span>
+		</div>
+
+		<!-- Ct analytics: All groups stacked inside this wrapper for single export -->
+		<div class="controls" id="ctExportWrap">
+			<h3>Ct summary and ΔCt/ΔΔCt — All Groups</h3>
+			<div id="groupsHeader" class="row" style="gap:8px; margin-bottom:6px">
+				<span class="note">Each panel below is computed only from samples in that group.</span>
+			</div>
+			<div id="groupsPanels"></div>
+
+			<!-- Export & JSON buttons + Hard Reset (mark as no-export so they won't appear in captures) -->
+			<div class="row no-export" style="gap:12px; margin-top:8px; flex-wrap:wrap">
+				<button id="exportPlateAJpegBtn" class="btn-primary" type="button">Export Plate A + legend as
+					JPEG</button>
+				<button id="exportPlateAPdfBtn" class="btn-primary" type="button">Export Plate A + legend as
+					PDF</button>
+
+				<button id="exportCtJpegBtn" class="btn-primary" type="button">Export Ct summary (all groups) as
+					JPEG</button>
+				<button id="exportCtPdfBtn" class="btn-primary" type="button">Export Ct summary (all groups) as
+					PDF</button>
+
+				<button id="exportJsonBtn" class="btn-primary" type="button">Export full page as JSON</button>
+				<input id="importJsonInput" type="file" accept="application/json" style="display:none"
+					title="Import JSON" aria-label="Import JSON file input" />
+				<button id="importJsonBtn" class="btn-primary" type="button" aria-controls="importJsonInput">Import
+					JSON</button>
+
+				<button id="hardResetBtn" class="small-danger" type="button"
+					title="Delete all data and reset the page">Hard reset (delete all)</button>
+			</div>
 		</div>
 	</div>
 
-	<div id="countsRow" class="row" style="padding:0 12px 8px"></div>
+	<div id="errorToast" role="alert"></div>
 
-	<!-- Plate A export wrapper: legend + plate together -->
-	<div class="plate-wrap" id="plateAExportWrap">
-		<h3>Plate A — Assign samples/conditions to wells</h3>
-		<div class="legend-title">Legend</div>
-		<div class="sample-legend" id="sampleLegend"></div>
-		<div class="plate-grid" id="plateGrid" aria-label="Plate A grid"></div>
-	</div>
-
-	<div class="controls">
-		<h3>Master Mix Planner</h3>
-		<table id="mmExtraWells" aria-label="Master Mix extra wells per target">
-			<thead>
-				<tr>
-					<th>Target</th>
-					<th>Assigned wells</th>
-					<th>Extra wells</th>
-					<th>Total wells used</th>
-				</tr>
-			</thead>
-			<tbody></tbody>
-		</table>
-		<span class="note">Each Target uses its own master mix. Totals = per‑well × (Assigned + Extra) for that
-			Target.</span>
-
-		<div class="row" style="margin-top:6px">
-			<input id="reagentName" type="text" placeholder="Reagent name (e.g., SYBR X2)"
-				aria-label="Reagent name" />
-			<input id="reagentVol" type="number" step="0.1" placeholder="µL / well" style="width:120px"
-				aria-label="Microliters per well" />
-			<button id="addReagentBtn" type="button">Add reagent</button>
-		</div>
-
-		<table id="mmTable" aria-label="Master Mix totals">
-			<thead>
-				<tr id="mmHeadRow1">
-					<th>Reagent</th>
-					<th>µL per well</th>
-					<th></th>
-				</tr>
-				<tr id="mmHeadRow2">
-					<th colspan="2" class="note">Totals per target</th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody id="mmBody"></tbody>
-			<tfoot id="mmFoot">
-				<tr id="mmFootPerWell">
-					<th colspan="2">Total per well (µL)</th>
-					<th></th>
-				</tr>
-				<tr id="mmFootGrand">
-					<th colspan="2">Master tube total per target (µL)</th>
-					<th></th>
-				</tr>
-			</tfoot>
-		</table>
-	</div>
-
-	<div class="plate-wrap">
-		<h3>Plate B — Enter Ct values</h3>
-		<table id="ctTableGrid" aria-label="Plate B Ct table">
-			<thead id="ctHead"></thead>
-			<tbody id="ctBody"></tbody>
-		</table>
-		<span class="note">Tip: Paste a column or a 2D block from Excel/Sheets. It will fill from the selected
-			cell.</span>
-	</div>
-
-	<!-- Ct analytics: All groups stacked inside this wrapper for single export -->
-	<div class="controls" id="ctExportWrap">
-		<h3>Ct summary and ΔCt/ΔΔCt — All Groups</h3>
-		<div id="groupsHeader" class="row" style="gap:8px; margin-bottom:6px">
-			<span class="note">Each panel below is computed only from samples in that group.</span>
-		</div>
-		<div id="groupsPanels"></div>
-
-		<!-- Export & JSON buttons + Hard Reset (mark as no-export so they won't appear in captures) -->
-		<div class="row no-export" style="gap:12px; margin-top:8px; flex-wrap:wrap">
-			<button id="exportPlateAJpegBtn" class="btn-primary" type="button">Export Plate A + legend as
-				JPEG</button>
-			<button id="exportPlateAPdfBtn" class="btn-primary" type="button">Export Plate A + legend as
-				PDF</button>
-
-			<button id="exportCtJpegBtn" class="btn-primary" type="button">Export Ct summary (all groups) as
-				JPEG</button>
-			<button id="exportCtPdfBtn" class="btn-primary" type="button">Export Ct summary (all groups) as
-				PDF</button>
-
-			<button id="exportJsonBtn" class="btn-primary" type="button">Export full page as JSON</button>
-			<input id="importJsonInput" type="file" accept="application/json" style="display:none"
-				title="Import JSON" aria-label="Import JSON file input" />
-			<button id="importJsonBtn" class="btn-primary" type="button" aria-controls="importJsonInput">Import
-				JSON</button>
-
-			<button id="hardResetBtn" class="small-danger" type="button"
-				title="Delete all data and reset the page">Hard reset (delete all)</button>
-		</div>
-	</div>
-</div>
-
-<div id="errorToast" role="alert"></div>
-
-<script>
-/* ===== Tiny error toast ===== */
-function showErrorToast(msg) {
-	const el = document.getElementById('errorToast');
-	el.textContent = msg;
-	el.style.display = 'block';
-	setTimeout(() => { el.style.display = 'none'; }, 6000);
-}
-window.addEventListener('error', e => {
-	console.error(e.error || e.message);
-	showErrorToast('A script error occurred. See console for details.');
-});
-
-/* ===== Constants & State ===== */
-const TOTAL_ROWS = 16, TOTAL_COLS = 24, MAX_COLORS = 4;
-const DEFAULT_COLOR = '#FFFFFF';
-const STORAGE_KEY = "qpcrPlateState_groups_v1"; // version with groups + hard reset
-
-const state = {
-	meta: { name: "", date: "", notes: "" },
-	wellsA: [],
-	wellsB: [],
-	selectedColor: null,
-	samples: [],
-	reagents: [],
-	extraWellsPerTarget: {},
-	groups: [], // [{id, name}]
-	groupSettings: {
-		// [groupId]: { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3' }
-	},
-	history: [],
-	redo: []
-};
-
-/* ===== Helpers ===== */
-const rowLetter = r => String.fromCharCode(65 + r);
-const idx = (r, c) => r * TOTAL_COLS + c;
-const deepClone = v => JSON.parse(JSON.stringify(v));
-const fmt1 = n => (isFinite(n) ? (+n).toFixed(1) : "");
-const fmt2 = n => (isFinite(n) ? (+n).toFixed(2) : "");
-const fmt3 = n => (isFinite(n) ? (+n).toFixed(3) : "");
-const getTargets = () => Array.from(new Set(state.samples.map(s => s.target).filter(Boolean))).sort();
-
-function normalizeCond(s) {
-	if (!s) return '';
-	const x = String(s).trim().toLowerCase();
-	if (x === 'me3' || x === 'h3k27me3' || x === 'k27me3') return 'h3k27me3';
-	if (x === 'ac' || x === 'h3k27ac' || x === 'k27ac') return 'h3k27ac';
-	return x;
-}
-
-/* ===== Initialize plate layouts ===== */
-function initEmptyPlate() {
-	state.wellsA = [];
-	for (let i = 0; i < TOTAL_ROWS * TOTAL_COLS; i++) {
-		state.wellsA.push({ colors: DEFAULT_COLOR, segmentation: 1 });
-	}
-}
-function initEmptyCtTable() {
-	state.wellsB = [];
-	for (let i = 0; i < TOTAL_ROWS * TOTAL_COLS; i++) {
-		state.wellsB.push({ ct: null });
-	}
-}
-
-/* ===== Storage ===== */
-function saveState() {
-	try {
-		localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-	} catch (err) {
-		console.error(err);
-		showErrorToast('Failed to save state. Storage might be full.');
-	}
-}
-function loadState() {
-	try {
-		const saved = localStorage.getItem(STORAGE_KEY);
-		if (saved) {
-			const parsed = JSON.parse(saved);
-			Object.assign(state, parsed);
+	<script>
+		/* ===== Tiny error toast ===== */
+		function showErrorToast(msg) {
+			const el = document.getElementById('errorToast');
+			el.textContent = msg;
+			el.style.display = 'block';
+			setTimeout(() => { el.style.display = 'none'; }, 6000);
 		}
-	} catch (err) {
-		console.error(err);
-	}
-	// Ensure wells exist
-	if (!state.wellsA?.length) initEmptyPlate();
-	if (!state.wellsB?.length) initEmptyCtTable();
+		window.addEventListener('error', e => {
+			console.error(e.error || e.message);
+			showErrorToast('A script error occurred. See console for details.');
+		});
 
-	// Migrate for groups if missing
-	if (!Array.isArray(state.groups) || state.groups.length === 0) {
-		state.groups = [{ id: 'g1', name: 'Group 1' }];
-		// Assign existing samples to Group 1 if they lack group
-		state.samples.forEach(s => { if (!('group' in s)) s.group = 'Group 1'; });
-	}
-	// Ensure groupSettings entries
-	state.groups.forEach(g => {
-		if (!state.groupSettings[g.id]) {
-			state.groupSettings[g.id] = { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3' };
+		/* ===== Constants & State ===== */
+		const TOTAL_ROWS = 16, TOTAL_COLS = 24, MAX_COLORS = 4;
+		const DEFAULT_COLOR = '#FFFFFF';
+		const STORAGE_KEY = "qpcrPlateState_groups_v1"; // version with groups + hard reset
+
+		const state = {
+			meta: { name: "", date: "", notes: "" },
+			wellsA: [],
+			wellsB: [],
+			selectedColor: null,
+			samples: [],
+			reagents: [],
+			extraWellsPerTarget: {},
+			groups: [], // [{id, name}]
+			groupSettings: {
+				// [groupId]: { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3' }
+			},
+			history: [],
+			redo: []
+		};
+
+		/* ===== Helpers ===== */
+		const rowLetter = r => String.fromCharCode(65 + r);
+		const idx = (r, c) => r * TOTAL_COLS + c;
+		const deepClone = v => JSON.parse(JSON.stringify(v));
+		const fmt1 = n => (isFinite(n) ? (+n).toFixed(1) : "");
+		const fmt2 = n => (isFinite(n) ? (+n).toFixed(2) : "");
+		const fmt3 = n => (isFinite(n) ? (+n).toFixed(3) : "");
+		const getTargets = () => Array.from(new Set(state.samples.map(s => s.target).filter(Boolean))).sort();
+
+		function normalizeCond(s) {
+			if (!s) return '';
+			const x = String(s).trim().toLowerCase();
+			if (x === 'me3' || x === 'h3k27me3' || x === 'k27me3') return 'h3k27me3';
+			if (x === 'ac' || x === 'h3k27ac' || x === 'k27ac') return 'h3k27ac';
+			return x;
 		}
-	});
-}
 
-/* ===== History (undo/redo) ===== */
-function pushHistory() {
-	state.history.push(deepClone({
-		wellsA: state.wellsA, wellsB: state.wellsB, samples: state.samples, reagents: state.reagents,
-		extraWellsPerTarget: state.extraWellsPerTarget, groups: state.groups, groupSettings: state.groupSettings
-	}));
-	if (state.history.length > 50) state.history.shift();
-	state.redo = [];
-	updateUndoRedoButtons();
-}
-function undo() {
-	if (!state.history.length) return;
-	state.redo.push(deepClone({
-		wellsA: state.wellsA, wellsB: state.wellsB, samples: state.samples, reagents: state.reagents,
-		extraWellsPerTarget: state.extraWellsPerTarget, groups: state.groups, groupSettings: state.groupSettings
-	}));
-	const prev = state.history.pop();
-	Object.assign(state, prev);
-	saveState();
-	renderAll();
-	updateUndoRedoButtons();
-}
-function redo() {
-	if (!state.redo.length) return;
-	state.history.push(deepClone({
-		wellsA: state.wellsA, wellsB: state.wellsB, samples: state.samples, reagents: state.reagents,
-		extraWellsPerTarget: state.extraWellsPerTarget, groups: state.groups, groupSettings: state.groupSettings
-	}));
-	const next = state.redo.pop();
-	Object.assign(state, next);
-	saveState();
-	renderAll();
-	updateUndoRedoButtons();
-}
-function updateUndoRedoButtons() {
-	const undoBtn = document.getElementById('undoBtn');
-	const redoBtn = document.getElementById('redoBtn');
-	if (undoBtn) undoBtn.disabled = !state.history.length;
-	if (redoBtn) redoBtn.disabled = !state.redo.length;
-}
-
-/* ===== Meta fields ===== */
-document.getElementById('metaName').addEventListener('change', () => {
-	state.meta.name = document.getElementById('metaName').value; saveState();
-});
-document.getElementById('metaDate').addEventListener('change', () => {
-	state.meta.date = document.getElementById('metaDate').value; saveState();
-});
-document.getElementById('metaNotes').addEventListener('change', () => {
-	state.meta.notes = document.getElementById('metaNotes').value; saveState();
-});
-
-/* ===== Sample add helpers ===== */
-function parseNameTriplet(sampleName) {
-	const parts = String(sampleName || '').split('_');
-	if (parts.length === 1) return { target: '', condition: '' };
-	if (parts.length === 2) return { target: parts[1], condition: '' };
-	return { target: parts[parts.length - 2], condition: parts[parts.length - 1] };
-}
-document.getElementById('sampleNameInput').addEventListener('input', () => {
-	const nameEl = document.getElementById('sampleNameInput');
-	const targetEl = document.getElementById('targetInput');
-	const condEl = document.getElementById('conditionNameInput');
-	const { target, condition } = parseNameTriplet(nameEl.value);
-	if (document.activeElement !== targetEl) targetEl.value = target;
-	if (document.activeElement !== condEl) condEl.value = condition;
-});
-
-/* ===== Plate A ===== */
-function renderPlateA() {
-	const grid = document.getElementById('plateGrid');
-	grid.innerHTML = '';
-
-	// Top row
-	grid.appendChild(document.createElement('div')).classList.add('corner');
-	for (let c = 0; c < TOTAL_COLS; c++) {
-		const header = document.createElement('div');
-		header.classList.add('col-header'); header.textContent = c + 1;
-		grid.appendChild(header);
-	}
-	grid.appendChild(document.createElement('div')).classList.add('corner');
-
-	for (let r = 0; r < TOTAL_ROWS; r++) {
-		const rowHeader1 = document.createElement('div');
-		rowHeader1.classList.add('row-header'); rowHeader1.textContent = rowLetter(r);
-		grid.appendChild(rowHeader1);
-
-		for (let c = 0; c < TOTAL_COLS; c++) {
-			const i = idx(r, c);
-			const well = document.createElement('div');
-			well.classList.add('well');
-			well.dataset.i = i;
-
-			const w = state.wellsA[i];
-			const colors = Array.isArray(w.colors) ? w.colors : [w.colors];
-			const seg = w.segmentation || 1;
-
-			if (seg > 1) {
-				well.classList.add('split-' + seg);
-				for (let s = 0; s < seg; s++) {
-					well.style.setProperty('--c' + (s + 1), colors[s] || DEFAULT_COLOR);
-				}
-			} else {
-				well.style.backgroundColor = colors[0] || DEFAULT_COLOR;
+		/* ===== Initialize plate layouts ===== */
+		function initEmptyPlate() {
+			state.wellsA = [];
+			for (let i = 0; i < TOTAL_ROWS * TOTAL_COLS; i++) {
+				state.wellsA.push({ colors: DEFAULT_COLOR, segmentation: 1 });
 			}
+		}
+		function initEmptyCtTable() {
+			state.wellsB = [];
+			for (let i = 0; i < TOTAL_ROWS * TOTAL_COLS; i++) {
+				state.wellsB.push({ ct: null });
+			}
+		}
 
-			well.addEventListener('click', () => {
-				const col = state.selectedColor || DEFAULT_COLOR;
-				pushHistory();
-				if (col === DEFAULT_COLOR) {
-					state.wellsA[i].colors = DEFAULT_COLOR;
-					state.wellsA[i].segmentation = 1;
-				} else {
-					const colors = Array.isArray(state.wellsA[i].colors) ? state.wellsA[i].colors : [state.wellsA[i].colors];
-					const seg = state.wellsA[i].segmentation || 1;
+		/* ===== Storage ===== */
+		function saveState() {
+			try {
+				localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+			} catch (err) {
+				console.error(err);
+				showErrorToast('Failed to save state. Storage might be full.');
+			}
+		}
+		function loadState() {
+			try {
+				const saved = localStorage.getItem(STORAGE_KEY);
+				if (saved) {
+					const parsed = JSON.parse(saved);
+					Object.assign(state, parsed);
+				}
+			} catch (err) {
+				console.error(err);
+			}
+			// Ensure wells exist
+			if (!state.wellsA?.length) initEmptyPlate();
+			if (!state.wellsB?.length) initEmptyCtTable();
 
-					if (col === colors[colors.length - 1]) {
-						colors.pop();
-						if (colors.length === 0) {
+			// Migrate for groups if missing
+			if (!Array.isArray(state.groups) || state.groups.length === 0) {
+				state.groups = [{ id: 'g1', name: 'Group 1' }];
+				// Assign existing samples to Group 1 if they lack group
+				state.samples.forEach(s => { if (!('group' in s)) s.group = 'Group 1'; });
+			}
+			// Ensure groupSettings entries
+			state.groups.forEach(g => {
+				if (!state.groupSettings[g.id]) {
+					state.groupSettings[g.id] = { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3' };
+				}
+			});
+		}
+
+		/* ===== History (undo/redo) ===== */
+		function pushHistory() {
+			state.history.push(deepClone({
+				wellsA: state.wellsA, wellsB: state.wellsB, samples: state.samples, reagents: state.reagents,
+				extraWellsPerTarget: state.extraWellsPerTarget, groups: state.groups, groupSettings: state.groupSettings
+			}));
+			if (state.history.length > 50) state.history.shift();
+			state.redo = [];
+			updateUndoRedoButtons();
+		}
+		function undo() {
+			if (!state.history.length) return;
+			state.redo.push(deepClone({
+				wellsA: state.wellsA, wellsB: state.wellsB, samples: state.samples, reagents: state.reagents,
+				extraWellsPerTarget: state.extraWellsPerTarget, groups: state.groups, groupSettings: state.groupSettings
+			}));
+			const prev = state.history.pop();
+			Object.assign(state, prev);
+			saveState();
+			renderAll();
+			updateUndoRedoButtons();
+		}
+		function redo() {
+			if (!state.redo.length) return;
+			state.history.push(deepClone({
+				wellsA: state.wellsA, wellsB: state.wellsB, samples: state.samples, reagents: state.reagents,
+				extraWellsPerTarget: state.extraWellsPerTarget, groups: state.groups, groupSettings: state.groupSettings
+			}));
+			const next = state.redo.pop();
+			Object.assign(state, next);
+			saveState();
+			renderAll();
+			updateUndoRedoButtons();
+		}
+		function updateUndoRedoButtons() {
+			const undoBtn = document.getElementById('undoBtn');
+			const redoBtn = document.getElementById('redoBtn');
+			if (undoBtn) undoBtn.disabled = !state.history.length;
+			if (redoBtn) redoBtn.disabled = !state.redo.length;
+		}
+
+		/* ===== Meta fields ===== */
+		document.getElementById('metaName').addEventListener('change', () => {
+			state.meta.name = document.getElementById('metaName').value; saveState();
+		});
+		document.getElementById('metaDate').addEventListener('change', () => {
+			state.meta.date = document.getElementById('metaDate').value; saveState();
+		});
+		document.getElementById('metaNotes').addEventListener('change', () => {
+			state.meta.notes = document.getElementById('metaNotes').value; saveState();
+		});
+
+		/* ===== Sample add helpers ===== */
+		function parseNameTriplet(sampleName) {
+			const parts = String(sampleName || '').split('_');
+			if (parts.length === 1) return { target: '', condition: '' };
+			if (parts.length === 2) return { target: parts[1], condition: '' };
+			return { target: parts[parts.length - 2], condition: parts[parts.length - 1] };
+		}
+		document.getElementById('sampleNameInput').addEventListener('input', () => {
+			const nameEl = document.getElementById('sampleNameInput');
+			const targetEl = document.getElementById('targetInput');
+			const condEl = document.getElementById('conditionNameInput');
+			const { target, condition } = parseNameTriplet(nameEl.value);
+			if (document.activeElement !== targetEl) targetEl.value = target;
+			if (document.activeElement !== condEl) condEl.value = condition;
+		});
+
+		/* ===== Plate A ===== */
+		function renderPlateA() {
+			const grid = document.getElementById('plateGrid');
+			grid.innerHTML = '';
+
+			// Top row
+			grid.appendChild(document.createElement('div')).classList.add('corner');
+			for (let c = 0; c < TOTAL_COLS; c++) {
+				const header = document.createElement('div');
+				header.classList.add('col-header'); header.textContent = c + 1;
+				grid.appendChild(header);
+			}
+			grid.appendChild(document.createElement('div')).classList.add('corner');
+
+			for (let r = 0; r < TOTAL_ROWS; r++) {
+				const rowHeader1 = document.createElement('div');
+				rowHeader1.classList.add('row-header'); rowHeader1.textContent = rowLetter(r);
+				grid.appendChild(rowHeader1);
+
+				for (let c = 0; c < TOTAL_COLS; c++) {
+					const i = idx(r, c);
+					const well = document.createElement('div');
+					well.classList.add('well');
+					well.dataset.i = i;
+
+					const w = state.wellsA[i];
+					const colors = Array.isArray(w.colors) ? w.colors : [w.colors];
+					const seg = w.segmentation || 1;
+
+					if (seg > 1) {
+						well.classList.add('split-' + seg);
+						for (let s = 0; s < seg; s++) {
+							well.style.setProperty('--c' + (s + 1), colors[s] || DEFAULT_COLOR);
+						}
+					} else {
+						well.style.backgroundColor = colors[0] || DEFAULT_COLOR;
+					}
+
+					well.addEventListener('click', () => {
+						const col = state.selectedColor || DEFAULT_COLOR;
+						pushHistory();
+						if (col === DEFAULT_COLOR) {
 							state.wellsA[i].colors = DEFAULT_COLOR;
 							state.wellsA[i].segmentation = 1;
 						} else {
-							state.wellsA[i].colors = colors.length === 1 ? colors[0] : colors;
-							state.wellsA[i].segmentation = Math.max(1, colors.length);
+							const colors = Array.isArray(state.wellsA[i].colors) ? state.wellsA[i].colors : [state.wellsA[i].colors];
+							const seg = state.wellsA[i].segmentation || 1;
+
+							if (col === colors[colors.length - 1]) {
+								colors.pop();
+								if (colors.length === 0) {
+									state.wellsA[i].colors = DEFAULT_COLOR;
+									state.wellsA[i].segmentation = 1;
+								} else {
+									state.wellsA[i].colors = colors.length === 1 ? colors[0] : colors;
+									state.wellsA[i].segmentation = Math.max(1, colors.length);
+								}
+							} else if (seg < MAX_COLORS) {
+								const newColors = [...colors.filter(c => c !== DEFAULT_COLOR), col];
+								state.wellsA[i].colors = newColors.length === 1 ? newColors[0] : newColors;
+								state.wellsA[i].segmentation = newColors.length;
+							}
 						}
-					} else if (seg < MAX_COLORS) {
-						const newColors = [...colors.filter(c => c !== DEFAULT_COLOR), col];
-						state.wellsA[i].colors = newColors.length === 1 ? newColors[0] : newColors;
-						state.wellsA[i].segmentation = newColors.length;
+						saveState();
+						renderPlateA();
+						updateCounts();
+						updateMasterMixTotals();
+						renderAllGroups(); // live update groups
+					});
+
+					// Seg labels
+					if (w && w.segmentation > 1) {
+						const segPositions = [
+							{ x: 25, y: 50 }, { x: 75, y: 50 }, { x: 75, y: 25 }, { x: 25, y: 25 }
+						];
+						for (let s = 0; s < Math.min(MAX_COLORS, w.segmentation); s++) {
+							const label = document.createElement('div');
+							label.classList.add('seg-label'); label.textContent = s + 1;
+							label.style.left = segPositions[s].x + '%';
+							label.style.top = segPositions[s].y + '%';
+							well.appendChild(label);
+						}
 					}
+
+					grid.appendChild(well);
 				}
+
+				const rowHeader2 = document.createElement('div');
+				rowHeader2.classList.add('row-header'); rowHeader2.textContent = rowLetter(r);
+				grid.appendChild(rowHeader2);
+			}
+
+			renderSampleLegend();
+		}
+		function renderSampleLegend() {
+			const legendDiv = document.getElementById('sampleLegend');
+			legendDiv.innerHTML = '';
+			state.samples.forEach(s => {
+				const item = document.createElement('div');
+				item.classList.add('sample-item');
+				const dot = document.createElement('span');
+				dot.classList.add('sample-dot'); dot.style.backgroundColor = s.color;
+				const name = document.createElement('span'); name.textContent = s.name + (s.group ? ` [${s.group}]` : '');
+				item.appendChild(dot); item.appendChild(name);
+				legendDiv.appendChild(item);
+			});
+		}
+
+		/* ===== Sample Management ===== */
+		function renderSamples() {
+			const sampleList = document.getElementById('sampleList');
+			sampleList.innerHTML = '';
+			state.samples.forEach((s, i) => {
+				const row = document.createElement('div');
+				row.classList.add('sample-row');
+
+				const swatch = document.createElement('div');
+				swatch.classList.add('sample-swatch'); swatch.style.backgroundColor = s.color;
+
+				const details = document.createElement('div');
+				details.textContent = `${s.name} — Target: ${s.target} — Cond: ${s.conditionName || ''} — Role: ${s.role} — Group: ${s.group || ''}`;
+				details.style.minWidth = '320px';
+
+				const buttons = document.createElement('div');
+				buttons.classList.add('inline-buttons');
+
+				// Quick group change
+				const groupSel = document.createElement('select');
+				groupSel.setAttribute('aria-label', 'Change sample group');
+				const groupNames = Array.from(new Set(state.groups.map(g => g.name)));
+				groupNames.forEach(n => {
+					const opt = document.createElement('option');
+					opt.value = n; opt.textContent = n; if (s.group === n) opt.selected = true;
+					groupSel.appendChild(opt);
+				});
+				groupSel.onchange = () => {
+					s.group = groupSel.value;
+					saveState(); renderSamples(); renderAllGroups();
+				};
+
+				const delBtn = document.createElement('button');
+				delBtn.textContent = '✕';
+				delBtn.title = 'Delete sample';
+				delBtn.onclick = () => {
+					state.samples.splice(i, 1);
+					saveState();
+					renderSamples(); renderSelector(); renderPlateA(); renderCtTable(); refreshMasterMix(); updateCounts(); renderAllGroups();
+				};
+
+				buttons.appendChild(groupSel);
+				buttons.appendChild(delBtn);
+
+				row.appendChild(swatch);
+				row.appendChild(details);
+				row.appendChild(buttons);
+				sampleList.appendChild(row);
+			});
+		}
+		function handleAddSample(e) {
+			if (e) e.preventDefault();
+			const name = document.getElementById('sampleNameInput').value.trim();
+			const role = document.getElementById('sampleRoleInput').value;
+			const target = document.getElementById('targetInput').value.trim();
+			const conditionName = document.getElementById('conditionNameInput').value.trim();
+			const groupName = document.getElementById('groupNameInput').value.trim() || 'Group 1';
+			const color = document.getElementById('sampleColorInput').value;
+			if (!name || !target) return;
+
+			pushHistory();
+
+			// ensure group exists (by name)
+			let group = state.groups.find(g => g.name === groupName);
+			if (!group) {
+				group = { id: 'g' + (Date.now() + Math.random()), name: groupName };
+				state.groups.push(group);
+				state.groupSettings[group.id] = { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3' };
+			}
+
+			state.samples.push({ id: Date.now() + Math.random(), name, role, target, conditionName, color, group: group.name });
+			if (!state.selectedColor) state.selectedColor = color;
+
+			document.getElementById('sampleNameInput').value = '';
+			document.getElementById('conditionNameInput').value = '';
+			document.getElementById('targetInput').value = '';
+
+			saveState();
+			renderSamples();
+			renderSelector();
+			renderPlateA();
+			renderCtTable();
+			refreshMasterMix();
+			updateCounts();
+			renderAllGroups();
+		}
+		document.getElementById('addForm').addEventListener('submit', handleAddSample);
+		document.getElementById('addSampleBtn').addEventListener('click', handleAddSample);
+
+		/* ===== Color selector ===== */
+		function renderSelector() {
+			const selectorDiv = document.getElementById('colorSelector');
+			selectorDiv.innerHTML = '';
+
+			// Clear option
+			const clearOption = document.createElement('div');
+			clearOption.classList.add('selector-pill');
+			if (state.selectedColor === null || state.selectedColor === DEFAULT_COLOR) clearOption.classList.add('active');
+			clearOption.onclick = () => { state.selectedColor = DEFAULT_COLOR; saveState(); renderSelector(); };
+			const clearSwatch = document.createElement('div'); clearSwatch.classList.add('selector-swatch'); clearSwatch.style.backgroundColor = DEFAULT_COLOR;
+			const clearName = document.createElement('div'); clearName.classList.add('selector-name'); clearName.textContent = 'Clear';
+			clearOption.appendChild(clearSwatch); clearOption.appendChild(clearName); selectorDiv.appendChild(clearOption);
+
+			// Samples
+			state.samples.forEach(s => {
+				const option = document.createElement('div');
+				option.classList.add('selector-pill');
+				if (state.selectedColor === s.color) option.classList.add('active');
+				option.onclick = () => { state.selectedColor = s.color; saveState(); renderSelector(); };
+				const swatch = document.createElement('div'); swatch.classList.add('selector-swatch'); swatch.style.backgroundColor = s.color;
+				const name = document.createElement('div'); name.classList.add('selector-name'); name.textContent = s.name;
+				option.appendChild(swatch); option.appendChild(name); selectorDiv.appendChild(option);
+			});
+		}
+
+		/* ===== Reset buttons ===== */
+		document.getElementById('resetButton').addEventListener('click', () => {
+			if (confirm('Reset all wells to white and clear all Ct values?')) {
+				pushHistory();
+				initEmptyPlate();
+				initEmptyCtTable();
 				saveState();
 				renderPlateA();
+				renderCtTable();
 				updateCounts();
 				updateMasterMixTotals();
-				renderAllGroups(); // live update groups
-			});
+				renderAllGroups();
+			}
+		});
+		document.getElementById('partialApplyBtn').addEventListener('click', () => {
+			const type = document.getElementById('partialResetSelect').value;
+			const input = document.getElementById('partialInput').value.trim().toUpperCase();
+			if (!type || !input) return;
 
-			// Seg labels
-			if (w && w.segmentation > 1) {
-				const segPositions = [
-					{ x: 25, y: 50 }, { x: 75, y: 50 }, { x: 75, y: 25 }, { x: 25, y: 25 }
-				];
-				for (let s = 0; s < Math.min(MAX_COLORS, w.segmentation); s++) {
-					const label = document.createElement('div');
-					label.classList.add('seg-label'); label.textContent = s + 1;
-					label.style.left = segPositions[s].x + '%';
-					label.style.top = segPositions[s].y + '%';
-					well.appendChild(label);
+			pushHistory();
+
+			if (type === 'row') {
+				const r = input.charCodeAt(0) - 65;
+				if (r >= 0 && r < TOTAL_ROWS) {
+					for (let c = 0; c < TOTAL_COLS; c++) {
+						const i = idx(r, c);
+						state.wellsA[i] = { colors: DEFAULT_COLOR, segmentation: 1 };
+						state.wellsB[i] = { ct: null };
+					}
+				}
+			} else if (type === 'col') {
+				const c = parseInt(input, 10) - 1;
+				if (c >= 0 && c < TOTAL_COLS) {
+					for (let r = 0; r < TOTAL_ROWS; r++) {
+						const i = idx(r, c);
+						state.wellsA[i] = { colors: DEFAULT_COLOR, segmentation: 1 };
+						state.wellsB[i] = { ct: null };
+					}
 				}
 			}
 
-			grid.appendChild(well);
-		}
-
-		const rowHeader2 = document.createElement('div');
-		rowHeader2.classList.add('row-header'); rowHeader2.textContent = rowLetter(r);
-		grid.appendChild(rowHeader2);
-	}
-
-	renderSampleLegend();
-}
-function renderSampleLegend() {
-	const legendDiv = document.getElementById('sampleLegend');
-	legendDiv.innerHTML = '';
-	state.samples.forEach(s => {
-		const item = document.createElement('div');
-		item.classList.add('sample-item');
-		const dot = document.createElement('span');
-		dot.classList.add('sample-dot'); dot.style.backgroundColor = s.color;
-		const name = document.createElement('span'); name.textContent = s.name + (s.group ? ` [${s.group}]` : '');
-		item.appendChild(dot); item.appendChild(name);
-		legendDiv.appendChild(item);
-	});
-}
-
-/* ===== Sample Management ===== */
-function renderSamples() {
-	const sampleList = document.getElementById('sampleList');
-	sampleList.innerHTML = '';
-	state.samples.forEach((s, i) => {
-		const row = document.createElement('div');
-		row.classList.add('sample-row');
-
-		const swatch = document.createElement('div');
-		swatch.classList.add('sample-swatch'); swatch.style.backgroundColor = s.color;
-
-		const details = document.createElement('div');
-		details.textContent = `${s.name} — Target: ${s.target} — Cond: ${s.conditionName || ''} — Role: ${s.role} — Group: ${s.group || ''}`;
-		details.style.minWidth = '320px';
-
-		const buttons = document.createElement('div');
-		buttons.classList.add('inline-buttons');
-
-		// Quick group change
-		const groupSel = document.createElement('select');
-		groupSel.setAttribute('aria-label', 'Change sample group');
-		const groupNames = Array.from(new Set(state.groups.map(g => g.name)));
-		groupNames.forEach(n => {
-			const opt = document.createElement('option');
-			opt.value = n; opt.textContent = n; if (s.group === n) opt.selected = true;
-			groupSel.appendChild(opt);
-		});
-		groupSel.onchange = () => {
-			s.group = groupSel.value;
-			saveState(); renderSamples(); renderAllGroups();
-		};
-
-		const delBtn = document.createElement('button');
-		delBtn.textContent = '✕';
-		delBtn.title = 'Delete sample';
-		delBtn.onclick = () => {
-			state.samples.splice(i, 1);
 			saveState();
-			renderSamples(); renderSelector(); renderPlateA(); renderCtTable(); refreshMasterMix(); updateCounts(); renderAllGroups();
-		};
+			renderPlateA();
+			renderCtTable();
+			updateCounts();
+			updateMasterMixTotals();
+			renderAllGroups();
+		});
+		document.getElementById('undoBtn').addEventListener('click', undo);
+		document.getElementById('redoBtn').addEventListener('click', redo);
 
-		buttons.appendChild(groupSel);
-		buttons.appendChild(delBtn);
-
-		row.appendChild(swatch);
-		row.appendChild(details);
-		row.appendChild(buttons);
-		sampleList.appendChild(row);
-	});
-}
-function handleAddSample(e) {
-	if (e) e.preventDefault();
-	const name = document.getElementById('sampleNameInput').value.trim();
-	const role = document.getElementById('sampleRoleInput').value;
-	const target = document.getElementById('targetInput').value.trim();
-	const conditionName = document.getElementById('conditionNameInput').value.trim();
-	const groupName = document.getElementById('groupNameInput').value.trim() || 'Group 1';
-	const color = document.getElementById('sampleColorInput').value;
-	if (!name || !target) return;
-
-	pushHistory();
-
-	// ensure group exists (by name)
-	let group = state.groups.find(g => g.name === groupName);
-	if (!group) {
-		group = { id: 'g' + (Date.now() + Math.random()), name: groupName };
-		state.groups.push(group);
-		state.groupSettings[group.id] = { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3' };
-	}
-
-	state.samples.push({ id: Date.now() + Math.random(), name, role, target, conditionName, color, group: group.name });
-	if (!state.selectedColor) state.selectedColor = color;
-
-	document.getElementById('sampleNameInput').value = '';
-	document.getElementById('conditionNameInput').value = '';
-	document.getElementById('targetInput').value = '';
-
-	saveState();
-	renderSamples();
-	renderSelector();
-	renderPlateA();
-	renderCtTable();
-	refreshMasterMix();
-	updateCounts();
-	renderAllGroups();
-}
-document.getElementById('addForm').addEventListener('submit', handleAddSample);
-document.getElementById('addSampleBtn').addEventListener('click', handleAddSample);
-
-/* ===== Color selector ===== */
-function renderSelector() {
-	const selectorDiv = document.getElementById('colorSelector');
-	selectorDiv.innerHTML = '';
-
-	// Clear option
-	const clearOption = document.createElement('div');
-	clearOption.classList.add('selector-pill');
-	if (state.selectedColor === null || state.selectedColor === DEFAULT_COLOR) clearOption.classList.add('active');
-	clearOption.onclick = () => { state.selectedColor = DEFAULT_COLOR; saveState(); renderSelector(); };
-	const clearSwatch = document.createElement('div'); clearSwatch.classList.add('selector-swatch'); clearSwatch.style.backgroundColor = DEFAULT_COLOR;
-	const clearName = document.createElement('div'); clearName.classList.add('selector-name'); clearName.textContent = 'Clear';
-	clearOption.appendChild(clearSwatch); clearOption.appendChild(clearName); selectorDiv.appendChild(clearOption);
-
-	// Samples
-	state.samples.forEach(s => {
-		const option = document.createElement('div');
-		option.classList.add('selector-pill');
-		if (state.selectedColor === s.color) option.classList.add('active');
-		option.onclick = () => { state.selectedColor = s.color; saveState(); renderSelector(); };
-		const swatch = document.createElement('div'); swatch.classList.add('selector-swatch'); swatch.style.backgroundColor = s.color;
-		const name = document.createElement('div'); name.classList.add('selector-name'); name.textContent = s.name;
-		option.appendChild(swatch); option.appendChild(name); selectorDiv.appendChild(option);
-	});
-}
-
-/* ===== Reset buttons ===== */
-document.getElementById('resetButton').addEventListener('click', () => {
-	if (confirm('Reset all wells to white and clear all Ct values?')) {
-		pushHistory();
-		initEmptyPlate();
-		initEmptyCtTable();
-		saveState();
-		renderPlateA();
-		renderCtTable();
-		updateCounts();
-		updateMasterMixTotals();
-		renderAllGroups();
-	}
-});
-document.getElementById('partialApplyBtn').addEventListener('click', () => {
-	const type = document.getElementById('partialResetSelect').value;
-	const input = document.getElementById('partialInput').value.trim().toUpperCase();
-	if (!type || !input) return;
-
-	pushHistory();
-
-	if (type === 'row') {
-		const r = input.charCodeAt(0) - 65;
-		if (r >= 0 && r < TOTAL_ROWS) {
-			for (let c = 0; c < TOTAL_COLS; c++) {
-				const i = idx(r, c);
-				state.wellsA[i] = { colors: DEFAULT_COLOR, segmentation: 1 };
-				state.wellsB[i] = { ct: null };
+		/* ===== Well color counting (for Master Mix) ===== */
+		function calculateCounts() {
+			const countsByTarget = {};
+			const targets = getTargets(); targets.forEach(t => countsByTarget[t] = 0);
+			for (let i = 0; i < state.wellsA.length; i++) {
+				const w = state.wellsA[i];
+				const colors = Array.isArray(w.colors) ? w.colors : [w.colors];
+				const colorsUsed = colors.filter(c => c !== DEFAULT_COLOR);
+				for (let color of colorsUsed) {
+					const s = state.samples.find(s => s.color.toLowerCase() === String(color).toLowerCase());
+					if (s && s.target) countsByTarget[s.target] = (countsByTarget[s.target] || 0) + 1;
+				}
 			}
+			return countsByTarget;
 		}
-	} else if (type === 'col') {
-		const c = parseInt(input, 10) - 1;
-		if (c >= 0 && c < TOTAL_COLS) {
-			for (let r = 0; r < TOTAL_ROWS; r++) {
-				const i = idx(r, c);
-				state.wellsA[i] = { colors: DEFAULT_COLOR, segmentation: 1 };
-				state.wellsB[i] = { ct: null };
+		function updateCounts() {
+			const countsRow = document.getElementById('countsRow');
+			if (!countsRow) return;
+
+			const bySample = {};
+			for (let i = 0; i < state.wellsA.length; i++) {
+				const w = state.wellsA[i];
+				const colors = Array.isArray(w.colors) ? w.colors : [w.colors];
+				const colorsUsed = colors.filter(c => c !== DEFAULT_COLOR);
+				for (let color of colorsUsed) {
+					const s = state.samples.find(s => s.color.toLowerCase() === String(color).toLowerCase());
+					if (s) bySample[s.id] = (bySample[s.id] || 0) + 1;
+				}
 			}
+			countsRow.innerHTML = '<strong>Well counts:</strong> ' + state.samples.map(s => {
+				const n = bySample[s.id] || 0;
+				return `<span class="sum-pill">${s.name}: ${n}</span>`;
+			}).join(' ');
 		}
-	}
 
-	saveState();
-	renderPlateA();
-	renderCtTable();
-	updateCounts();
-	updateMasterMixTotals();
-	renderAllGroups();
-});
-document.getElementById('undoBtn').addEventListener('click', undo);
-document.getElementById('redoBtn').addEventListener('click', redo);
-
-/* ===== Well color counting (for Master Mix) ===== */
-function calculateCounts() {
-	const countsByTarget = {};
-	const targets = getTargets(); targets.forEach(t => countsByTarget[t] = 0);
-	for (let i = 0; i < state.wellsA.length; i++) {
-		const w = state.wellsA[i];
-		const colors = Array.isArray(w.colors) ? w.colors : [w.colors];
-		const colorsUsed = colors.filter(c => c !== DEFAULT_COLOR);
-		for (let color of colorsUsed) {
-			const s = state.samples.find(s => s.color.toLowerCase() === String(color).toLowerCase());
-			if (s && s.target) countsByTarget[s.target] = (countsByTarget[s.target] || 0) + 1;
-		}
-	}
-	return countsByTarget;
-}
-function updateCounts() {
-	const countsRow = document.getElementById('countsRow');
-	if (!countsRow) return;
-
-	const bySample = {};
-	for (let i = 0; i < state.wellsA.length; i++) {
-		const w = state.wellsA[i];
-		const colors = Array.isArray(w.colors) ? w.colors : [w.colors];
-		const colorsUsed = colors.filter(c => c !== DEFAULT_COLOR);
-		for (let color of colorsUsed) {
-			const s = state.samples.find(s => s.color.toLowerCase() === String(color).toLowerCase());
-			if (s) bySample[s.id] = (bySample[s.id] || 0) + 1;
-		}
-	}
-	countsRow.innerHTML = '<strong>Well counts:</strong> ' + state.samples.map(s => {
-		const n = bySample[s.id] || 0;
-		return `<span class="sum-pill">${s.name}: ${n}</span>`;
-	}).join(' ');
-}
-
-/* ===== Master Mix Planner ===== */
-function renderExtraWellsTable() {
-	const countsByTarget = calculateCounts();
-	const tb = document.querySelector('#mmExtraWells tbody'); tb.innerHTML = '';
-	getTargets().forEach(t => {
-		const assigned = countsByTarget[t] || 0;
-		const extra = +state.extraWellsPerTarget[t] || 0;
-		const tr = document.createElement('tr');
-		tr.innerHTML = `
+		/* ===== Master Mix Planner ===== */
+		function renderExtraWellsTable() {
+			const countsByTarget = calculateCounts();
+			const tb = document.querySelector('#mmExtraWells tbody'); tb.innerHTML = '';
+			getTargets().forEach(t => {
+				const assigned = countsByTarget[t] || 0;
+				const extra = +state.extraWellsPerTarget[t] || 0;
+				const tr = document.createElement('tr');
+				tr.innerHTML = `
 			<td>${t}</td>
 			<td class="assigned" data-target="${t}">${assigned}</td>
 			<td><input type="number" step="1" min="0" value="${extra}" style="width:90px" data-target="${t}" class="extraWellsInput" aria-label="Extra wells for ${t}"/></td>
 			<td class="total-used" data-target="${t}">${assigned + extra}</td>
 		`;
-		tb.appendChild(tr);
-	});
-	tb.querySelectorAll('.extraWellsInput').forEach(inp => {
-		inp.oninput = () => {
-			const t = inp.dataset.target;
-			const v = Math.max(0, Math.floor(+inp.value || 0));
-			state.extraWellsPerTarget[t] = v;
-			saveState(); updateMasterMixTotals();
-		};
-	});
-}
-function renderReagents() {
-	const head1 = document.getElementById('mmHeadRow1');
-	const head2 = document.getElementById('mmHeadRow2');
-	const body = document.getElementById('mmBody');
-	const footPerWell = document.getElementById('mmFootPerWell');
-	const footGrand = document.getElementById('mmFootGrand');
-
-	const targets = getTargets();
-
-	head1.innerHTML = '<th>Reagent</th><th>µL per well</th>' + targets.map(() => '<th></th>').join('') + '<th></th>';
-	head2.innerHTML = '<th colspan="2" class="note">Totals per target</th>' + targets.map(t => `<th>${t}</th>`).join('') + '<th></th>';
-
-	body.innerHTML = '';
-	state.reagents.forEach((r, i) => {
-		const tr = document.createElement('tr');
-		tr.innerHTML = `<td>${r.name}</td><td>${fmt1(r.perWell)}</td>` + targets.map(() => '<td class="mm-cell"></td>').join('') + `<td><button type="button" data-i="${i}" class="delR" aria-label="Delete reagent ${r.name}">✕</button></td>`;
-		body.appendChild(tr);
-	});
-	body.querySelectorAll('.delR').forEach(btn => {
-		btn.onclick = () => { const i = parseInt(btn.dataset.i, 10); state.reagents.splice(i, 1); saveState(); renderReagents(); updateMasterMixTotals(); };
-	});
-
-	footPerWell.innerHTML = '<th colspan="2">Total per well (µL)</th>' + targets.map(() => '<th class="mm-pw"></th>').join('') + '<th></th>';
-	footGrand.innerHTML = '<th colspan="2">Master tube total per target (µL)</th>' + targets.map(() => '<th class="mm-gt"></th>').join('') + '<th></th>';
-}
-function updateMasterMixTotals() {
-	const countsByTarget = calculateCounts();
-	const targets = getTargets();
-
-	// Update Assigned/Total used in extra table
-	targets.forEach(t => {
-		const assignedCell = document.querySelector(`.assigned[data-target="${t}"]`);
-		const totalCell = document.querySelector(`.total-used[data-target="${t}"]`);
-		if (assignedCell) assignedCell.textContent = countsByTarget[t] || 0;
-		if (totalCell) {
-			const extra = +state.extraWellsPerTarget[t] || 0;
-			totalCell.textContent = (countsByTarget[t] || 0) + extra;
-		}
-	});
-
-	// Effective wells per target
-	const eff = {}; targets.forEach(t => eff[t] = (countsByTarget[t] || 0) + (+state.extraWellsPerTarget[t] || 0));
-
-	// Reagent per-target totals and footers
-	const bodyRows = Array.from(document.querySelectorAll('#mmBody tr'));
-	const perTargetGrand = {}; targets.forEach(t => perTargetGrand[t] = 0);
-
-	bodyRows.forEach((tr, rowIdx) => {
-		const r = state.reagents[rowIdx] || { perWell: 0 };
-		const per = r.perWell || 0;
-		const targetCells = Array.from(tr.querySelectorAll('td.mm-cell'));
-		targets.forEach((t, ti) => {
-			const tot = per * (eff[t] || 0);
-			perTargetGrand[t] += tot;
-			targetCells[ti].textContent = fmt1(tot);
-		});
-	});
-
-	const perWellSum = state.reagents.reduce((a, r) => a + (r.perWell || 0), 0);
-	Array.from(document.querySelectorAll('#mmFootPerWell .mm-pw')).forEach(cell => cell.textContent = fmt1(perWellSum));
-
-	const footGTCells = Array.from(document.querySelectorAll('#mmFootGrand .mm-gt'));
-	targets.forEach((t, i) => { if (footGTCells[i]) footGTCells[i].textContent = fmt1(perTargetGrand[t]); });
-}
-document.getElementById('addReagentBtn').addEventListener('click', () => {
-	const name = document.getElementById('reagentName').value.trim();
-	const perWell = parseFloat(document.getElementById('reagentVol').value);
-	if (!name || !isFinite(perWell)) return;
-	state.reagents.push({ name, perWell });
-	document.getElementById('reagentName').value = ''; document.getElementById('reagentVol').value = '';
-	saveState(); renderReagents(); updateMasterMixTotals();
-});
-function refreshMasterMix() { renderExtraWellsTable(); renderReagents(); updateMasterMixTotals(); }
-
-/* ===== Plate B (Ct table with paste) ===== */
-function renderCtTable() {
-	const thead = document.getElementById('ctHead');
-	const tbody = document.getElementById('ctBody');
-	thead.innerHTML = ''; tbody.innerHTML = '';
-
-	const trh = document.createElement('tr');
-	trh.appendChild(document.createElement('th'));
-	for (let c = 1; c <= TOTAL_COLS; c++) { const th = document.createElement('th'); th.textContent = c; trh.appendChild(th); }
-	thead.appendChild(trh);
-
-	for (let r = 0; r < TOTAL_ROWS; r++) {
-		const tr = document.createElement('tr');
-		const rh = document.createElement('th'); rh.textContent = rowLetter(r); tr.appendChild(rh);
-		for (let c = 0; c < TOTAL_COLS; c++) {
-			const td = document.createElement('td'); const i = idx(r, c);
-			const inp = document.createElement('input'); inp.type = 'text'; inp.setAttribute('aria-label', `Ct ${rowLetter(r)}${c + 1}`);
-			if (state.wellsB[i].ct != null) inp.value = String(state.wellsB[i].ct);
-			inp.addEventListener('change', () => {
-				const v = parseFloat(inp.value); state.wellsB[i].ct = isFinite(v) ? v : null; saveState(); renderAllGroupsDebounced();
+				tb.appendChild(tr);
 			});
-			inp.addEventListener('paste', (e) => {
-				e.preventDefault();
-				const text = (e.clipboardData || window.clipboardData).getData('text'); if (!text) return;
-				const rows = text.split(/\r?\n/).filter(Boolean);
-				let rr = r, cc = c;
-				for (let ri = 0; ri < rows.length && rr < TOTAL_ROWS; ri++) {
-					const cols = rows[ri].split('\t');
-					cc = c;
-					for (let ci = 0; ci < cols.length && cc < TOTAL_COLS; ci++) {
-						const num = parseFloat(cols[ci].trim());
-						const at = idx(rr, cc);
-						state.wellsB[at].ct = isFinite(num) ? num : null;
-						const cell = document.querySelector(`#ctBody tr:nth-child(${rr + 1}) td:nth-child(${cc + 2}) input`);
-						if (cell) cell.value = isFinite(num) ? String(num) : '';
-						cc++;
-					}
-					rr++;
+			tb.querySelectorAll('.extraWellsInput').forEach(inp => {
+				inp.oninput = () => {
+					const t = inp.dataset.target;
+					const v = Math.max(0, Math.floor(+inp.value || 0));
+					state.extraWellsPerTarget[t] = v;
+					saveState(); updateMasterMixTotals();
+				};
+			});
+		}
+		function renderReagents() {
+			const head1 = document.getElementById('mmHeadRow1');
+			const head2 = document.getElementById('mmHeadRow2');
+			const body = document.getElementById('mmBody');
+			const footPerWell = document.getElementById('mmFootPerWell');
+			const footGrand = document.getElementById('mmFootGrand');
+
+			const targets = getTargets();
+
+			head1.innerHTML = '<th>Reagent</th><th>µL per well</th>' + targets.map(() => '<th></th>').join('') + '<th></th>';
+			head2.innerHTML = '<th colspan="2" class="note">Totals per target</th>' + targets.map(t => `<th>${t}</th>`).join('') + '<th></th>';
+
+			body.innerHTML = '';
+			state.reagents.forEach((r, i) => {
+				const tr = document.createElement('tr');
+				tr.innerHTML = `<td>${r.name}</td><td>${fmt1(r.perWell)}</td>` + targets.map(() => '<td class="mm-cell"></td>').join('') + `<td><button type="button" data-i="${i}" class="delR" aria-label="Delete reagent ${r.name}">✕</button></td>`;
+				body.appendChild(tr);
+			});
+			body.querySelectorAll('.delR').forEach(btn => {
+				btn.onclick = () => { const i = parseInt(btn.dataset.i, 10); state.reagents.splice(i, 1); saveState(); renderReagents(); updateMasterMixTotals(); };
+			});
+
+			footPerWell.innerHTML = '<th colspan="2">Total per well (µL)</th>' + targets.map(() => '<th class="mm-pw"></th>').join('') + '<th></th>';
+			footGrand.innerHTML = '<th colspan="2">Master tube total per target (µL)</th>' + targets.map(() => '<th class="mm-gt"></th>').join('') + '<th></th>';
+		}
+		function updateMasterMixTotals() {
+			const countsByTarget = calculateCounts();
+			const targets = getTargets();
+
+			// Update Assigned/Total used in extra table
+			targets.forEach(t => {
+				const assignedCell = document.querySelector(`.assigned[data-target="${t}"]`);
+				const totalCell = document.querySelector(`.total-used[data-target="${t}"]`);
+				if (assignedCell) assignedCell.textContent = countsByTarget[t] || 0;
+				if (totalCell) {
+					const extra = +state.extraWellsPerTarget[t] || 0;
+					totalCell.textContent = (countsByTarget[t] || 0) + extra;
 				}
-				saveState(); renderAllGroupsDebounced();
 			});
-			td.appendChild(inp); tr.appendChild(td);
+
+			// Effective wells per target
+			const eff = {}; targets.forEach(t => eff[t] = (countsByTarget[t] || 0) + (+state.extraWellsPerTarget[t] || 0));
+
+			// Reagent per-target totals and footers
+			const bodyRows = Array.from(document.querySelectorAll('#mmBody tr'));
+			const perTargetGrand = {}; targets.forEach(t => perTargetGrand[t] = 0);
+
+			bodyRows.forEach((tr, rowIdx) => {
+				const r = state.reagents[rowIdx] || { perWell: 0 };
+				const per = r.perWell || 0;
+				const targetCells = Array.from(tr.querySelectorAll('td.mm-cell'));
+				targets.forEach((t, ti) => {
+					const tot = per * (eff[t] || 0);
+					perTargetGrand[t] += tot;
+					targetCells[ti].textContent = fmt1(tot);
+				});
+			});
+
+			const perWellSum = state.reagents.reduce((a, r) => a + (r.perWell || 0), 0);
+			Array.from(document.querySelectorAll('#mmFootPerWell .mm-pw')).forEach(cell => cell.textContent = fmt1(perWellSum));
+
+			const footGTCells = Array.from(document.querySelectorAll('#mmFootGrand .mm-gt'));
+			targets.forEach((t, i) => { if (footGTCells[i]) footGTCells[i].textContent = fmt1(perTargetGrand[t]); });
 		}
-		tbody.appendChild(tr);
-	}
-}
+		document.getElementById('addReagentBtn').addEventListener('click', () => {
+			const name = document.getElementById('reagentName').value.trim();
+			const perWell = parseFloat(document.getElementById('reagentVol').value);
+			if (!name || !isFinite(perWell)) return;
+			state.reagents.push({ name, perWell });
+			document.getElementById('reagentName').value = ''; document.getElementById('reagentVol').value = '';
+			saveState(); renderReagents(); updateMasterMixTotals();
+		});
+		function refreshMasterMix() { renderExtraWellsTable(); renderReagents(); updateMasterMixTotals(); }
 
-/* ===== Groups: data, UI, and analytics ===== */
+		/* ===== Plate B (Ct table with paste) ===== */
+		function renderCtTable() {
+			const thead = document.getElementById('ctHead');
+			const tbody = document.getElementById('ctBody');
+			thead.innerHTML = ''; tbody.innerHTML = '';
 
-/* Auto-prune empty groups: remove any group with no samples, and its settings */
-function pruneEmptyGroups(){
-	// Group names that are actually used by samples
-	const groupsInUse = new Set(state.samples.map(s => s.group).filter(Boolean));
-	const before = state.groups.length;
-	// Keep only groups with samples
-	state.groups = state.groups.filter(g => groupsInUse.has(g.name));
-	// Drop settings for removed groups
-	const validIds = new Set(state.groups.map(g => g.id));
-	Object.keys(state.groupSettings || {}).forEach(id => { if(!validIds.has(id)) delete state.groupSettings[id]; });
-	if (state.groups.length !== before) saveState();
-}
+			const trh = document.createElement('tr');
+			trh.appendChild(document.createElement('th'));
+			for (let c = 1; c <= TOTAL_COLS; c++) { const th = document.createElement('th'); th.textContent = c; trh.appendChild(th); }
+			thead.appendChild(trh);
 
-function ensureDefaultGroup() {
-	if (state.groups.length === 0) {
-		state.groups.push({ id: 'g1', name: 'Group 1' });
-		state.groupSettings['g1'] = { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3' };
-	}
-	// if any sample has no group, assign to "Group 1"
-	state.samples.forEach(s => { if (!s.group) s.group = 'Group 1'; });
-}
+			for (let r = 0; r < TOTAL_ROWS; r++) {
+				const tr = document.createElement('tr');
+				const rh = document.createElement('th'); rh.textContent = rowLetter(r); tr.appendChild(rh);
+				for (let c = 0; c < TOTAL_COLS; c++) {
+					const td = document.createElement('td'); const i = idx(r, c);
+					const inp = document.createElement('input'); inp.type = 'text'; inp.setAttribute('aria-label', `Ct ${rowLetter(r)}${c + 1}`);
+					if (state.wellsB[i].ct != null) inp.value = String(state.wellsB[i].ct);
+					inp.addEventListener('change', () => {
+						const v = parseFloat(inp.value); state.wellsB[i].ct = isFinite(v) ? v : null; saveState(); renderAllGroupsDebounced();
+					});
+					inp.addEventListener('paste', (e) => {
+						e.preventDefault();
+						const text = (e.clipboardData || window.clipboardData).getData('text'); if (!text) return;
+						const rows = text.split(/\r?\n/).filter(Boolean);
+						let rr = r, cc = c;
+						for (let ri = 0; ri < rows.length && rr < TOTAL_ROWS; ri++) {
+							const cols = rows[ri].split('\t');
+							cc = c;
+							for (let ci = 0; ci < cols.length && cc < TOTAL_COLS; ci++) {
+								const num = parseFloat(cols[ci].trim());
+								const at = idx(rr, cc);
+								state.wellsB[at].ct = isFinite(num) ? num : null;
+								const cell = document.querySelector(`#ctBody tr:nth-child(${rr + 1}) td:nth-child(${cc + 2}) input`);
+								if (cell) cell.value = isFinite(num) ? String(num) : '';
+								cc++;
+							}
+							rr++;
+						}
+						saveState(); renderAllGroupsDebounced();
+					});
+					td.appendChild(inp); tr.appendChild(td);
+				}
+				tbody.appendChild(tr);
+			}
+		}
 
-// Build panels
-function renderAllGroups() {
-	ensureDefaultGroup();
-	pruneEmptyGroups(); // <-- Auto-remove any group with no samples
-	const container = document.getElementById('groupsPanels');
-	container.innerHTML = '';
+		/* ===== Groups: data, UI, and analytics ===== */
 
-	// One panel per group, stacked
-	state.groups.forEach(group => {
-		const panel = document.createElement('div');
-		panel.classList.add('controls');
-		panel.dataset.groupId = group.id;
+		/* Auto-prune empty groups: remove any group with no samples, and its settings */
+		function pruneEmptyGroups() {
+			// Group names that are actually used by samples
+			const groupsInUse = new Set(state.samples.map(s => s.group).filter(Boolean));
+			const before = state.groups.length;
+			// Keep only groups with samples
+			state.groups = state.groups.filter(g => groupsInUse.has(g.name));
+			// Drop settings for removed groups
+			const validIds = new Set(state.groups.map(g => g.id));
+			Object.keys(state.groupSettings || {}).forEach(id => { if (!validIds.has(id)) delete state.groupSettings[id]; });
+			if (state.groups.length !== before) saveState();
+		}
 
-		// Header + controls unique per group
-		const set = state.groupSettings[group.id] || { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3' };
-		const targetsInGroup = getTargetsInGroup(group.name);
+		function ensureDefaultGroup() {
+			if (state.groups.length === 0) {
+				state.groups.push({ id: 'g1', name: 'Group 1' });
+				state.groupSettings['g1'] = { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3' };
+			}
+			// if any sample has no group, assign to "Group 1"
+			state.samples.forEach(s => { if (!s.group) s.group = 'Group 1'; });
+		}
 
-		panel.innerHTML = `
+		// Build panels
+		function renderAllGroups() {
+			ensureDefaultGroup();
+			pruneEmptyGroups(); // <-- Auto-remove any group with no samples
+			const container = document.getElementById('groupsPanels');
+			container.innerHTML = '';
+
+			// One panel per group, stacked
+			state.groups.forEach(group => {
+				const panel = document.createElement('div');
+				panel.classList.add('controls');
+				panel.dataset.groupId = group.id;
+
+				// Header + controls unique per group
+				const set = state.groupSettings[group.id] || { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3' };
+				const targetsInGroup = getTargetsInGroup(group.name);
+
+				panel.innerHTML = `
 			<h3>Ct summary and ΔCt/ΔΔCt — Group: ${group.name}</h3>
 			<div class="row" data-group-id="${group.id}">
 				<label>Control type within target for ΔCt
@@ -1230,7 +1258,7 @@ function renderAllGroups() {
 				</label>
 				<label>Control Target for ΔΔCt
 					<select class="ctrl-target" aria-label="Control Target for ΔΔCt">
-						${targetsInGroup.map(t => `<option value="${t}" ${set.ctrlTarget===t ? 'selected':''}>${t}</option>`).join('')}
+						${targetsInGroup.map(t => `<option value="${t}" ${set.ctrlTarget === t ? 'selected' : ''}>${t}</option>`).join('')}
 					</select>
 				</label>
 				<label>Condition for chart
@@ -1260,394 +1288,487 @@ function renderAllGroups() {
 			</div>
 		`;
 
-		container.appendChild(panel);
-	});
+				container.appendChild(panel);
+			});
 
-	// Bind inputs and compute per-group
-	bindGroupInputsAndCompute();
-}
-function getTargetsInGroup(groupName) {
-	// targets from samples in that group
-	return Array.from(new Set(
-		state.samples.filter(s => s.group === groupName).map(s => s.target).filter(Boolean)
-	)).sort();
-}
-function bindGroupInputsAndCompute() {
-	// Update settings on change and recompute
-	document.querySelectorAll('#groupsPanels .row[data-group-id]').forEach(row => {
-		const gid = row.dataset.groupId;
-		const ctrlTypeEl = row.querySelector('.ctrl-type');
-		const ctrlTargetEl = row.querySelector('.ctrl-target');
-		const chartCondEl = row.querySelector('.chart-cond');
-
-		const update = () => {
-			state.groupSettings[gid] = state.groupSettings[gid] || { controlType:'IgG', ctrlTarget:'', chartCond:'me3' };
-			state.groupSettings[gid].controlType = ctrlTypeEl.value;
-			state.groupSettings[gid].ctrlTarget = ctrlTargetEl.value;
-			state.groupSettings[gid].chartCond = chartCondEl.value;
-			saveState();
-			computeGroup(gid);
-		};
-
-		ctrlTypeEl.addEventListener('input', update);
-		ctrlTypeEl.addEventListener('change', update);
-		ctrlTargetEl.addEventListener('change', update);
-		chartCondEl.addEventListener('input', update);
-		chartCondEl.addEventListener('change', update);
-	});
-
-	// Initial compute for all
-	state.groups.forEach(g => computeGroup(g.id));
-}
-
-function computeGroup(groupId) {
-	const group = state.groups.find(g => g.id === groupId);
-	if (!group) return;
-	const groupName = group.name;
-	const settings = state.groupSettings[groupId] || { controlType:'IgG', ctrlTarget:'', chartCond:'me3' };
-	const controlType = String(settings.controlType||'').trim().toLowerCase();
-	const ctrlTarget = settings.ctrlTarget || '';
-	const chartCondNorm = normalizeCond(settings.chartCond||'');
-
-	// Map color -> sample for this group only
-	const colorToSample = new Map(
-		state.samples
-			.filter(s => s.group === groupName)
-			.map(s => [s.color.toLowerCase(), s])
-	);
-
-	// Buckets of CTs per sample in this group based on Plate A color mapping
-	const buckets = new Map(); // sampleId -> { vals:[], sample }
-	for (let i = 0; i < state.wellsA.length; i++) {
-		const w = state.wellsA[i];
-		const wellColors = Array.isArray(w.colors) ? w.colors : [w.colors];
-		const ctVal = state.wellsB[i]?.ct;
-		if (ctVal == null || !isFinite(ctVal)) continue;
-
-		for (const col of wellColors) {
-			if (!col || col === DEFAULT_COLOR) continue;
-			const s = colorToSample.get(String(col).toLowerCase());
-			if (!s) continue;
-			if (!buckets.has(s.id)) buckets.set(s.id, { vals:[], sample:s });
-			buckets.get(s.id).vals.push(ctVal);
+			// Bind inputs and compute per-group
+			bindGroupInputsAndCompute();
 		}
-	}
-
-	// Prepare rows for this group: all samples in group, with means
-	const groupSamples = state.samples.filter(s => s.group === groupName);
-	const rows = groupSamples.map(s => {
-		const b = buckets.get(s.id); const n = b ? b.vals.length : 0;
-		const mean = n ? b.vals.reduce((a, b) => a + b, 0) / n : null;
-		return { id:s.id, sample:s, n, meanCt:mean, dCt:null, ddCt:null, fc:null };
-	});
-
-	// Compute ΔCt within each target (in this group)
-	const targets = Array.from(new Set(groupSamples.map(s => s.target).filter(Boolean))).sort();
-	const byTarget = {}; const perTargetCondDCt = {};
-	targets.forEach(t => {
-		const tRows = rows.filter(r => r.sample.target === t);
-		let refRow = null;
-		if (controlType){
-			refRow = tRows.find(r => (String(r.sample.conditionName||'').toLowerCase()).includes(controlType)) || null;
+		function getTargetsInGroup(groupName) {
+			// targets from samples in that group
+			return Array.from(new Set(
+				state.samples.filter(s => s.group === groupName).map(s => s.target).filter(Boolean)
+			)).sort();
 		}
-		if (!refRow) refRow = tRows[0] || null;
-		const refMean = refRow?.meanCt ?? null;
+		function bindGroupInputsAndCompute() {
+			// Update settings on change and recompute
+			document.querySelectorAll('#groupsPanels .row[data-group-id]').forEach(row => {
+				const gid = row.dataset.groupId;
+				const ctrlTypeEl = row.querySelector('.ctrl-type');
+				const ctrlTargetEl = row.querySelector('.ctrl-target');
+				const chartCondEl = row.querySelector('.chart-cond');
 
-		tRows.forEach(r => { if (r.meanCt!=null && refMean!=null) r.dCt = r.meanCt - refMean; });
+				const update = () => {
+					state.groupSettings[gid] = state.groupSettings[gid] || { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3' };
+					state.groupSettings[gid].controlType = ctrlTypeEl.value;
+					state.groupSettings[gid].ctrlTarget = ctrlTargetEl.value;
+					state.groupSettings[gid].chartCond = chartCondEl.value;
+					saveState();
+					computeGroup(gid);
+				};
 
-		const map = {};
-		tRows.forEach(r => {
-			const cnameNorm = normalizeCond(r.sample.conditionName||'');
-			if (cnameNorm && r.dCt!=null) map[cnameNorm] = r.dCt;
-		});
-		byTarget[t] = tRows;
-		perTargetCondDCt[t] = map;
-	});
+				ctrlTypeEl.addEventListener('input', update);
+				ctrlTypeEl.addEventListener('change', update);
+				ctrlTargetEl.addEventListener('change', update);
+				chartCondEl.addEventListener('input', update);
+				chartCondEl.addEventListener('change', update);
+			});
 
-	// ΔΔCt across targets using selected control target in this group
-	const ctrlMap = perTargetCondDCt[ctrlTarget] || {};
-	targets.forEach(t => {
-		(byTarget[t]||[]).forEach(r => {
-			const cnameNorm = normalizeCond(r.sample.conditionName||'');
-			const base = ctrlMap[cnameNorm];
-			if (r.dCt!=null && base!=null) {
-				r.ddCt = r.dCt - base;
-				r.fc = Math.pow(2, -r.ddCt);
+			// Initial compute for all
+			state.groups.forEach(g => computeGroup(g.id));
+		}
+
+		function computeGroup(groupId) {
+			const group = state.groups.find(g => g.id === groupId);
+			if (!group) return;
+			const groupName = group.name;
+			const settings = state.groupSettings[groupId] || { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3' };
+			const controlType = String(settings.controlType || '').trim().toLowerCase();
+			const ctrlTarget = settings.ctrlTarget || '';
+			const chartCondNorm = normalizeCond(settings.chartCond || '');
+
+			// Map color -> sample for this group only
+			const colorToSample = new Map(
+				state.samples
+					.filter(s => s.group === groupName)
+					.map(s => [s.color.toLowerCase(), s])
+			);
+
+			// Buckets of CTs per sample in this group based on Plate A color mapping
+			const buckets = new Map(); // sampleId -> { vals:[], sample }
+			for (let i = 0; i < state.wellsA.length; i++) {
+				const w = state.wellsA[i];
+				const wellColors = Array.isArray(w.colors) ? w.colors : [w.colors];
+				const ctVal = state.wellsB[i]?.ct;
+				if (ctVal == null || !isFinite(ctVal)) continue;
+
+				for (const col of wellColors) {
+					if (!col || col === DEFAULT_COLOR) continue;
+					const s = colorToSample.get(String(col).toLowerCase());
+					if (!s) continue;
+					if (!buckets.has(s.id)) buckets.set(s.id, { vals: [], sample: s });
+					buckets.get(s.id).vals.push(ctVal);
+				}
 			}
-		});
-	});
 
-	// Render table
-	const panel = document.querySelector(`#groupsPanels .controls[data-group-id="${groupId}"]`);
-	if (!panel) return;
-	const tb = panel.querySelector('table.ct-detail tbody');
-	tb.innerHTML = '';
-	targets.forEach(t => {
-		(byTarget[t]||[]).forEach(r => {
-			const rawVals = (buckets.get(r.sample.id)?.vals||[]).map(v => fmt2(v)).join(', ');
-			const tr = document.createElement('tr');
-			tr.innerHTML = `
+			// Prepare rows for this group: all samples in group, with means
+			const groupSamples = state.samples.filter(s => s.group === groupName);
+			const rows = groupSamples.map(s => {
+				const b = buckets.get(s.id); const n = b ? b.vals.length : 0;
+				const mean = n ? b.vals.reduce((a, b) => a + b, 0) / n : null;
+				return { id: s.id, sample: s, n, meanCt: mean, dCt: null, ddCt: null, fc: null };
+			});
+
+			// Compute ΔCt within each target (in this group)
+			const targets = Array.from(new Set(groupSamples.map(s => s.target).filter(Boolean))).sort();
+			const byTarget = {}; const perTargetCondDCt = {};
+			targets.forEach(t => {
+				const tRows = rows.filter(r => r.sample.target === t);
+				let refRow = null;
+				if (controlType) {
+					refRow = tRows.find(r => (String(r.sample.conditionName || '').toLowerCase()).includes(controlType)) || null;
+				}
+				if (!refRow) refRow = tRows[0] || null;
+				const refMean = refRow?.meanCt ?? null;
+
+				tRows.forEach(r => { if (r.meanCt != null && refMean != null) r.dCt = r.meanCt - refMean; });
+
+				const map = {};
+				tRows.forEach(r => {
+					const cnameNorm = normalizeCond(r.sample.conditionName || '');
+					if (cnameNorm && r.dCt != null) map[cnameNorm] = r.dCt;
+				});
+				byTarget[t] = tRows;
+				perTargetCondDCt[t] = map;
+			});
+
+			// ΔΔCt across targets using selected control target in this group
+			const ctrlMap = perTargetCondDCt[ctrlTarget] || {};
+			targets.forEach(t => {
+				(byTarget[t] || []).forEach(r => {
+					const cnameNorm = normalizeCond(r.sample.conditionName || '');
+					const base = ctrlMap[cnameNorm];
+					if (r.dCt != null && base != null) {
+						r.ddCt = r.dCt - base;
+						r.fc = Math.pow(2, -r.ddCt);
+					}
+				});
+			});
+
+			// Render table
+			const panel = document.querySelector(`#groupsPanels .controls[data-group-id="${groupId}"]`);
+			if (!panel) return;
+			const tb = panel.querySelector('table.ct-detail tbody');
+			tb.innerHTML = '';
+			targets.forEach(t => {
+				(byTarget[t] || []).forEach(r => {
+					const rawVals = (buckets.get(r.sample.id)?.vals || []).map(v => fmt2(v)).join(', ');
+					const tr = document.createElement('tr');
+					tr.innerHTML = `
 				<td>${t}</td>
 				<td>${r.sample.name}</td>
 				<td>${r.sample.role}</td>
 				<td>${r.sample.conditionName || ''}</td>
 				<td>${rawVals}</td>
-				<td>${r.meanCt!=null? fmt3(r.meanCt):''}</td>
-				<td>${r.dCt!=null? fmt3(r.dCt):''}</td>
-				<td>${r.ddCt!=null? fmt3(r.ddCt):''}</td>
-				<td>${r.fc!=null? fmt3(r.fc):''}</td>
+				<td>${r.meanCt != null ? fmt3(r.meanCt) : ''}</td>
+				<td>${r.dCt != null ? fmt3(r.dCt) : ''}</td>
+				<td>${r.ddCt != null ? fmt3(r.ddCt) : ''}</td>
+				<td>${r.fc != null ? fmt3(r.fc) : ''}</td>
 			`;
-			tb.appendChild(tr);
-		});
-	});
+					tb.appendChild(tr);
+				});
+			});
 
-	// Render chart per group: one bar per target for chosen condition
-	const labels=[]; const data=[];
-	targets.forEach(t => {
-		const r = (byTarget[t]||[]).find(x => normalizeCond(x.sample.conditionName||'') === chartCondNorm);
-		if (r && r.fc!=null){ labels.push(t); data.push(r.fc); }
-	});
-	drawGroupChart(panel.querySelector('canvas.group-chart'), labels, data);
-}
+			// Render chart per group: one bar per target for chosen condition
+			const labels = []; const data = [];
+			targets.forEach(t => {
+				const r = (byTarget[t] || []).find(x => normalizeCond(x.sample.conditionName || '') === chartCondNorm);
+				if (r && r.fc != null) { labels.push(t); data.push(r.fc); }
+			});
+			drawGroupChart(panel.querySelector('canvas.group-chart'), labels, data);
+		}
 
-function drawGroupChart(canvas, labels, data){
-	const ctx = canvas.getContext('2d');
-	try{
-		const existing = Chart.getChart ? Chart.getChart(canvas) : (canvas.chart || null);
-		if (existing && typeof existing.destroy === 'function') existing.destroy();
-	}catch(err){ console.warn('Chart destroy skipped:', err); }
+		function drawGroupChart(canvas, labels, data) {
+			const ctx = canvas.getContext('2d');
+			try {
+				const existing = Chart.getChart ? Chart.getChart(canvas) : (canvas.chart || null);
+				if (existing && typeof existing.destroy === 'function') existing.destroy();
+			} catch (err) { console.warn('Chart destroy skipped:', err); }
 
-	const chart = new Chart(ctx, {
-		type:'bar',
-		data:{ labels, datasets:[{ label:'Fold Change (2^-ΔΔCt)', data, backgroundColor:'rgba(52, 152, 219, 0.7)', borderColor:'#2c82c9', borderWidth:1 }]},
-		options:{
-			responsive:false, maintainAspectRatio:false,
-			layout:{ padding:{top:0,right:8,bottom:0,left:8} },
-			plugins:{ legend:{display:false} },
-			scales:{
-				y:{ beginAtZero:true, title:{display:true, text:'Fold Change'} },
-				x:{ title:{display:true, text:'Target'}, ticks:{ maxRotation:0, autoSkip:false } }
+			const chart = new Chart(ctx, {
+				type: 'bar',
+				data: { labels, datasets: [{ label: 'Fold Change (2^-ΔΔCt)', data, backgroundColor: 'rgba(52, 152, 219, 0.7)', borderColor: '#2c82c9', borderWidth: 1 }] },
+				options: {
+					responsive: false, maintainAspectRatio: false,
+					layout: { padding: { top: 0, right: 8, bottom: 0, left: 8 } },
+					plugins: { legend: { display: false } },
+					scales: {
+						y: { beginAtZero: true, title: { display: true, text: 'Fold Change' } },
+						x: { title: { display: true, text: 'Target' }, ticks: { maxRotation: 0, autoSkip: false } }
+					}
+				}
+			});
+			canvas._chart = chart;
+		}
+
+		/* Debounced recompute for bulk paste */
+		let rafToken = null;
+		function renderAllGroupsDebounced() {
+			if (rafToken) cancelAnimationFrame(rafToken);
+			rafToken = requestAnimationFrame(() => { rafToken = null; renderAllGroups(); });
+		}
+
+		/* ===== Export helpers (html2canvas lazy load) ===== */
+		async function ensureHtml2Canvas() {
+			if (window.html2canvas) return;
+			await new Promise((res, rej) => {
+				const s = document.createElement('script');
+				s.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+				s.onload = res; s.onerror = () => rej(new Error('Failed to load html2canvas'));
+				document.head.appendChild(s);
+			});
+		}
+		async function exportElementAsCanvas(el) {
+			await ensureHtml2Canvas();
+			return html2canvas(el, { scale: 2, useCORS: true, backgroundColor: '#ffffff', windowWidth: el.scrollWidth });
+		}
+
+		/* Toggle capture mode to hide .no-export elements */
+		async function withHiddenForExport(cb) {
+			document.body.classList.add('capturing');
+			try { return await cb(); }
+			finally { document.body.classList.remove('capturing'); }
+		}
+
+		function buildMetaHeaderNode() {
+			const wrap = document.createElement('div');
+			wrap.className = 'meta-export';
+
+			const name = (state.meta?.name || '').trim();
+			const date = (state.meta?.date || '').trim();
+			const notes = (state.meta?.notes || '').trim();
+
+			const title = document.createElement('div');
+			title.className = 'title';
+			title.textContent = 'Experiment metadata';
+			wrap.appendChild(title);
+
+			const row = document.createElement('div');
+			const kv1 = document.createElement('span');
+			kv1.className = 'kv';
+			kv1.textContent = `Name: ${name || '—'}`;
+			const kv2 = document.createElement('span');
+			kv2.className = 'kv';
+			kv2.textContent = `Date: ${date || '—'}`;
+			row.appendChild(kv1);
+			row.appendChild(kv2);
+			wrap.appendChild(row);
+
+			if (notes) {
+				const notesEl = document.createElement('div');
+				notesEl.className = 'notes';
+				notesEl.textContent = `Notes: ${notes}`;
+				wrap.appendChild(notesEl);
+			}
+			return wrap;
+		}
+
+		// Build a temporary wrapper (meta + cloned target) for capture, and snapshot charts
+		async function renderWithMetaCanvas(targetEl) {
+			// Build wrapper off-screen
+			const tmp = document.createElement('div');
+			tmp.style.width = targetEl.scrollWidth + 'px'; // keep sizing stable
+			tmp.style.paddingBottom = '8px';
+			tmp.style.position = 'absolute';
+			tmp.style.left = '-99999px';
+
+			// Prepend metadata header
+			const meta = buildMetaHeaderNode();
+			tmp.appendChild(meta);
+
+			// Clone the target section so we don’t move the original
+			const clone = targetEl.cloneNode(true);
+
+			// Replace canvases in the clone with image snapshots of the originals
+			const origCanvases = Array.from(targetEl.querySelectorAll('canvas'));
+			const cloneCanvases = Array.from(clone.querySelectorAll('canvas'));
+			cloneCanvases.forEach((cClone, i) => {
+				const cOrig = origCanvases[i];
+				if (!cOrig) return;
+				try {
+					// Ensure latest chart drawing is flushed
+					const ch = (window.Chart && (Chart.getChart ? Chart.getChart(cOrig) : cOrig._chart)) || null;
+					if (ch && typeof ch.update === 'function') ch.update();
+
+					const url = cOrig.toDataURL('image/png');
+					const img = new Image();
+					// Preserve pixel size to avoid blur/aspect issues
+					img.width = cOrig.width;
+					img.height = cOrig.height;
+					img.style.width = cOrig.style.width || '';
+					img.style.height = cOrig.style.height || '';
+					img.src = url;
+
+					cClone.replaceWith(img);
+				} catch (e) {
+					console.warn('Canvas snapshot failed:', e);
+				}
+			});
+
+			tmp.appendChild(clone);
+
+			// Mount off-screen and capture
+			document.body.appendChild(tmp);
+			try {
+				const canvas = await exportElementAsCanvas(tmp);
+				return canvas;
+			} finally {
+				document.body.removeChild(tmp);
 			}
 		}
-	});
-	canvas._chart = chart;
-}
 
-/* Debounced recompute for bulk paste */
-let rafToken = null;
-function renderAllGroupsDebounced(){
-	if(rafToken) cancelAnimationFrame(rafToken);
-	rafToken = requestAnimationFrame(()=>{ rafToken=null; renderAllGroups(); });
-}
+		/* Exports */
+		document.getElementById('exportPlateAJpegBtn').onclick = async () => {
+			try {
+				await withHiddenForExport(async () => {
+					const el = document.getElementById('plateAExportWrap');
+					const canvas = await renderWithMetaCanvas(el);
+					const a = document.createElement('a');
+					a.href = canvas.toDataURL('image/jpeg', 0.95);
+					a.download = 'plateA_with_meta.jpg';
+					a.click();
+				});
+			} catch (err) { console.error(err); showErrorToast('Export failed. Check console.'); }
+		};
 
-/* ===== Export helpers (html2canvas lazy load) ===== */
-async function ensureHtml2Canvas() {
-	if (window.html2canvas) return;
-	await new Promise((res, rej) => {
-		const s = document.createElement('script');
-		s.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
-		s.onload = res; s.onerror = () => rej(new Error('Failed to load html2canvas'));
-		document.head.appendChild(s);
-	});
-}
-async function exportElementAsCanvas(el) {
-	await ensureHtml2Canvas();
-	return html2canvas(el, { scale: 2, useCORS: true, backgroundColor: '#ffffff', windowWidth: el.scrollWidth });
-}
+		document.getElementById('exportPlateAPdfBtn').onclick = async () => {
+			try {
+				await withHiddenForExport(async () => {
+					const el = document.getElementById('plateAExportWrap');
+					const canvas = await renderWithMetaCanvas(el);
+					const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+					const { jsPDF } = window.jspdf;
+					const pdf = new jsPDF({ orientation: 'l', unit: 'pt', format: 'a4' });
+					const margin = 20, pageW = pdf.internal.pageSize.getWidth(), pageH = pdf.internal.pageSize.getHeight();
+					const img = new Image(); img.src = dataUrl; await new Promise(r => img.onload = r);
+					const maxW = pageW - margin * 2, maxH = pageH - margin * 2;
+					let w = img.width, h = img.height, scale = Math.min(maxW / w, maxH / h);
+					w *= scale; h *= scale;
+					pdf.addImage(dataUrl, 'JPEG', margin + (maxW - w) / 2, margin + (maxH - h) / 2, w, h);
+					pdf.save('plateA_with_meta.pdf');
+				});
+			} catch (err) { console.error(err); showErrorToast('Export failed. Check console.'); }
+		};
 
-/* Toggle capture mode to hide .no-export elements */
-async function withHiddenForExport(cb) {
-	document.body.classList.add('capturing');
-	try { return await cb(); }
-	finally { document.body.classList.remove('capturing'); }
-}
+		document.getElementById('exportCtJpegBtn').onclick = async () => {
+			try {
+				await withHiddenForExport(async () => {
+					const el = document.getElementById('ctExportWrap');
+					const canvas = await renderWithMetaCanvas(el);
+					const a = document.createElement('a');
+					a.href = canvas.toDataURL('image/jpeg', 0.95);
+					a.download = 'ct_summary_with_meta.jpg';
+					a.click();
+				});
+			} catch (err) { console.error(err); showErrorToast('Export failed. Check console.'); }
+		};
 
-/* Exports */
-document.getElementById('exportPlateAJpegBtn').onclick = async () => {
-	try {
-		await withHiddenForExport(async () => {
-			const el = document.getElementById('plateAExportWrap');
-			const canvas = await exportElementAsCanvas(el);
-			const a = document.createElement('a');
-			a.href = canvas.toDataURL('image/jpeg', 0.95); a.download = 'plateA_and_legend.jpg'; a.click();
+		document.getElementById('exportCtPdfBtn').onclick = async () => {
+			try {
+				await withHiddenForExport(async () => {
+					const el = document.getElementById('ctExportWrap');
+					const canvas = await renderWithMetaCanvas(el);
+					const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+					const { jsPDF } = window.jspdf;
+					const pdf = new jsPDF({ orientation: 'p', unit: 'pt', format: 'a4' });
+					const margin = 20, pageW = pdf.internal.pageSize.getWidth(), pageH = pdf.internal.pageSize.getHeight();
+					const img = new Image(); img.src = dataUrl; await new Promise(r => img.onload = r);
+					const maxW = pageW - margin * 2, maxH = pageH - margin * 2;
+					let w = img.width, h = img.height, scale = Math.min(maxW / w, maxH / h);
+					w *= scale; h *= scale;
+					pdf.addImage(dataUrl, 'JPEG', margin + (maxW - w) / 2, margin, w, h);
+					pdf.save('ct_summary_with_meta.pdf');
+				});
+			} catch (err) { console.error(err); showErrorToast('Export failed. Check console.'); }
+		};
+
+		/* ===== Export/Import JSON ===== */
+		document.getElementById('exportJsonBtn').onclick = () => {
+			try {
+				const payload = { version: 'groups_v1', exported_at: new Date().toISOString(), state: deepClone(state) };
+				const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+				const a = document.createElement('a');
+				a.href = URL.createObjectURL(blob);
+				a.download = (state.meta.name ? state.meta.name.replace(/\s+/g, '') + '' : '') + 'qpcr_page_state.json';
+				a.click();
+				setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+			} catch (err) {
+				console.error(err);
+				showErrorToast('JSON export failed.');
+			}
+		};
+		document.getElementById('importJsonBtn').onclick = () => {
+			document.getElementById('importJsonInput').click();
+		};
+		document.getElementById('importJsonInput').addEventListener('change', async (e) => {
+			const file = e.target.files?.[0];
+			if (!file) return;
+			try {
+				const text = await file.text();
+				const payload = JSON.parse(text);
+				const nextState = payload && payload.state ? payload.state : payload;
+				// Basic validation
+				if (!nextState || !Array.isArray(nextState.wellsA) || !Array.isArray(nextState.wellsB)) {
+					throw new Error('Invalid JSON structure.');
+				}
+				Object.assign(state, nextState);
+				// ensure groupSettings for all groups
+				state.groups = state.groups || [{ id: 'g1', name: 'Group 1' }];
+				state.groupSettings = state.groupSettings || {};
+				state.groups.forEach(g => {
+					if (!state.groupSettings[g.id]) state.groupSettings[g.id] = { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3' };
+				});
+				state.history = [];
+				state.redo = [];
+				saveState();
+				renderAll();
+				alert('JSON imported successfully.');
+			} catch (err) {
+				console.error(err);
+				showErrorToast('JSON import failed. Check the file content.');
+			}
+			e.target.value = '';
 		});
-	} catch (err) { console.error(err); showErrorToast('Export failed. Check console.'); }
-};
-document.getElementById('exportPlateAPdfBtn').onclick = async () => {
-	try {
-		await withHiddenForExport(async () => {
-			const el = document.getElementById('plateAExportWrap');
-			const canvas = await exportElementAsCanvas(el);
-			const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
-			const { jsPDF } = window.jspdf;
-			const pdf = new jsPDF({ orientation: 'l', unit: 'pt', format: 'a4' });
-			const margin = 20, pageW = pdf.internal.pageSize.getWidth(), pageH = pdf.internal.pageSize.getHeight();
-			const img = new Image(); img.src = dataUrl; await new Promise(r => img.onload = r);
-			const maxW = pageW - margin * 2, maxH = pageH - margin * 2;
-			let w = img.width, h = img.height, scale = Math.min(maxW / w, maxH / h);
-			w *= scale; h *= scale;
-			pdf.addImage(dataUrl, 'JPEG', margin + (maxW - w) / 2, margin + (maxH - h) / 2, w, h);
-			pdf.save('plateA_and_legend.pdf');
-		});
-	} catch (err) { console.error(err); showErrorToast('Export failed. Check console.'); }
-};
 
-document.getElementById('exportCtJpegBtn').onclick = async () => {
-	try {
-		await withHiddenForExport(async () => {
-			const el = document.getElementById('ctExportWrap');
-			const canvas = await exportElementAsCanvas(el);
-			const a = document.createElement('a');
-			a.href = canvas.toDataURL('image/jpeg', 0.95); a.download = 'ct_summary_all_groups.jpg'; a.click();
-		});
-	} catch (err) { console.error(err); showErrorToast('Export failed. Check console.'); }
-};
-document.getElementById('exportCtPdfBtn').onclick = async () => {
-	try {
-		await withHiddenForExport(async () => {
-			const el = document.getElementById('ctExportWrap');
-			const canvas = await exportElementAsCanvas(el);
-			const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
-			const { jsPDF } = window.jspdf;
-			const pdf = new jsPDF({ orientation: 'p', unit: 'pt', format: 'a4' });
-			const margin = 20, pageW = pdf.internal.pageSize.getWidth(), pageH = pdf.internal.pageSize.getHeight();
-			const img = new Image(); img.src = dataUrl; await new Promise(r => img.onload = r);
-			const maxW = pageW - margin * 2, maxH = pageH - margin * 2;
-			let w = img.width, h = img.height, scale = Math.min(maxW / w, maxH / h);
-			w *= scale; h *= scale;
-			pdf.addImage(dataUrl, 'JPEG', margin + (maxW - w) / 2, margin, w, h);
-			pdf.save('ct_summary_all_groups.pdf');
-		});
-	} catch (err) { console.error(err); showErrorToast('Export failed. Check console.'); }
-};
+		/* ===== HARD RESET: wipe all data with confirmation ===== */
+		document.getElementById('hardResetBtn').addEventListener('click', () => {
+			const msg = [
+				'This will reset the entire page.',
+				'All samples, wells, Ct values, reagents, groups, and settings will be deleted.',
+				'This cannot be undone.',
+				'Continue?'
+			].join('\n');
+			if (!confirm(msg)) return;
 
-/* ===== Export/Import JSON ===== */
-document.getElementById('exportJsonBtn').onclick = () => {
-	try {
-		const payload = { version: 'groups_v1', exported_at: new Date().toISOString(), state: deepClone(state) };
-		const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-		const a = document.createElement('a');
-		a.href = URL.createObjectURL(blob);
-		a.download = (state.meta.name ? state.meta.name.replace(/\s+/g, '') + '' : '') + 'qpcr_page_state.json';
-		a.click();
-		setTimeout(() => URL.revokeObjectURL(a.href), 5000);
-	} catch (err) {
-		console.error(err);
-		showErrorToast('JSON export failed.');
-	}
-};
-document.getElementById('importJsonBtn').onclick = () => {
-	document.getElementById('importJsonInput').click();
-};
-document.getElementById('importJsonInput').addEventListener('change', async (e) => {
-	const file = e.target.files?.[0];
-	if (!file) return;
-	try {
-		const text = await file.text();
-		const payload = JSON.parse(text);
-		const nextState = payload && payload.state ? payload.state : payload;
-		// Basic validation
-		if (!nextState || !Array.isArray(nextState.wellsA) || !Array.isArray(nextState.wellsB)) {
-			throw new Error('Invalid JSON structure.');
+			try {
+				// 1) Clear persistent storage
+				localStorage.removeItem(STORAGE_KEY);
+
+				// 2) Clear in-memory state
+				state.meta = { name: "", date: "", notes: "" };
+				state.wellsA = [];
+				state.wellsB = [];
+				state.selectedColor = null;
+				state.samples = [];
+				state.reagents = [];
+				state.extraWellsPerTarget = {};
+				state.groups = [];
+				state.groupSettings = {};
+				state.history = [];
+				state.redo = [];
+
+				// 3) Re-initialize a clean baseline
+				initEmptyPlate();
+				initEmptyCtTable();
+
+				// Provide a default Group 1 so the UI is usable immediately
+				state.groups = [{ id: 'g1', name: 'Group 1' }];
+				state.groupSettings['g1'] = { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3' };
+
+				saveState();
+
+				// 4) Re-render the entire app
+				renderAll();
+
+				// Optional: focus first input
+				const nameEl = document.getElementById('sampleNameInput');
+				if (nameEl) nameEl.focus();
+
+				alert('Page has been reset.');
+			} catch (err) {
+				console.error(err);
+				showErrorToast('Hard reset failed. See console for details.');
+			}
+		});
+
+		/* ===== Init ===== */
+		function renderAll() {
+			// meta
+			document.getElementById('metaName').value = state.meta.name || '';
+			document.getElementById('metaDate').value = state.meta.date || '';
+			document.getElementById('metaNotes').value = state.meta.notes || '';
+
+			renderSamples();
+			renderSelector();
+			renderPlateA();
+			renderCtTable();
+			refreshMasterMix();
+			updateCounts();
+			renderAllGroups();
+			updateUndoRedoButtons();
 		}
-		Object.assign(state, nextState);
-		// ensure groupSettings for all groups
-		state.groups = state.groups || [{ id: 'g1', name: 'Group 1' }];
-		state.groupSettings = state.groupSettings || {};
-		state.groups.forEach(g => {
-			if (!state.groupSettings[g.id]) state.groupSettings[g.id] = { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3' };
-		});
-		state.history = [];
-		state.redo = [];
-		saveState();
-		renderAll();
-		alert('JSON imported successfully.');
-	} catch (err) {
-		console.error(err);
-		showErrorToast('JSON import failed. Check the file content.');
-	}
-	e.target.value = '';
-});
+		(function init() {
+			try {
+				loadState();
+				renderAll();
+			} catch (err) {
+				console.error(err);
+				showErrorToast('Initialization error. See console.');
+			}
+		})();
+	</script>
 
-/* ===== HARD RESET: wipe all data with confirmation ===== */
-document.getElementById('hardResetBtn').addEventListener('click', () => {
-	const msg = [
-		'This will reset the entire page.',
-		'All samples, wells, Ct values, reagents, groups, and settings will be deleted.',
-		'This cannot be undone.',
-		'Continue?'
-	].join('\n');
-	if (!confirm(msg)) return;
-
-	try {
-		// 1) Clear persistent storage
-		localStorage.removeItem(STORAGE_KEY);
-
-		// 2) Clear in-memory state
-		state.meta = { name: "", date: "", notes: "" };
-		state.wellsA = [];
-		state.wellsB = [];
-		state.selectedColor = null;
-		state.samples = [];
-		state.reagents = [];
-		state.extraWellsPerTarget = {};
-		state.groups = [];
-		state.groupSettings = {};
-		state.history = [];
-		state.redo = [];
-
-		// 3) Re-initialize a clean baseline
-		initEmptyPlate();
-		initEmptyCtTable();
-
-		// Provide a default Group 1 so the UI is usable immediately
-		state.groups = [{ id: 'g1', name: 'Group 1' }];
-		state.groupSettings['g1'] = { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3' };
-
-		saveState();
-
-		// 4) Re-render the entire app
-		renderAll();
-
-		// Optional: focus first input
-		const nameEl = document.getElementById('sampleNameInput');
-		if (nameEl) nameEl.focus();
-
-		alert('Page has been reset.');
-	} catch (err) {
-		console.error(err);
-		showErrorToast('Hard reset failed. See console for details.');
-	}
-});
-
-/* ===== Init ===== */
-function renderAll() {
-	// meta
-	document.getElementById('metaName').value = state.meta.name || '';
-	document.getElementById('metaDate').value = state.meta.date || '';
-	document.getElementById('metaNotes').value = state.meta.notes || '';
-
-	renderSamples();
-	renderSelector();
-	renderPlateA();
-	renderCtTable();
-	refreshMasterMix();
-	updateCounts();
-	renderAllGroups();
-	updateUndoRedoButtons();
-}
-(function init() {
-	try {
-		loadState();
-		renderAll();
-	} catch (err) {
-		console.error(err);
-		showErrorToast('Initialization error. See console.');
-	}
-})();
-</script>
-
-<footer style="
+	<footer style="
     margin-top: 40px;
     font-size: 13px;
     color: #333;
@@ -1658,25 +1779,28 @@ function renderAll() {
     background-color: #f5f7fa;
     font-family: Arial, sans-serif;
 ">
-    <strong style="font-size: 14px; color: #222;">
-    © 2025 Mahmood Mohammed Ali – University of Grenoble Alpes – Institute of Advanced Bioscience (IAB)
-    </strong><br><br>
+		<strong style="font-size: 14px; color: #222;">
+			© 2025 Mahmood Mohammed Ali – University of Grenoble Alpes – Institute of Advanced Bioscience (IAB)
+		</strong><br><br>
 
-    <em style="color: #555;">Cite as:</em> Mahmood Mohammed Ali. 
-    <strong><em>qPCR Plate Planner</em></strong> (v1.0.0, 2025). GitHub. DOI: 
-    <a href="https://doi.org/10.5281/zenodo.17410644" target="_blank" style="color: #2c82c9; text-decoration: none;">
-        10.5281/zenodo.17410644
-    </a><br><br>
+		<em style="color: #555;">Cite as:</em> Mahmood Mohammed Ali.
+		<strong><em>qPCR Plate Planner</em></strong> (v1.0.0, 2025). GitHub. DOI:
+		<a href="https://doi.org/10.5281/zenodo.17410644" target="_blank"
+			style="color: #2c82c9; text-decoration: none;">
+			10.5281/zenodo.17410644
+		</a><br><br>
 
-    <div style="margin-top: 8px;">
-        Licensed under 
-        <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" style="color: #7B1E3A; text-decoration: none;">
-            CC BY-NC 4.0
-        </a>
-        <img src="https://licensebuttons.net/l/by-nc/4.0/88x31.png" alt="CC BY-NC 4.0" style="height: 20px; vertical-align: middle; margin-left: 6px;">
-    </div>
-</footer>
+		<div style="margin-top: 8px;">
+			Licensed under
+			<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank"
+				style="color: #7B1E3A; text-decoration: none;">
+				CC BY-NC 4.0
+			</a>
+			<img src="https://licensebuttons.net/l/by-nc/4.0/88x31.png" alt="CC BY-NC 4.0"
+				style="height: 20px; vertical-align: middle; margin-left: 6px;">
+		</div>
+	</footer>
+
 </body>
 
 </html>
-
