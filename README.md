@@ -155,7 +155,6 @@ Mahmood Mohammed Ali. *qPCR Plate Planner* (2025). GitHub. University of Grenobl
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17410644.svg)](https://doi.org/10.5281/zenodo.17410644)
 
-
 [LinkedIn](https://www.linkedin.com/in/mahmood-mohammed-ali-20334b205)
 
 
