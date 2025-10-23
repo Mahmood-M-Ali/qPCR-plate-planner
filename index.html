@@ -233,15 +233,24 @@
 		}
 
 		.well.split-2 {
-			background: linear-gradient(0deg, var(--c1) 0 100%) left/50% 100% no-repeat, linear-gradient(0deg, var(--c2) 0 100%) right/50% 100% no-repeat;
+			background:
+				linear-gradient(0deg, var(--c1) 0 100%) left/50% 100% no-repeat,
+				linear-gradient(0deg, var(--c2) 0 100%) right/50% 100% no-repeat;
 		}
 
 		.well.split-3 {
-			background: linear-gradient(0deg, var(--c1) 0 100%) left/50% 100% no-repeat, linear-gradient(0deg, var(--c2) 0 100%) right top/50% 50% no-repeat, linear-gradient(0deg, var(--c3) 0 100%) right bottom/50% 50% no-repeat;
+			background:
+				linear-gradient(0deg, var(--c1) 0 100%) left/50% 100% no-repeat,
+				linear-gradient(0deg, var(--c2) 0 100%) right top/50% 50% no-repeat,
+				linear-gradient(0deg, var(--c3) 0 100%) right bottom/50% 50% no-repeat;
 		}
 
 		.well.split-4 {
-			background: linear-gradient(0deg, var(--c1) 0 100%) left top/50% 50% no-repeat, linear-gradient(0deg, var(--c2) 0 100%) right top/50% 50% no-repeat, linear-gradient(0deg, var(--c3) 0 100%) left bottom/50% 50% no-repeat, linear-gradient(0deg, var(--c4) 0 100%) right bottom/50% 50% no-repeat;
+			background:
+				linear-gradient(0deg, var(--c1) 0 100%) left top/50% 50% no-repeat,
+				linear-gradient(0deg, var(--c2) 0 100%) right top/50% 50% no-repeat,
+				linear-gradient(0deg, var(--c3) 0 100%) left bottom/50% 50% no-repeat,
+				linear-gradient(0deg, var(--c4) 0 100%) right bottom/50% 50% no-repeat;
 		}
 
 		.seg-label {
@@ -389,7 +398,7 @@
 
 		/* Hide elements during export capture */
 		.capturing .no-export {
-			display: none !important;
+			display: none !important
 		}
 
 		/* Metadata export box */
@@ -418,7 +427,7 @@
 		}
 	</style>
 
-	<!-- Core libs on load: Chart.js and jsPDF (stable from your working version) -->
+	<!-- Core libs on load: Chart.js and jsPDF -->
 	<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 </head>
@@ -457,15 +466,26 @@
 				<label>Color <input id="sampleColorInput" type="color" value="#2ECC71"
 						aria-label="Sample color" /></label>
 				<button id="addSampleBtn" type="button">Add sample</button>
-				<button id="resetButton" type="button" class="small-danger" style="margin-left:auto">Reset plate to
-					white (clear Ct)</button>
 			</form>
 
 			<div class="sample-list" id="sampleList" aria-live="polite"></div>
 
 			<h3>Color selection</h3>
 			<div class="selector-wrap" id="colorSelector" aria-label="Color selection"></div>
-			<div class="row" style="gap:8px">
+		</div>
+
+		<div id="countsRow" class="row" style="padding:0 12px 8px"></div>
+
+		<!-- Plate A export wrapper: legend + plate together -->
+		<div class="plate-wrap" id="plateAExportWrap">
+			<h3>Plate A — Assign samples/conditions to wells</h3>
+
+			<!-- Plate A controls row: Clear + Partial reset + Undo/Redo -->
+			<div class="row" style="margin: 6px 0 8px">
+				<button id="resetPlateAButton" type="button" class="small-danger">
+					Clear Plate A (wells → white)
+				</button>
+
 				<label for="partialResetSelect">Partial reset</label>
 				<select id="partialResetSelect" aria-label="Partial reset scope" title="Partial reset scope">
 					<option value="">Partial reset…</option>
@@ -475,16 +495,11 @@
 				<input id="partialInput" type="text" placeholder="A or 12" style="width:88px"
 					aria-label="Row letter or column number" />
 				<button id="partialApplyBtn" type="button">Apply</button>
-				<button id="undoBtn" type="button">Undo</button>
+
+				<button id="undoBtn" type="button" style="margin-left:auto">Undo</button>
 				<button id="redoBtn" type="button">Redo</button>
 			</div>
-		</div>
 
-		<div id="countsRow" class="row" style="padding:0 12px 8px"></div>
-
-		<!-- Plate A export wrapper: legend + plate together -->
-		<div class="plate-wrap" id="plateAExportWrap">
-			<h3>Plate A — Assign samples/conditions to wells</h3>
 			<div class="legend-title">Legend</div>
 			<div class="sample-legend" id="sampleLegend"></div>
 			<div class="plate-grid" id="plateGrid" aria-label="Plate A grid"></div>
@@ -542,6 +557,14 @@
 
 		<div class="plate-wrap">
 			<h3>Plate B — Enter Ct values</h3>
+
+			<!-- Plate B-only reset (under title) -->
+			<div class="row" style="margin: 6px 0 8px">
+				<button id="resetPlateBButton" type="button" class="small-danger">
+					Clear Plate B (Ct values)
+				</button>
+			</div>
+
 			<table id="ctTableGrid" aria-label="Plate B Ct table">
 				<thead id="ctHead"></thead>
 				<tbody id="ctBody"></tbody>
@@ -558,7 +581,7 @@
 			</div>
 			<div id="groupsPanels"></div>
 
-			<!-- Export & JSON buttons + Hard Reset (mark as no-export so they won't appear in captures) -->
+			<!-- Export & JSON buttons + Hard Reset (no-export) -->
 			<div class="row no-export" style="gap:12px; margin-top:8px; flex-wrap:wrap">
 				<button id="exportPlateAJpegBtn" class="btn-primary" type="button">Export Plate A + legend as
 					JPEG</button>
@@ -977,20 +1000,7 @@
 			});
 		}
 
-		/* ===== Reset buttons ===== */
-		document.getElementById('resetButton').addEventListener('click', () => {
-			if (confirm('Reset all wells to white and clear all Ct values?')) {
-				pushHistory();
-				initEmptyPlate();
-				initEmptyCtTable();
-				saveState();
-				renderPlateA();
-				renderCtTable();
-				updateCounts();
-				updateMasterMixTotals();
-				renderAllGroups();
-			}
-		});
+		/* ===== Partial reset (moved next to Plate A button) ===== */
 		document.getElementById('partialApplyBtn').addEventListener('click', () => {
 			const type = document.getElementById('partialResetSelect').value;
 			const input = document.getElementById('partialInput').value.trim().toUpperCase();
@@ -1027,6 +1037,42 @@
 		});
 		document.getElementById('undoBtn').addEventListener('click', undo);
 		document.getElementById('redoBtn').addEventListener('click', redo);
+
+		/* ===== Separate reset handlers ===== */
+		function resetPlateAOnly() {
+			if (!confirm('Do you want to clear Plate A (set all wells to white)?')) return;
+			pushHistory();
+			// Clear Plate A wells and segmentation
+			initEmptyPlate();
+
+			// Persist and re-render what Plate A affects
+			saveState();
+			renderPlateA();
+			updateCounts();
+			updateMasterMixTotals();
+			renderAllGroups(); // analytics may change when wells are cleared
+		}
+
+		function resetPlateBOnly() {
+			if (!confirm('Do you want to clear Plate B (all Ct values)?')) return;
+			pushHistory();
+
+			// Clear Plate B (Ct values)
+			initEmptyCtTable();
+
+			// Persist and re-render what Plate B affects
+			saveState();
+			renderCtTable();
+			renderAllGroups(); // ΔCt/ΔΔCt and charts update
+		}
+
+		// Wire up the new buttons (robust binding)
+		(function bindResetButtons() {
+			const btnA = document.getElementById('resetPlateAButton');
+			if (btnA) btnA.addEventListener('click', resetPlateAOnly);
+			const btnB = document.getElementById('resetPlateBButton');
+			if (btnB) btnB.addEventListener('click', resetPlateBOnly);
+		})();
 
 		/* ===== Well color counting (for Master Mix) ===== */
 		function calculateCounts() {
@@ -1072,11 +1118,11 @@
 				const extra = +state.extraWellsPerTarget[t] || 0;
 				const tr = document.createElement('tr');
 				tr.innerHTML = `
-			<td>${t}</td>
-			<td class="assigned" data-target="${t}">${assigned}</td>
-			<td><input type="number" step="1" min="0" value="${extra}" style="width:90px" data-target="${t}" class="extraWellsInput" aria-label="Extra wells for ${t}"/></td>
-			<td class="total-used" data-target="${t}">${assigned + extra}</td>
-		`;
+		 <td>${t}</td>
+		 <td class="assigned" data-target="${t}">${assigned}</td>
+		 <td><input type="number" step="1" min="0" value="${extra}" style="width:90px" data-target="${t}" class="extraWellsInput" aria-label="Extra wells for ${t}"/></td>
+		 <td class="total-used" data-target="${t}">${assigned + extra}</td>
+	 `;
 				tb.appendChild(tr);
 			});
 			tb.querySelectorAll('.extraWellsInput').forEach(inp => {
@@ -1092,8 +1138,6 @@
 			const head1 = document.getElementById('mmHeadRow1');
 			const head2 = document.getElementById('mmHeadRow2');
 			const body = document.getElementById('mmBody');
-			const footPerWell = document.getElementById('mmFootPerWell');
-			const footGrand = document.getElementById('mmFootGrand');
 
 			const targets = getTargets();
 
@@ -1109,9 +1153,6 @@
 			body.querySelectorAll('.delR').forEach(btn => {
 				btn.onclick = () => { const i = parseInt(btn.dataset.i, 10); state.reagents.splice(i, 1); saveState(); renderReagents(); updateMasterMixTotals(); };
 			});
-
-			footPerWell.innerHTML = '<th colspan="2">Total per well (µL)</th>' + targets.map(() => '<th class="mm-pw"></th>').join('') + '<th></th>';
-			footGrand.innerHTML = '<th colspan="2">Master tube total per target (µL)</th>' + targets.map(() => '<th class="mm-gt"></th>').join('') + '<th></th>';
 		}
 		function updateMasterMixTotals() {
 			const countsByTarget = calculateCounts();
@@ -1473,6 +1514,7 @@
 			if (window.html2canvas) return;
 			await new Promise((res, rej) => {
 				const s = document.createElement('script');
+				/* Use a stable html2canvas CDN of your choice if not provided */
 				s.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
 				s.onload = res; s.onerror = () => rej(new Error('Failed to load html2canvas'));
 				document.head.appendChild(s);
@@ -1538,6 +1580,34 @@
 
 			// Clone the target section so we don’t move the original
 			const clone = targetEl.cloneNode(true);
+			// Hide export-only in the clone (does not affect live page)
+			(() => {
+				// 1) Hide anything explicitly marked as no-export
+				clone.querySelectorAll('.no-export').forEach(el => { el.style.display = 'none'; });
+
+				// 2) Hide specific controls we don’t want in exports
+				const hideSelectors = [
+					'#resetPlateAButton',
+					'#resetPlateBButton',
+					'#partialResetSelect',
+					'#partialInput',
+					'#partialApplyBtn',
+					'#undoBtn',
+					'#redoBtn'
+				];
+				hideSelectors.forEach(sel => {
+					clone.querySelectorAll(sel).forEach(el => { el.style.display = 'none'; });
+				});
+
+				// 3) Defensive heuristic: hide “control-only” rows in the clone
+				clone.querySelectorAll('.row').forEach(row => {
+					const hasInteractive = row.querySelector('button, input, select');
+					const isDataArea = row.closest('.plate-grid, #ctTableGrid, table, .sample-legend');
+					if (hasInteractive && !isDataArea) {
+						row.style.display = 'none';
+					}
+				});
+			})();
 
 			// Replace canvases in the clone with image snapshots of the originals
 			const origCanvases = Array.from(targetEl.querySelectorAll('canvas'));
@@ -1546,13 +1616,11 @@
 				const cOrig = origCanvases[i];
 				if (!cOrig) return;
 				try {
-					// Ensure latest chart drawing is flushed
 					const ch = (window.Chart && (Chart.getChart ? Chart.getChart(cOrig) : cOrig._chart)) || null;
 					if (ch && typeof ch.update === 'function') ch.update();
 
 					const url = cOrig.toDataURL('image/png');
 					const img = new Image();
-					// Preserve pixel size to avoid blur/aspect issues
 					img.width = cOrig.width;
 					img.height = cOrig.height;
 					img.style.width = cOrig.style.width || '';
@@ -1564,6 +1632,35 @@
 					console.warn('Canvas snapshot failed:', e);
 				}
 			});
+
+
+			// Replace canvases in the clone with image snapshots of the originals
+			(() => {
+				const origCanvases = Array.from(targetEl.querySelectorAll('canvas'));
+				const cloneCanvases = Array.from(clone.querySelectorAll('canvas'));
+				cloneCanvases.forEach((cClone, i) => {
+					const cOrig = origCanvases[i];
+					if (!cOrig) return;
+					try {
+						// Ensure latest chart drawing is flushed
+						const ch = (window.Chart && (Chart.getChart ? Chart.getChart(cOrig) : cOrig._chart)) || null;
+						if (ch && typeof ch.update === 'function') ch.update();
+
+						const url = cOrig.toDataURL('image/png');
+						const img = new Image();
+						// Preserve pixel size to avoid blur/aspect issues
+						img.width = cOrig.width;
+						img.height = cOrig.height;
+						img.style.width = cOrig.style.width || '';
+						img.style.height = cOrig.style.height || '';
+						img.src = url;
+
+						cClone.replaceWith(img);
+					} catch (e) {
+						console.warn('Canvas snapshot failed:', e);
+					}
+				});
+			})();
 
 			tmp.appendChild(clone);
 
@@ -1590,7 +1687,6 @@
 				});
 			} catch (err) { console.error(err); showErrorToast('Export failed. Check console.'); }
 		};
-
 		document.getElementById('exportPlateAPdfBtn').onclick = async () => {
 			try {
 				await withHiddenForExport(async () => {
@@ -1622,7 +1718,6 @@
 				});
 			} catch (err) { console.error(err); showErrorToast('Export failed. Check console.'); }
 		};
-
 		document.getElementById('exportCtPdfBtn').onclick = async () => {
 			try {
 				await withHiddenForExport(async () => {
@@ -1769,32 +1864,29 @@
 	</script>
 
 	<footer style="
-    margin-top: 40px;
-    font-size: 13px;
-    color: #333;
-    text-align: center;
-    border-top: 1px solid #ccc;
-    padding: 16px 20px;
-    line-height: 1.6;
-    background-color: #f5f7fa;
-    font-family: Arial, sans-serif;
+	margin-top: 40px;
+	font-size: 13px;
+	color: #333;
+	text-align: center;
+	border-top: 1px solid #ccc;
+	padding: 16px 20px;
+	line-height: 1.6;
+	background-color: #f5f7fa;
+	font-family: Arial, sans-serif;
 ">
 		<strong style="font-size: 14px; color: #222;">
- 			 © 2025 Mahmood Mohammed Ali
+			© 2025 Mahmood Mohammed Ali
 		</strong>
 		<br>
 		<span style="font-size: 13px; color: #666; display: block; margin-top: 4px;">
-  			Grenoble Alpes University – Institute of Advanced Bioscience – Epigenetics of Regeneration and Cancer Group
+			Grenoble Alpes University – Institute of Advanced Bioscience – Epigenetics of Regeneration and Cancer Group
 		</span>
-
-
 		<em style="color: #555;">Cite as:</em> Mahmood Mohammed Ali.
 		<strong><em>qPCR Plate Planner</em></strong> (v1.0.0, 2025). GitHub. DOI:
 		<a href="https://doi.org/10.5281/zenodo.17410644" target="_blank"
 			style="color: #2c82c9; text-decoration: none;">
 			10.5281/zenodo.17410644
 		</a><br><br>
-
 		<div style="margin-top: 8px;">
 			Licensed under
 			<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank"
@@ -1805,9 +1897,6 @@
 				style="height: 20px; vertical-align: middle; margin-left: 6px;">
 		</div>
 	</footer>
-
 </body>
 
 </html>
-
-
