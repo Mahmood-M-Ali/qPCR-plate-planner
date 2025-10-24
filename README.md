@@ -17,8 +17,6 @@ To explore the tool immediately and learn how it works:
 
 3-Review sample metadata, plate layout, and ΔΔCt analysis logic in action
 
-License: CC BY-NC 4.0 — Free to use and adapt for non-commercial purposes with attribution.
-
 **What is this tool for?**
 
 This tool is designed for molecular biologists and researchers conducting qPCR experiments, particularly those involving:
