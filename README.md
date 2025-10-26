@@ -1,4 +1,5 @@
-**qPCR Plate Planner - README**
+# qPCR Plate Planner
+
 
 **Overview**
 
