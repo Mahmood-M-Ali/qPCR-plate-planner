@@ -93,7 +93,7 @@ Designed for molecular biologists conducting qPCR experiments involving:
 ## Workflow
 
 ### Step 1: Define Samples
-Use the naming convention `Name_Target_Condition` (e.g., `HeLa_CCNA2_IgG`). The tool automatically extracts the target gene and condition from each sample name. Assign each sample a unique color **ensure that no two samples share the same color**, as this may compromise visual clarity and downstream analysis. Specify the role (Control or Condition) and assign each sample to a group.
+Use the naming convention `Name_Target_Condition` (e.g., `HeLa_CCNA2_IgG`). The tool automatically extracts the target gene and condition from each sample name. Assign each sample a color then Specify the role (Control or Condition) and assign each sample to a group.
 
 ### Step 2: Design Plate Layout
 Select samples and assign them to wells on Plate A. Supports multiplexing (up to 4 samples per well).
