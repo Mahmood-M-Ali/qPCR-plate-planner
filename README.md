@@ -138,7 +138,7 @@ This represents relative gene expression or enrichment level.
 
 ## Technical Requirements
 
-- Modern browser: Chrome, Firefox, Safari, Edge  
+- Modern browser: Chrome, Firefox, Safari, Edge...  
 - No installation required  
 - Data stored locally on your own device via `localStorage`  
 - An internet connection is required only once to load external libraries via CDN; after that, all functionality runs locally in the browser without further connectivity.
