@@ -34,6 +34,9 @@ Although originally developed for CUT&RUN, it is broadly applicable to ChIP-qPCR
 2. Click **Import JSON** and select `example-import.json` from the repository  
 3. Explore sample metadata, plate layout, and ΔΔCt analysis
 
+## Demo: Using the Example JSON
+
+![qPCR Planner Demo](assets/qPCR-demo.gif)
 ---
 
 ## Use Cases
