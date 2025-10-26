@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>qPCR Plate Planner</title>
-	<link rel="icon" href="favicon.png" type="image/png">
+    <link rel="icon" href="favicon.png" type="image/png">
     <style>
         :root {
             --gap: 8px;
@@ -254,19 +254,33 @@
                 linear-gradient(0deg, var(--c4) 0 100%) right bottom/50% 50% no-repeat;
         }
 
-        .seg-label {
+        /* Numbers in wells */
+        .well-number {
             position: absolute;
             top: 50%;
+            left: 50%;
             transform: translate(-50%, -50%);
-            width: 14px;
-            height: 14px;
+            font-weight: 800;
+            font-size: 14px;
+            color: #000;
+            text-shadow: 0 0 2px #fff, 0 0 6px #fff;
+            pointer-events: none;
+        }
+
+        .seg-number {
+            position: absolute;
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
-            background: rgba(0, 0, 0, .75);
-            color: #fff;
-            font-size: 9px;
-            line-height: 14px;
+            background: #fff;
+            border: 1px solid #333;
+            color: #000;
+            font-size: 10px;
+            line-height: 16px;
             text-align: center;
-            pointer-events: none
+            font-weight: 800;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
         }
 
         /* Tables */
@@ -379,13 +393,13 @@
         .btn-primary:hover {
             filter: brightness(0.96);
             transform: scale(1.02);
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12)
         }
 
         .btn-primary:active {
             filter: brightness(0.92);
             transform: scale(0.98);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08)
         }
 
         /* Tiny error toast */
@@ -431,6 +445,18 @@
         .meta-export .notes {
             margin-top: 6px;
             white-space: pre-wrap
+        }
+
+        /* Print improvements */
+        @media print {
+
+            .well-number,
+            .seg-number {
+                color: #000 !important;
+                text-shadow: none !important;
+                border-color: #000 !important;
+                background: #fff !important;
+            }
         }
     </style>
 
@@ -588,15 +614,11 @@
 
             <!-- Export & JSON buttons + Hard Reset (no-export) -->
             <div class="row no-export" style="gap:12px; margin-top:8px; flex-wrap:wrap">
-                <button id="exportPlateAJpegBtn" class="btn-primary" type="button">Export Plate A as
-                    JPEG</button>
-                <button id="exportPlateAPdfBtn" class="btn-primary" type="button">Export Plate A as
-                    PDF</button>
+                <button id="exportPlateAJpegBtn" class="btn-primary" type="button">Export Plate A as JPEG</button>
+                <button id="exportPlateAPdfBtn" class="btn-primary" type="button">Export Plate A as PDF</button>
 
-                <button id="exportCtJpegBtn" class="btn-primary" type="button">Export Ct summaries as
-                    JPEG</button>
-                <button id="exportCtPdfBtn" class="btn-primary" type="button">Export Ct summaries as
-                    PDF</button>
+                <button id="exportCtJpegBtn" class="btn-primary" type="button">Export Ct summaries as JPEG</button>
+                <button id="exportCtPdfBtn" class="btn-primary" type="button">Export Ct summaries as PDF</button>
 
                 <button id="exportJsonBtn" class="btn-primary" type="button">Export full page as JSON</button>
                 <input id="importJsonInput" type="file" accept="application/json" style="display:none"
@@ -661,6 +683,22 @@
             if (x === 'me3' || x === 'h3k27me3' || x === 'k27me3') return 'h3k27me3';
             if (x === 'ac' || x === 'h3k27ac' || x === 'k27ac') return 'h3k27ac';
             return x;
+        }
+
+        /* Dynamic sample numbering and color lookup */
+        function getSampleNumberById(sampleId) {
+            const i = state.samples.findIndex(s => s.id === sampleId);
+            return i >= 0 ? (i + 1) : '';
+        }
+        function getSampleByColor(color) {
+            if (!color) return null;
+            const col = String(color).toLowerCase();
+            return state.samples.find(s => String(s.color).toLowerCase() === col) || null;
+        }
+        function colorExistsInSamples(color) {
+            const col = String(color || '').toLowerCase();
+            if (!col) return false;
+            return state.samples.some(s => String(s.color).toLowerCase() === col);
         }
 
         /* ===== Initialize plate layouts ===== */
@@ -852,17 +890,42 @@
                         renderAllGroups(); // live update groups
                     });
 
-                    // Seg labels
-                    if (w && w.segmentation > 1) {
+                    // Inject dynamic sample numbers
+                    // Remove any existing numbers (safety on re-render)
+                    Array.from(well.querySelectorAll('.well-number, .seg-number')).forEach(el => el.remove());
+
+                    if (seg > 1) {
                         const segPositions = [
                             { x: 25, y: 50 }, { x: 75, y: 50 }, { x: 75, y: 25 }, { x: 25, y: 25 }
                         ];
-                        for (let s = 0; s < Math.min(MAX_COLORS, w.segmentation); s++) {
-                            const label = document.createElement('div');
-                            label.classList.add('seg-label'); label.textContent = s + 1;
-                            label.style.left = segPositions[s].x + '%';
-                            label.style.top = segPositions[s].y + '%';
-                            well.appendChild(label);
+                        for (let s = 0; s < Math.min(MAX_COLORS, seg); s++) {
+                            const col = colors[s];
+                            if (!col || col === DEFAULT_COLOR) continue;
+                            const sample = getSampleByColor(col);
+                            if (!sample) continue;
+                            const num = getSampleNumberById(sample.id);
+                            if (!num) continue;
+
+                            const badge = document.createElement('div');
+                            badge.className = 'seg-number';
+                            badge.textContent = num;
+                            badge.style.left = segPositions[s].x + '%';
+                            badge.style.top = segPositions[s].y + '%';
+                            well.appendChild(badge);
+                        }
+                    } else {
+                        const col = colors[0];
+                        if (col && col !== DEFAULT_COLOR) {
+                            const sample = getSampleByColor(col);
+                            if (sample) {
+                                const num = getSampleNumberById(sample.id);
+                                if (num) {
+                                    const label = document.createElement('div');
+                                    label.className = 'well-number';
+                                    label.textContent = num;
+                                    well.appendChild(label);
+                                }
+                            }
                         }
                     }
 
@@ -874,18 +937,19 @@
                 grid.appendChild(rowHeader2);
             }
 
-			// Bottom row (mirrored column headers)
-			grid.appendChild(document.createElement('div')).classList.add('corner');
-			for (let c = 0; c < TOTAL_COLS; c++) {
-	   			const header = document.createElement('div');
-	    		header.classList.add('col-header');
-	   			header.textContent = c + 1;
-	    		grid.appendChild(header);
-			}
-			grid.appendChild(document.createElement('div')).classList.add('corner');
-			
+            // Bottom row (mirrored column headers)
+            grid.appendChild(document.createElement('div')).classList.add('corner');
+            for (let c = 0; c < TOTAL_COLS; c++) {
+                const header = document.createElement('div');
+                header.classList.add('col-header');
+                header.textContent = c + 1;
+                grid.appendChild(header);
+            }
+            grid.appendChild(document.createElement('div')).classList.add('corner');
+
             renderSampleLegend();
         }
+
         function renderSampleLegend() {
             const legendDiv = document.getElementById('sampleLegend');
             legendDiv.innerHTML = '';
@@ -894,7 +958,9 @@
                 item.classList.add('sample-item');
                 const dot = document.createElement('span');
                 dot.classList.add('sample-dot'); dot.style.backgroundColor = s.color;
-                const name = document.createElement('span'); name.textContent = s.name + (s.group ? ` [${s.group}]` : '');
+                const name = document.createElement('span');
+                const num = getSampleNumberById(s.id);
+                name.textContent = `#${num} ${s.name}` + (s.group ? ` [${s.group}]` : '');
                 item.appendChild(dot); item.appendChild(name);
                 legendDiv.appendChild(item);
             });
@@ -912,7 +978,8 @@
                 swatch.classList.add('sample-swatch'); swatch.style.backgroundColor = s.color;
 
                 const details = document.createElement('div');
-                details.textContent = `${s.name} — Target: ${s.target} — Cond: ${s.conditionName || ''} — Role: ${s.role} — Group: ${s.group || ''}`;
+                const num = getSampleNumberById(s.id);
+                details.textContent = `#${num} — ${s.name} — Target: ${s.target} — Cond: ${s.conditionName || ''} — Role: ${s.role} — Group: ${s.group || ''}`;
                 details.style.minWidth = '320px';
 
                 const buttons = document.createElement('div');
@@ -950,6 +1017,8 @@
                 sampleList.appendChild(row);
             });
         }
+
+        /* Enforce unique colors on add */
         function handleAddSample(e) {
             if (e) e.preventDefault();
             const name = document.getElementById('sampleNameInput').value.trim();
@@ -959,6 +1028,14 @@
             const groupName = document.getElementById('groupNameInput').value.trim() || 'Group 1';
             const color = document.getElementById('sampleColorInput').value;
             if (!name || !target) return;
+
+            // Enforce unique color per sample
+            if (colorExistsInSamples(color)) {
+                showErrorToast('This color is already used by another sample. Please pick a different color.');
+                const colorInput = document.getElementById('sampleColorInput');
+                if (colorInput) colorInput.focus();
+                return;
+            }
 
             pushHistory();
 
@@ -1010,7 +1087,9 @@
                 if (state.selectedColor === s.color) option.classList.add('active');
                 option.onclick = () => { state.selectedColor = s.color; saveState(); renderSelector(); };
                 const swatch = document.createElement('div'); swatch.classList.add('selector-swatch'); swatch.style.backgroundColor = s.color;
-                const name = document.createElement('div'); name.classList.add('selector-name'); name.textContent = s.name;
+                const name = document.createElement('div'); name.classList.add('selector-name');
+                const num = getSampleNumberById(s.id);
+                name.textContent = `#${num} ${s.name}`;
                 option.appendChild(swatch); option.appendChild(name); selectorDiv.appendChild(option);
             });
         }
@@ -1120,7 +1199,8 @@
             }
             countsRow.innerHTML = '<strong>Well counts:</strong> ' + state.samples.map(s => {
                 const n = bySample[s.id] || 0;
-                return `<span class="sum-pill">${s.name}: ${n}</span>`;
+                const num = getSampleNumberById(s.id);
+                return `<span class="sum-pill">#${num} ${s.name}: ${n}</span>`;
             }).join(' ');
         }
 
@@ -1133,11 +1213,11 @@
                 const extra = +state.extraWellsPerTarget[t] || 0;
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-		 <td>${t}</td>
-		 <td class="assigned" data-target="${t}">${assigned}</td>
-		 <td><input type="number" step="1" min="0" value="${extra}" style="width:90px" data-target="${t}" class="extraWellsInput" aria-label="Extra wells for ${t}"/></td>
-		 <td class="total-used" data-target="${t}">${assigned + extra}</td>
-	 `;
+					<td>${t}</td>
+					<td class="assigned" data-target="${t}">${assigned}</td>
+					<td><input type="number" step="1" min="0" value="${extra}" style="width:90px" data-target="${t}" class="extraWellsInput" aria-label="Extra wells for ${t}"/></td>
+					<td class="total-used" data-target="${t}">${assigned + extra}</td>
+				`;
                 tb.appendChild(tr);
             });
             tb.querySelectorAll('.extraWellsInput').forEach(inp => {
@@ -1312,7 +1392,7 @@
         // Build panels
         function renderAllGroups() {
             ensureDefaultGroup();
-            pruneEmptyGroups(); // <-- Auto-remove any group with no samples
+            pruneEmptyGroups();
             const container = document.getElementById('groupsPanels');
             container.innerHTML = '';
 
@@ -1327,42 +1407,42 @@
                 const targetsInGroup = getTargetsInGroup(group.name);
 
                 panel.innerHTML = `
-			<h3>Ct summary and ΔCt/ΔΔCt — Group: ${group.name}</h3>
-			<div class="row" data-group-id="${group.id}">
-				<label>Control type within target for ΔCt
-					<input type="text" class="ctrl-type" value="${set.controlType || ''}" style="width:120px" aria-label="Control type for ΔCt"/>
-				</label>
-				<label>Control Target for ΔΔCt
-					<select class="ctrl-target" aria-label="Control Target for ΔΔCt">
-						${targetsInGroup.map(t => `<option value="${t}" ${set.ctrlTarget === t ? 'selected' : ''}>${t}</option>`).join('')}
-					</select>
-				</label>
-				<label>Condition for chart
-					<input type="text" class="chart-cond" value="${set.chartCond || ''}" style="width:120px" aria-label="Condition for chart"/>
-				</label>
-				<span class="note">ΔΔCt(Target, condition) = ΔCt(Target, condition) − ΔCt(ControlTarget, condition).</span>
-			</div>
-			<table class="ct-detail" aria-label="Ct detail table for ${group.name}">
-				<thead>
-					<tr>
-						<th>Target</th>
-						<th>Sample</th>
-						<th>Role</th>
-						<th>Condition</th>
-						<th>Raw Ct values</th>
-						<th>Mean Ct</th>
-						<th>ΔCt</th>
-						<th>ΔΔCt</th>
-						<th>FC (2^-ΔΔCt)</th>
-					</tr>
-				</thead>
-				<tbody></tbody>
-			</table>
-			<div class="controls" style="margin-top:8px">
-				<div class="chart-title">Fold Change chart — ${group.name}</div>
-				<canvas class="group-chart" width="720" height="160" aria-label="Fold Change chart for ${group.name}"></canvas>
-			</div>
-		`;
+					<h3>Ct summary and ΔCt/ΔΔCt — Group: ${group.name}</h3>
+					<div class="row" data-group-id="${group.id}">
+						<label>Control type within target for ΔCt
+							<input type="text" class="ctrl-type" value="${set.controlType || ''}" style="width:120px" aria-label="Control type for ΔCt"/>
+						</label>
+						<label>Control Target for ΔΔCt
+							<select class="ctrl-target" aria-label="Control Target for ΔΔCt">
+								${targetsInGroup.map(t => `<option value="${t}" ${set.ctrlTarget === t ? 'selected' : ''}>${t}</option>`).join('')}
+							</select>
+						</label>
+						<label>Condition for chart
+							<input type="text" class="chart-cond" value="${set.chartCond || ''}" style="width:120px" aria-label="Condition for chart"/>
+						</label>
+						<span class="note">ΔΔCt(Target, condition) = ΔCt(Target, condition) − ΔCt(ControlTarget, condition).</span>
+					</div>
+					<table class="ct-detail" aria-label="Ct detail table for ${group.name}">
+						<thead>
+							<tr>
+								<th>Target</th>
+								<th>Sample</th>
+								<th>Role</th>
+								<th>Condition</th>
+								<th>Raw Ct values</th>
+								<th>Mean Ct</th>
+								<th>ΔCt</th>
+								<th>ΔΔCt</th>
+								<th>FC (2^-ΔΔCt)</th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</table>
+					<div class="controls" style="margin-top:8px">
+						<div class="chart-title">Fold Change chart — ${group.name}</div>
+						<canvas class="group-chart" width="720" height="160" aria-label="Fold Change chart for ${group.name}"></canvas>
+					</div>
+				`;
 
                 container.appendChild(panel);
             });
@@ -1491,16 +1571,16 @@
                     const rawVals = (buckets.get(r.sample.id)?.vals || []).map(v => fmt2(v)).join(', ');
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-				<td>${t}</td>
-				<td>${r.sample.name}</td>
-				<td>${r.sample.role}</td>
-				<td>${r.sample.conditionName || ''}</td>
-				<td>${rawVals}</td>
-				<td>${r.meanCt != null ? fmt3(r.meanCt) : ''}</td>
-				<td>${r.dCt != null ? fmt3(r.dCt) : ''}</td>
-				<td>${r.ddCt != null ? fmt3(r.ddCt) : ''}</td>
-				<td>${r.fc != null ? fmt3(r.fc) : ''}</td>
-			`;
+						<td>${t}</td>
+						<td>#${getSampleNumberById(r.sample.id)} ${r.sample.name}</td>
+						<td>${r.sample.role}</td>
+						<td>${r.sample.conditionName || ''}</td>
+						<td>${rawVals}</td>
+						<td>${r.meanCt != null ? fmt3(r.meanCt) : ''}</td>
+						<td>${r.dCt != null ? fmt3(r.dCt) : ''}</td>
+						<td>${r.ddCt != null ? fmt3(r.ddCt) : ''}</td>
+						<td>${r.fc != null ? fmt3(r.fc) : ''}</td>
+					`;
                     tb.appendChild(tr);
                 });
             });
@@ -1667,35 +1747,6 @@
                     console.warn('Canvas snapshot failed:', e);
                 }
             });
-
-
-            // Replace canvases in the clone with image snapshots of the originals
-            (() => {
-                const origCanvases = Array.from(targetEl.querySelectorAll('canvas'));
-                const cloneCanvases = Array.from(clone.querySelectorAll('canvas'));
-                cloneCanvases.forEach((cClone, i) => {
-                    const cOrig = origCanvases[i];
-                    if (!cOrig) return;
-                    try {
-                        // Ensure latest chart drawing is flushed
-                        const ch = (window.Chart && (Chart.getChart ? Chart.getChart(cOrig) : cOrig._chart)) || null;
-                        if (ch && typeof ch.update === 'function') ch.update();
-
-                        const url = cOrig.toDataURL('image/png');
-                        const img = new Image();
-                        // Preserve pixel size to avoid blur/aspect issues
-                        img.width = cOrig.width;
-                        img.height = cOrig.height;
-                        img.style.width = cOrig.style.width || '';
-                        img.style.height = cOrig.style.height || '';
-                        img.src = url;
-
-                        cClone.replaceWith(img);
-                    } catch (e) {
-                        console.warn('Canvas snapshot failed:', e);
-                    }
-                });
-            })();
 
             tmp.appendChild(clone);
 
@@ -1899,16 +1950,16 @@
     </script>
 
     <footer style="
-	margin-top: 40px;
-	font-size: 13px;
-	color: #333;
-	text-align: center;
-	border-top: 1px solid #ccc;
-	padding: 16px 20px;
-	line-height: 1.6;
-	background-color: #f5f7fa;
-	font-family: Arial, sans-serif;
-">
+		margin-top: 40px;
+		font-size: 13px;
+		color: #333;
+		text-align: center;
+		border-top: 1px solid #ccc;
+		padding: 16px 20px;
+		line-height: 1.6;
+		background-color: #f5f7fa;
+		font-family: Arial, sans-serif;
+	">
         <strong style="font-size: 14px; color: #222;">
             © 2025 Mahmood Mohammed Ali
         </strong>
@@ -1935,10 +1986,3 @@
 </body>
 
 </html>
-
-
-
-
-
-
-
