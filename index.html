@@ -874,6 +874,16 @@
                 grid.appendChild(rowHeader2);
             }
 
+			// Bottom row (mirrored column headers)
+			grid.appendChild(document.createElement('div')).classList.add('corner');
+			for (let c = 0; c < TOTAL_COLS; c++) {
+	   			const header = document.createElement('div');
+	    		header.classList.add('col-header');
+	   			header.textContent = c + 1;
+	    		grid.appendChild(header);
+			}
+			grid.appendChild(document.createElement('div')).classList.add('corner');
+			
             renderSampleLegend();
         }
         function renderSampleLegend() {
@@ -1925,6 +1935,7 @@
 </body>
 
 </html>
+
 
 
 
