@@ -1,5 +1,16 @@
 # qPCR Plate Planner
 
+## Table of Contents
+- [Overview](#overview)
+- [Quick Start](#quick-start)
+- [Use Cases](#what-is-this-tool-for)
+- [Key Features](#key-features)
+- [How It Works](#how-it-works)
+- [Calculations Explained](#calculations-explained)
+- [Technical Requirements](#technical-requirements)
+- [Libraries Used](#libraries-used)
+- [License & Citation](#license)
+
 
 **Overview**
 
