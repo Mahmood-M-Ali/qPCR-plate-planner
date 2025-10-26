@@ -1405,7 +1405,13 @@
                 // Header + controls unique per group
                 const set = state.groupSettings[group.id] || { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3' };
                 const targetsInGroup = getTargetsInGroup(group.name);
-
+                // Auto-initialize ctrlTarget on first render if empty and targets exist
+                if (!set.ctrlTarget && targetsInGroup.length > 0) {
+                    set.ctrlTarget = targetsInGroup[0];
+                    state.groupSettings[group.id] = set;
+                    saveState();
+                }
+				
                 panel.innerHTML = `
 					<h3>Ct summary and ΔCt/ΔΔCt — Group: ${group.name}</h3>
 					<div class="row" data-group-id="${group.id}">
@@ -1986,3 +1992,4 @@
 </body>
 
 </html>
+
