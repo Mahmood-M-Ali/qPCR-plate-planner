@@ -1237,7 +1237,7 @@
                 const rh = document.createElement('th'); rh.textContent = rowLetter(r); tr.appendChild(rh);
                 for (let c = 0; c < TOTAL_COLS; c++) {
                     const td = document.createElement('td'); const i = idx(r, c);
-                    const inp = document.createElement('input'); inp.type = 'text'; inp.setAttribute('aria-label', `Ct ${rowLetter(r)}${c + 1}`);
+                    const inp = document.createElement('input'); inp.type = 'text'; inp.setAttribute('aria-label', `Ct ${rowLetter(r)}${c + 1}`); inp.id = `ct-${rowLetter(r)}-${c + 1}`; inp.name = `ct-${rowLetter(r)}-${c + 1}`; inp.autocomplete = 'off';
                     if (state.wellsB[i].ct != null) inp.value = String(state.wellsB[i].ct);
                     inp.addEventListener('change', () => {
                         const v = parseFloat(inp.value); state.wellsB[i].ct = isFinite(v) ? v : null; saveState(); renderAllGroupsDebounced();
@@ -1918,4 +1918,5 @@
 </body>
 
 </html>
+
 
