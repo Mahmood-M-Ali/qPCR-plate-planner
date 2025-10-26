@@ -3,168 +3,157 @@
 ## Table of Contents
 - [Overview](#overview)
 - [Quick Start](#quick-start)
-- [Use Cases](#what-is-this-tool-for)
+- [Use Cases](#use-cases)
 - [Key Features](#key-features)
-- [How It Works](#how-it-works)
-- [Calculations Explained](#calculations-explained)
+- [Workflow](#workflow)
+- [Calculation Methods](#calculation-methods)
 - [Technical Requirements](#technical-requirements)
-- [Libraries Used](#libraries-used)
-- [License & Citation](#license)
+- [Libraries](#libraries)
+- [License and Citation](#license-and-citation)
 
+---
 
-**Overview**
+## Overview
 
-qPCR Plate Planner is a comprehensive web-based tool for planning, executing, and analyzing quantitative PCR (qPCR) experiments. It provides an all-in-one solution for designing 384-well plate layouts, calculating master mix volumes, recording Ct values, and performing ΔΔCt analysis with automated fold-change calculations and visualizations.
-An example file (example-import.json) is included to illustrate expected input structure. Users can import it via the Import JSON button to explore sample metadata, plate layout, and ΔΔCt analysis logic.
-This tool applies the 2^−ΔΔCt method for relative quantification, as described by (Livak & Schmittgen, 2001. DOI:10.1006/meth.2001.1262), adapted for CUT&RUN workflows where qPCR is used to assess enrichment at target loci.
+*qPCR Plate Planner* is a browser-based tool for designing, executing, and analyzing quantitative PCR (qPCR) experiments. It integrates:
 
-Beyond CUT&RUN: While originally designed for CUT&RUN ΔΔCt workflows, qPCR Plate Planner is adaptable to a wide range of qPCR-based experiments—including gene expression analysis, ChIP-qPCR, CUT&Tag, and drug response profiling—where comparative quantification are performed.
+- 384-well plate layout design  
+- Master mix volume calculation  
+- Ct value entry and synchronization  
+- ΔΔCt analysis with automated fold-change computation and visualization  
 
-**Quick Start**
-To explore the tool immediately and learn how it works:
+The tool applies the 2^−ΔΔCt method for relative quantification (Livak & Schmittgen, 2001. [DOI:10.1006/meth.2001.1262](https://doi.org/10.1006/meth.2001.1262)), adapted for CUT&RUN workflows assessing target enrichment.
 
-1-Open the live interface: https://mahmood-m-ali.github.io/qPCR-plate-planner/
+Although originally developed for CUT&RUN, it is broadly applicable to ChIP-qPCR, CUT&Tag, gene expression profiling, and drug response assays.
 
-2-Click "Import JSON" and select example-import.json from the repository
+---
 
-3-Review sample metadata, plate layout, and ΔΔCt analysis logic in action
+## Quick Start
 
-**What is this tool for?**
+1. Open the planner: [Live Interface](https://mahmood-m-ali.github.io/qPCR-plate-planner/)  
+2. Click **Import JSON** and select `example-import.json` from the repository  
+3. Explore sample metadata, plate layout, and ΔΔCt analysis
 
-This tool is designed for molecular biologists and researchers conducting qPCR experiments, particularly those involving:
+---
 
-- Multiple target genes
-- Multiple experimental conditions (e.g., different treatments, antibodies, or time points)
-- Multiple experimental groups (e.g., distinct cell lines or treatment conditions co-plated on the same 384-well plate, each requiring independent analysis)
-- Technical replicates across 384-well plates
-- Comparative gene expression analysis using the ΔΔCt method
-- Primarily used to assess the success of CUT&RUN experiments and similar chromatin profiling techniques by quantifying target enrichment
+## Use Cases
 
-**Key Features**
+Designed for molecular biologists conducting qPCR experiments involving:
 
-**1. Sample Management**
+- Multiple target genes and conditions  
+- Distinct experimental groups co-plated on a single 384-well plate  
+- Technical replicates  
+- Comparative gene expression analysis using ΔΔCt  
+- Chromatin profiling validation (e.g., CUT&RUN, ChIP-qPCR)
 
-- Define samples with automatic parsing of naming convention (Name_Target_Condition)
-- Assign unique colors to each sample for visual identification (do not assign the same color to multiple samples)
-- Assign groups
-- Organize samples by target gene, condition, role (Control/Condition) and group.
+---
 
-**2. Plate Layout Designer (Plate A)**
+## Key Features
 
-- Visual 384-well plate grid (16 rows × 24 columns)
-- Click to assign samples in wells
-- Color-coded legend for easy sample identification
-- Real-time well count tracking per sample
-- Undo/redo functionality
-- Export plate layout as JPEG or PDF
+### Sample Management
+- Auto-parsing of sample names (`Name_Target_Condition`)  
+- Unique color assignment for visual clarity  
+- Grouping by target, condition, and role (Control/Condition)
 
-**3. Master Mix Calculator**
+### Plate Layout Designer (Plate A)
+- Interactive 384-well grid (16×24)  
+- Sample assignment via click  
+- Color-coded legend and real-time well tracking  
+- Undo/redo and export as JPEG/PDF
 
-- Track assigned wells per target gene
-- Add extra wells for pipetting safety margin
-- Define reagents with volumes per well
-- Automatic calculation of total reagent volumes needed per target
-- Separate master mix calculations for each target gene
+### Master Mix Calculator
+- Well count per target gene  
+- Safety margin wells  
+- Reagent definition and per-well volumes  
+- Total volume calculation per target
 
-**4. Ct Value Entry (Plate B)**
+### Ct Value Entry (Plate B)
+- Spreadsheet-style input grid  
+- Paste support from Excel/Google Sheets  
+- Synchronization with Plate A layout
 
-- Spreadsheet-style input grid matching the 384-well layout
-- Paste support from Excel/Google Sheets (column or block paste)
-- Maintains synchronization with Plate A layout
+### ΔΔCt Analysis & Visualization
+- Mean Ct calculation from replicates  
+- ΔCt and ΔΔCt computation  
+- Fold-change via 2^(-ΔΔCt)  
+- Interactive bar chart and summary table  
+- Export as JPEG/PDF
 
-**5. ΔΔCt Analysis & Visualization**
+### Data Management
+- Automatic local storage  
+- JSON export/import for reproducibility  
+- Metadata tracking (name, date, notes)
+- Download your plate planning and ct results and the charts as PDF or JPEG
 
-- Automatic calculation of mean Ct values from replicates
-- ΔCt calculation relative to control condition within each target
-- ΔΔCt calculation relative to control target gene
-- Fold-change calculation using 2^(-ΔΔCt) method
-- Interactive bar chart showing fold changes
-- Comprehensive summary table with all calculations
-- Export analysis and charts as JPEG or PDF
+---
 
-**6. Data Management**
+## Workflow
 
-- Automatic local storage of all data
-- Export entire project as JSON
-- Import JSON to restore previous experiments
-- Experiment metadata tracking (name, date, notes)
+### Step 1: Define Samples
+Use the naming convention `Name_Target_Condition` (e.g., `HeLa_CCNA2_IgG`). The tool automatically extracts the target gene and condition from each sample name. Assign each sample a unique color **ensure that no two samples share the same color**, as this may compromise visual clarity and downstream analysis. Specify the role (Control or Condition) and assign each sample to a group.
 
-**How It Works**
+### Step 2: Design Plate Layout
+Select samples and assign them to wells on Plate A. Supports multiplexing (up to 4 samples per well).
 
-**Step 1: Define Your Samples**
+### Step 3: Plan Master Mix
+Define reagents and volumes. The tool calculates total volumes per target gene.
 
-Create samples using the naming convention Name_Target_Condition (e.g., "HeLa_CCNA2_IgG"). The tool automatically extracts the target gene and condition. Assign each sample a unique color and specify whether it's a control or experimental condition and assign a group.
+### Step 4: Enter Ct Values
+Paste Ct data from your instrument into Plate B. Supports single and block pasting.
 
-**Step 2: Design Your Plate Layout**
+### Step 5: Analyze Results
+Configure control condition and reference gene. The tool performs ΔCt, ΔΔCt, and fold-change analysis.
 
-Select a sample from the color selector and click wells on Plate A to assign samples. You can assign up to 4 samples per well for multiplexed assays. The legend shows all samples and their colors.
+---
 
-**Step 3: Plan Your Master Mix**
+## Calculation Methods
 
-The tool counts assigned wells per target automatically. Add extra wells for pipetting margin, then define your reagents (e.g., primers, SYBR Green) with per-well volumes. The calculator shows total volumes needed for each target's master mix.
+### Mean Ct  
+The average of Ct values across all wells assigned to a given sample, accounting for technical replicates.
 
-**Step 4: Enter Ct Values**
-
-After running your qPCR, paste Ct values from your instrument's export directly into Plate B. The tool accepts single values or blocks of data pasted from spreadsheets.
-
-**Step 5: Analyze Results**
-
-The tool automatically calculates ΔCt and ΔΔCt values and generates fold-change charts. Configure your control condition and control target gene to customize the analysis.
-
-**Calculations Explained**
-
-**Mean Ct**
-
-For each sample, the tool averages Ct values across all wells assigned to that sample, accounting for technical replicates.
-
-**ΔCt (Delta Ct)**
-
-ΔCt = Ct(sample) - Ct(control within same target)
-
+### ΔCt  
+Calculated as:  
+**ΔCt = Ct(sample) − Ct(control within same target)**  
 This normalizes expression within each target gene relative to its control condition (e.g., IgG control).
 
-**ΔΔCt (Delta Delta Ct)**
-
-ΔΔCt = ΔCt(target gene) - ΔCt(control target gene)
-
+### ΔΔCt  
+Calculated as:  
+**ΔΔCt = ΔCt(target gene) − ΔCt(reference gene)**  
 This normalizes expression across different target genes using a reference gene (e.g., housekeeping gene).
 
-**Fold Change**
+### Fold Change  
+Calculated as:  
+**Fold Change = 2^(−ΔΔCt)**  
+This represents relative gene expression or enrichment level.
 
-Fold Change = 2^(-ΔΔCt)
+**Interpretation:**
+- Fold Change = 1 → No change  
+- Fold Change > 1 → Upregulation or enrichment  
+- Fold Change < 1 → Downregulation or depletion
 
-This represents the relative gene expression or enrichment of epigenetic mark level, where:
+---
 
-- FC = 1: No change in enrichment/expression
-- FC > 1: Enrichment/Upregulation
-- FC < 1: Less enriched/Downregulation
+## Technical Requirements
 
-**Technical Requirements**
+- Modern browser: Chrome, Firefox, Safari, Edge  
+- No installation required  
+- Data stored locally on your own device via `localStorage`  
+- An internet connection is required only once to load external libraries via CDN; after that, all functionality runs locally in the browser without further connectivity.
+  
+---
 
-- Modern web browser (Chrome, Firefox, Safari, Edge)
-- No installation required - runs entirely in browser
-- All data stored locally in browser localStorage
-- Internet connection required only for initial loading of CDN libraries
+## Libraries
 
-**Libraries Used**
+- `Chart.js` – Data visualization  
+- `jsPDF` – PDF export  
+- `html2canvas` – Image capture
 
-- Chart.js for data visualization
-- jsPDF for PDF export
-- html2canvas for image capture
+---
 
-**Use Cases**
+## License and Citation
 
-- ChIP-qPCR experiments with multiple antibodies and genomic regions
-- CUT&RUN experiments to validate chromatin immunoprecipitation efficiency
-- Gene expression studies with multiple conditions and time points
-
-**License**
-
-Mahmood Mohammed Ali. *qPCR Plate Planner* (2025). GitHub. University of Grenoble Alpes – Institute of Advanced Bioscience (IAB). . Licensed under CC BY-NC 4.0.
-
+Mahmood Mohammed Ali. *qPCR Plate Planner* (2025). GitHub. University of Grenoble Alpes – Institute of Advanced Bioscience (IAB). Licensed under **CC BY-NC 4.0**.
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17410644.svg)](https://doi.org/10.5281/zenodo.17410644)
 
-[LinkedIn](https://www.linkedin.com/in/mahmood-mohammed-ali-20334b205)
-
-
+[LinkedIn Profile](https://www.linkedin.com/in/mahmood-mohammed-ali-20334b205)
