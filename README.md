@@ -29,10 +29,10 @@ Although originally developed for CUT&RUN, it is broadly applicable to ChIP-qPCR
 ---
 
 ## Quick Start
-
-1. Open the planner: [Live Interface](https://mahmood-m-ali.github.io/qPCR-plate-planner/)  
-2. Click **Import JSON** and select `example-import.json` from the repository  
-3. Explore sample metadata, plate layout, and ΔΔCt analysis
+1. First download the file "Import JSON example to discover the tool.json" from Github
+2. Open the planner: [Live Interface](https://mahmood-m-ali.github.io/qPCR-plate-planner/)  
+3. Click **Import JSON** and select `Import JSON example to discover the tool.json` which you downloaded from the Github repository  
+4. Explore sample metadata, plate layout, and ΔΔCt analysis
 
 ## Demo: Using the Example JSON
 
