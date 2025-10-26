@@ -1,0 +1,2894 @@
+{
+  "version": "groups_v1",
+  "exported_at": "2025-10-26T17:12:38.185Z",
+  "state": {
+    "meta": {
+      "name": "HT Cell line H3K27me3 Cut&Run",
+      "date": "2025-10-26",
+      "notes": "Two replicates of HT Cut&Run targeting H3K27me3 across HOX genes which are expected to be enriched in this mark versus CCNA2 gene which is expected to be deprived of the mark in these cell lines. \nThis file is designed to demonstrate full planner functionality including sample setup, plate layout, master mix calculation, Ct entry, and ΔΔCt analysis"
+    },
+    "wellsA": [
+      {
+        "colors": "#527560",
+        "segmentation": 1
+      },
+      {
+        "colors": "#b1e2c5",
+        "segmentation": 1
+      },
+      {
+        "colors": "#016a2b",
+        "segmentation": 1
+      },
+      {
+        "colors": "#1b6538",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#527560",
+        "segmentation": 1
+      },
+      {
+        "colors": "#b1e2c5",
+        "segmentation": 1
+      },
+      {
+        "colors": "#016a2b",
+        "segmentation": 1
+      },
+      {
+        "colors": "#1b6538",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#527560",
+        "segmentation": 1
+      },
+      {
+        "colors": "#b1e2c5",
+        "segmentation": 1
+      },
+      {
+        "colors": "#016a2b",
+        "segmentation": 1
+      },
+      {
+        "colors": "#1b6538",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#57ff1a",
+        "segmentation": 1
+      },
+      {
+        "colors": "#76ab63",
+        "segmentation": 1
+      },
+      {
+        "colors": "#91e273",
+        "segmentation": 1
+      },
+      {
+        "colors": "#628656",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#57ff1a",
+        "segmentation": 1
+      },
+      {
+        "colors": "#76ab63",
+        "segmentation": 1
+      },
+      {
+        "colors": "#91e273",
+        "segmentation": 1
+      },
+      {
+        "colors": "#628656",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#57ff1a",
+        "segmentation": 1
+      },
+      {
+        "colors": "#76ab63",
+        "segmentation": 1
+      },
+      {
+        "colors": "#91e273",
+        "segmentation": 1
+      },
+      {
+        "colors": "#628656",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#7961f5",
+        "segmentation": 1
+      },
+      {
+        "colors": "#3b22b9",
+        "segmentation": 1
+      },
+      {
+        "colors": "#917eec",
+        "segmentation": 1
+      },
+      {
+        "colors": "#3419b8",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#7961f5",
+        "segmentation": 1
+      },
+      {
+        "colors": "#3b22b9",
+        "segmentation": 1
+      },
+      {
+        "colors": "#917eec",
+        "segmentation": 1
+      },
+      {
+        "colors": "#3419b8",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#7961f5",
+        "segmentation": 1
+      },
+      {
+        "colors": "#3b22b9",
+        "segmentation": 1
+      },
+      {
+        "colors": "#917eec",
+        "segmentation": 1
+      },
+      {
+        "colors": "#3419b8",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#6ce8ea",
+        "segmentation": 1
+      },
+      {
+        "colors": "#9adfe0",
+        "segmentation": 1
+      },
+      {
+        "colors": "#27adb0",
+        "segmentation": 1
+      },
+      {
+        "colors": "#287577",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#6ce8ea",
+        "segmentation": 1
+      },
+      {
+        "colors": "#9adfe0",
+        "segmentation": 1
+      },
+      {
+        "colors": "#27adb0",
+        "segmentation": 1
+      },
+      {
+        "colors": "#287577",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#6ce8ea",
+        "segmentation": 1
+      },
+      {
+        "colors": "#9adfe0",
+        "segmentation": 1
+      },
+      {
+        "colors": "#27adb0",
+        "segmentation": 1
+      },
+      {
+        "colors": "#287577",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      },
+      {
+        "colors": "#FFFFFF",
+        "segmentation": 1
+      }
+    ],
+    "wellsB": [
+      {
+        "ct": 34
+      },
+      {
+        "ct": 30.24
+      },
+      {
+        "ct": 30.96
+      },
+      {
+        "ct": 30.61
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": 34.59
+      },
+      {
+        "ct": 30.94
+      },
+      {
+        "ct": 31.2
+      },
+      {
+        "ct": 30.7
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": 34.46
+      },
+      {
+        "ct": 30.68
+      },
+      {
+        "ct": 31.38
+      },
+      {
+        "ct": 31.11
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": 33.77
+      },
+      {
+        "ct": 25.25
+      },
+      {
+        "ct": 25.3
+      },
+      {
+        "ct": 25.54
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": 34
+      },
+      {
+        "ct": 25.42
+      },
+      {
+        "ct": 25.5
+      },
+      {
+        "ct": 25.96
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": 34.01
+      },
+      {
+        "ct": 25.66
+      },
+      {
+        "ct": 25.81
+      },
+      {
+        "ct": 26.15
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": 34.43
+      },
+      {
+        "ct": 30.36
+      },
+      {
+        "ct": 31.03
+      },
+      {
+        "ct": 31.29
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": 34.38
+      },
+      {
+        "ct": 30.97
+      },
+      {
+        "ct": 31.48
+      },
+      {
+        "ct": 30.64
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": 34.59
+      },
+      {
+        "ct": 31.21
+      },
+      {
+        "ct": 30.8
+      },
+      {
+        "ct": 31.56
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": 33.13
+      },
+      {
+        "ct": 24.74
+      },
+      {
+        "ct": 24.74
+      },
+      {
+        "ct": 25.22
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": 33.12
+      },
+      {
+        "ct": 25.05
+      },
+      {
+        "ct": 25.14
+      },
+      {
+        "ct": 25.15
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": 33.53
+      },
+      {
+        "ct": 25.13
+      },
+      {
+        "ct": 25.4
+      },
+      {
+        "ct": 25.83
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      },
+      {
+        "ct": null
+      }
+    ],
+    "selectedColor": "#287577",
+    "samples": [
+      {
+        "id": 1761478312601.1587,
+        "name": "HT_CCNA2_IgG",
+        "role": "Control",
+        "target": "CCNA2",
+        "conditionName": "IgG",
+        "color": "#527560",
+        "group": "Group 1"
+      },
+      {
+        "id": 1761478321603.0396,
+        "name": "HT_HOXA1_IgG",
+        "role": "Control",
+        "target": "HOXA1",
+        "conditionName": "IgG",
+        "color": "#b1e2c5",
+        "group": "Group 1"
+      },
+      {
+        "id": 1761478333256.0188,
+        "name": "HT_HOXA2_IgG",
+        "role": "Control",
+        "target": "HOXA2",
+        "conditionName": "IgG",
+        "color": "#016a2b",
+        "group": "Group 1"
+      },
+      {
+        "id": 1761478345694.9973,
+        "name": "HT_HOXD1_IgG",
+        "role": "Control",
+        "target": "HOXD1",
+        "conditionName": "IgG",
+        "color": "#1b6538",
+        "group": "Group 1"
+      },
+      {
+        "id": 1761478355823.6711,
+        "name": "HT_CCNA2_IgG",
+        "role": "Control",
+        "target": "CCNA2",
+        "conditionName": "IgG",
+        "color": "#7961f5",
+        "group": "Group 2"
+      },
+      {
+        "id": 1761478363021.5386,
+        "name": "HT_HOXA1_IgG",
+        "role": "Control",
+        "target": "HOXA1",
+        "conditionName": "IgG",
+        "color": "#3b22b9",
+        "group": "Group 2"
+      },
+      {
+        "id": 1761478369409.6785,
+        "name": "HT_HOXA2_IgG",
+        "role": "Control",
+        "target": "HOXA2",
+        "conditionName": "IgG",
+        "color": "#917eec",
+        "group": "Group 2"
+      },
+      {
+        "id": 1761478375828.33,
+        "name": "HT_HOXD1_IgG",
+        "role": "Control",
+        "target": "HOXD1",
+        "conditionName": "IgG",
+        "color": "#3419b8",
+        "group": "Group 2"
+      },
+      {
+        "id": 1761478498452.466,
+        "name": "HT_CCNA2_me3",
+        "role": "Condition",
+        "target": "CCNA2",
+        "conditionName": "me3",
+        "color": "#57ff1a",
+        "group": "Group 1"
+      },
+      {
+        "id": 1761478507609.8972,
+        "name": "HT_HOXA1_me3",
+        "role": "Condition",
+        "target": "HOXA1",
+        "conditionName": "me3",
+        "color": "#76ab63",
+        "group": "Group 1"
+      },
+      {
+        "id": 1761478515654.9473,
+        "name": "HT_HOXA2_me3",
+        "role": "Condition",
+        "target": "HOXA2",
+        "conditionName": "me3",
+        "color": "#91e273",
+        "group": "Group 1"
+      },
+      {
+        "id": 1761478526435.8208,
+        "name": "HT_HOXD1_me3",
+        "role": "Condition",
+        "target": "HOXD1",
+        "conditionName": "me3",
+        "color": "#628656",
+        "group": "Group 1"
+      },
+      {
+        "id": 1761478542845.723,
+        "name": "HT_CCNA2_me3",
+        "role": "Condition",
+        "target": "CCNA2",
+        "conditionName": "me3",
+        "color": "#6ce8ea",
+        "group": "Group 2"
+      },
+      {
+        "id": 1761478553018.588,
+        "name": "HT_HOXA1_me3",
+        "role": "Condition",
+        "target": "HOXA1",
+        "conditionName": "me3",
+        "color": "#9adfe0",
+        "group": "Group 2"
+      },
+      {
+        "id": 1761478558066.993,
+        "name": "HT_HOXA2_me3",
+        "role": "Condition",
+        "target": "HOXA2",
+        "conditionName": "me3",
+        "color": "#27adb0",
+        "group": "Group 2"
+      },
+      {
+        "id": 1761478562778.137,
+        "name": "HT_HOXD1_me3",
+        "role": "Condition",
+        "target": "HOXD1",
+        "conditionName": "me3",
+        "color": "#287577",
+        "group": "Group 2"
+      }
+    ],
+    "reagents": [
+      {
+        "name": "Syber Green X2",
+        "perWell": 5
+      },
+      {
+        "name": "H2O",
+        "perWell": 3
+      },
+      {
+        "name": "Primer",
+        "perWell": 1
+      }
+    ],
+    "extraWellsPerTarget": {
+      "CCNA2": 4,
+      "HOXA1": 4,
+      "HOXA2": 4,
+      "HOXD1": 4
+    },
+    "groups": [
+      {
+        "id": "g1761478312601.4468",
+        "name": "Group 1"
+      },
+      {
+        "id": "g1761478355823.8208",
+        "name": "Group 2"
+      }
+    ],
+    "groupSettings": {
+      "g1761478312601.4468": {
+        "controlType": "IgG",
+        "ctrlTarget": "CCNA2",
+        "chartCond": "me3"
+      },
+      "g1761478355823.8208": {
+        "controlType": "IgG",
+        "ctrlTarget": "CCNA2",
+        "chartCond": "me3"
+      }
+    },
+    "history": [],
+    "redo": []
+  }
+}
