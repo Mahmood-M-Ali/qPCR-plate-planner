@@ -3,7 +3,7 @@
 ## Table of Contents
 - [Overview](#overview)
 - [Quick Start](#quick-start)
-- [Professional Visualization](#professional-visualization)
+- [Scientific Visualization](#scientific-visualization)
 - [Key Features](#key-features)
 - [Workflow](#workflow)
 - [Statistical & Calculation Methods](#statistical--calculation-methods)
@@ -14,14 +14,14 @@
 
 ## Overview
 
-*qPCR Plate Planner* is a high-performance, browser-based suite for designing, executing, and analyzing quantitative PCR (qPCR) experiments with publication-ready outputs. It bridges the gap between raw Ct data and "Prism-style" scientific figures by integrating:
+*qPCR Plate Planner* is a high-performance, browser-based suite for designing, executing, and analyzing quantitative PCR (qPCR) experiments. It provides a unified environment for generating high-quality scientific figures by integrating:
 
-- **Intelligent 384-Well Layouts**: Optimized for spaced triplicates to minimize cross-contamination.
-- **Advanced Statistics**: Automated t-tests and ANOVA with p-value significance mapping (*, **, ***).
+- **Intelligent 384-Well Layouts**: Optimized for spaced triplicates to ensure data integrity.
+- **Advanced Statistics**: Automated t-tests and ANOVA with standardized p-value significance mapping (*, **, ***).
 - **Quality Control**: Real-time outlier detection using Z-score and IQR methods.
-- **Publication-Ready Charts**: Clean, high-contrast "Prism-style" visualizations with SD/SEM error bars.
+- **Scientific-Grade Charts**: Clean, high-contrast visualizations with SD/SEM error bars.
 
-The tool implements the 2^−ΔΔCt method (Livak & Schmittgen, 2001) with enhanced mathematical validation and error propagation.
+The tool implements the 2^−ΔΔCt method (Livak & Schmittgen, 2001) with enhanced mathematical validation and error propagation across diverse experimental designs.
 
 ---
 
@@ -29,35 +29,35 @@ The tool implements the 2^−ΔΔCt method (Livak & Schmittgen, 2001) with enhan
 1. **Download the Sample**: Get `qPCR_Pro_Example_Dataset.json` from this repository.
 2. **Launch the App**: [Live Interface](https://mahmood-m-ali.github.io/qPCR-plate-planner/)  
 3. **Import Data**: Click **Import JSON** and select the example file.
-4. **Explore**: See how the tool handles 4 genes, calculates significance, and identifies a deliberate outlier in the QC summary.
+4. **Explore**: See how the tool handles multiple genes, calculates significance, and identifies outliers in the QC summary.
 
 ---
 
-## Professional Visualization (Prism-Style)
-The latest version features a major aesthetic overhaul designed for direct inclusion in manuscripts:
-- **Clean Aesthetics**: Solid high-contrast colors (Light Gray for Controls, Dark Gray for Conditions) with no distracting background gridlines.
-- **Significance Mapping**: Automated horizontal brackets with centered bold stars for instant p-value recognition.
-- **Optimized Layout**: 45° rotated X-axis labels and dynamic canvas scaling to prevent gene name collisions.
-- **Publication Standards**: 2px bold black axes and standardized font sizing (Inter family).
+## Scientific Visualization
+The latest version features a refined aesthetic designed for clear data presentation:
+- **Clean Aesthetics**: Solid high-contrast colors (Light Gray for Controls, Dark Gray for Conditions) with minimized background noise.
+- **Significance Mapping**: Automated horizontal brackets with centered bold stars for clear p-value recognition.
+- **Optimized Layout**: 45° rotated X-axis labels and dynamic canvas scaling to accommodate varying gene name lengths.
+- **Standardized Formatting**: 2px bold black axes and legible typography (Inter family).
 
 ---
 
 ## Key Features
 
 ### Statistical Analysis & QC
-- **Multiple Test Support**: Choose between Student's t-test or one-way ANOVA.
-- **Smart Outlier Detection**: Toggle between Z-score or Interquartile Range (IQR) to identify and exclude "jumpy" replicates.
-- **Error Bars**: Select between Standard Deviation (SD) for spread or Standard Error of the Mean (SEM) for precision.
-- **Proactive Warnings**: Detects insufficient replicates ($n < 2$) before they cause calculation failures.
+- **Multiple Test Support**: Choose between Student's t-test or one-way ANOVA depending on your experimental design.
+- **Smart Outlier Detection**: Toggle between Z-score or Interquartile Range (IQR) to identify and exclude technical replicates that deviate from the mean.
+- **Error Bars**: Select between Standard Deviation (SD) for data spread or Standard Error of the Mean (SEM) for statistical precision.
+- **Proactive Warnings**: Detects insufficient replicates ($n < 2$) before they impact calculation reliability.
 
 ### Intelligent Plate Designer
-- **Spaced Triplicate Logic**: Built-in templates for 384-well plates that leave "white spacer" columns between samples.
-- **Multi-Gene Stacking**: Support for complex layouts involving 10+ genes on a single plate.
-- **Master Mix Calculator**: Automatic volume adjustments including safety margins (e.g., 1.1x).
+- **Spaced Triplicate Logic**: Built-in templates for 384-well plates that leave "white spacer" columns between samples to minimize cross-talk.
+- **Multi-Gene Stacking**: Support for complex layouts involving multiple target and reference genes on a single plate.
+- **Master Mix Calculator**: Automatic volume adjustments including configurable safety margins.
 
 ### Data Management
 - **JSON Portability**: Save entire experiments (layout + Ct data + analysis settings) in a single portable file.
-- **High-Res Export**: Download charts and plate maps as JPEG or vector-quality PDF.
+- **High-Res Export**: Download charts and plate maps as JPEG or vector-quality PDF for archiving and presentation.
 - **Local-First Security**: All calculations happen in your browser; no data is ever uploaded to a server.
 
 ---
@@ -71,12 +71,12 @@ Use the `Name_Target_Condition` convention. The tool handles grouping automatica
 Apply triplicates to the 384-well grid. The tool tracks well usage per target to feed the Master Mix calculator.
 
 ### Step 3: Input Ct Data (Plate B)
-Paste Ct values directly from your qPCR instrument (LightCycler, QuantStudio, etc.). The grid supports block-pasting from Excel.
+Paste Ct values directly from your qPCR instrument. The grid supports block-pasting from spreadsheet applications.
 
 ### Step 4: Refine Analysis
-Select your **Control Target** (e.g., Gapdh) and **Control Condition** (e.g., IgG or Wildtype). Adjust the QC threshold to prune outliers.
+Select your **Control Target** (reference gene) and **Control Condition**. Adjust the QC thresholds to prune outliers.
 
-### Step 5: Export for Publication
+### Step 5: Export Data
 Download the final bar chart with significance stars and the detailed ΔΔCt summary table.
 
 ---
@@ -100,7 +100,7 @@ The tool calculates fold change using the standard formula:
 
 ### Outlier Removal
 - **Z-Score**: Identifies points more than $N$ standard deviations from the mean.
-- **IQR**: Identifies points outside $1.5 \times$ the interquartile range (Tukey's Fences).
+- **IQR**: Identifies points outside $1.5 \times$ the interquartile range.
 
 ---
 
