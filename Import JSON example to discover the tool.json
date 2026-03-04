@@ -1,27 +1,27 @@
 {
   "version": "groups_v1",
-  "exported_at": "2025-10-26T17:12:38.185Z",
+  "exported_at": "2026-03-04T12:33:27.391986Z",
   "state": {
     "meta": {
-      "name": "HT Cell line H3K27me3 Cut&Run",
-      "date": "2025-10-26",
-      "notes": "Two replicates of HT Cut&Run targeting H3K27me3 across HOX genes which are expected to be enriched in this mark versus CCNA2 gene which is expected to be deprived of the mark in these cell lines. \nThis file is designed to demonstrate full planner functionality including sample setup, plate layout, master mix calculation, Ct entry, and ΔΔCt analysis"
+      "name": "Epigenetic Regulation of Cell Cycle - Demo Dataset",
+      "date": "2026-03-04",
+      "notes": "This example demonstrates a typical RT-qPCR analysis workflow.\nCells were treated with a P300 inhibitor for 48 hours.\nTarget genes: CCNA2 (Cell cycle), HOXA1 (Development), MYC (Oncogene).\nReference gene: GAPDH."
     },
     "wellsA": [
       {
-        "colors": "#527560",
+        "colors": "#bdc3c7",
         "segmentation": 1
       },
       {
-        "colors": "#b1e2c5",
+        "colors": "#bdc3c7",
         "segmentation": 1
       },
       {
-        "colors": "#016a2b",
+        "colors": "#bdc3c7",
         "segmentation": 1
       },
       {
-        "colors": "#1b6538",
+        "colors": "#FFFFFF",
         "segmentation": 1
       },
       {
@@ -105,19 +105,19 @@
         "segmentation": 1
       },
       {
-        "colors": "#527560",
+        "colors": "#7f8c8d",
         "segmentation": 1
       },
       {
-        "colors": "#b1e2c5",
+        "colors": "#7f8c8d",
         "segmentation": 1
       },
       {
-        "colors": "#016a2b",
+        "colors": "#7f8c8d",
         "segmentation": 1
       },
       {
-        "colors": "#1b6538",
+        "colors": "#FFFFFF",
         "segmentation": 1
       },
       {
@@ -201,19 +201,19 @@
         "segmentation": 1
       },
       {
-        "colors": "#527560",
+        "colors": "#3498db",
         "segmentation": 1
       },
       {
-        "colors": "#b1e2c5",
+        "colors": "#3498db",
         "segmentation": 1
       },
       {
-        "colors": "#016a2b",
+        "colors": "#3498db",
         "segmentation": 1
       },
       {
-        "colors": "#1b6538",
+        "colors": "#FFFFFF",
         "segmentation": 1
       },
       {
@@ -297,15 +297,15 @@
         "segmentation": 1
       },
       {
-        "colors": "#FFFFFF",
+        "colors": "#2980b9",
         "segmentation": 1
       },
       {
-        "colors": "#FFFFFF",
+        "colors": "#2980b9",
         "segmentation": 1
       },
       {
-        "colors": "#FFFFFF",
+        "colors": "#2980b9",
         "segmentation": 1
       },
       {
@@ -393,19 +393,19 @@
         "segmentation": 1
       },
       {
-        "colors": "#57ff1a",
+        "colors": "#e74c3c",
         "segmentation": 1
       },
       {
-        "colors": "#76ab63",
+        "colors": "#e74c3c",
         "segmentation": 1
       },
       {
-        "colors": "#91e273",
+        "colors": "#e74c3c",
         "segmentation": 1
       },
       {
-        "colors": "#628656",
+        "colors": "#FFFFFF",
         "segmentation": 1
       },
       {
@@ -489,19 +489,19 @@
         "segmentation": 1
       },
       {
-        "colors": "#57ff1a",
+        "colors": "#c0392b",
         "segmentation": 1
       },
       {
-        "colors": "#76ab63",
+        "colors": "#c0392b",
         "segmentation": 1
       },
       {
-        "colors": "#91e273",
+        "colors": "#c0392b",
         "segmentation": 1
       },
       {
-        "colors": "#628656",
+        "colors": "#FFFFFF",
         "segmentation": 1
       },
       {
@@ -585,19 +585,19 @@
         "segmentation": 1
       },
       {
-        "colors": "#57ff1a",
+        "colors": "#9b59b6",
         "segmentation": 1
       },
       {
-        "colors": "#76ab63",
+        "colors": "#9b59b6",
         "segmentation": 1
       },
       {
-        "colors": "#91e273",
+        "colors": "#9b59b6",
         "segmentation": 1
       },
       {
-        "colors": "#628656",
+        "colors": "#FFFFFF",
         "segmentation": 1
       },
       {
@@ -681,15 +681,15 @@
         "segmentation": 1
       },
       {
-        "colors": "#FFFFFF",
+        "colors": "#8e44ad",
         "segmentation": 1
       },
       {
-        "colors": "#FFFFFF",
+        "colors": "#8e44ad",
         "segmentation": 1
       },
       {
-        "colors": "#FFFFFF",
+        "colors": "#8e44ad",
         "segmentation": 1
       },
       {
@@ -777,19 +777,19 @@
         "segmentation": 1
       },
       {
-        "colors": "#7961f5",
+        "colors": "#FFFFFF",
         "segmentation": 1
       },
       {
-        "colors": "#3b22b9",
+        "colors": "#FFFFFF",
         "segmentation": 1
       },
       {
-        "colors": "#917eec",
+        "colors": "#FFFFFF",
         "segmentation": 1
       },
       {
-        "colors": "#3419b8",
+        "colors": "#FFFFFF",
         "segmentation": 1
       },
       {
@@ -873,19 +873,19 @@
         "segmentation": 1
       },
       {
-        "colors": "#7961f5",
+        "colors": "#FFFFFF",
         "segmentation": 1
       },
       {
-        "colors": "#3b22b9",
+        "colors": "#FFFFFF",
         "segmentation": 1
       },
       {
-        "colors": "#917eec",
+        "colors": "#FFFFFF",
         "segmentation": 1
       },
       {
-        "colors": "#3419b8",
+        "colors": "#FFFFFF",
         "segmentation": 1
       },
       {
@@ -969,19 +969,19 @@
         "segmentation": 1
       },
       {
-        "colors": "#7961f5",
+        "colors": "#FFFFFF",
         "segmentation": 1
       },
       {
-        "colors": "#3b22b9",
+        "colors": "#FFFFFF",
         "segmentation": 1
       },
       {
-        "colors": "#917eec",
+        "colors": "#FFFFFF",
         "segmentation": 1
       },
       {
-        "colors": "#3419b8",
+        "colors": "#FFFFFF",
         "segmentation": 1
       },
       {
@@ -1257,19 +1257,19 @@
         "segmentation": 1
       },
       {
-        "colors": "#6ce8ea",
+        "colors": "#FFFFFF",
         "segmentation": 1
       },
       {
-        "colors": "#9adfe0",
+        "colors": "#FFFFFF",
         "segmentation": 1
       },
       {
-        "colors": "#27adb0",
+        "colors": "#FFFFFF",
         "segmentation": 1
       },
       {
-        "colors": "#287577",
+        "colors": "#FFFFFF",
         "segmentation": 1
       },
       {
@@ -1353,19 +1353,19 @@
         "segmentation": 1
       },
       {
-        "colors": "#6ce8ea",
+        "colors": "#FFFFFF",
         "segmentation": 1
       },
       {
-        "colors": "#9adfe0",
+        "colors": "#FFFFFF",
         "segmentation": 1
       },
       {
-        "colors": "#27adb0",
+        "colors": "#FFFFFF",
         "segmentation": 1
       },
       {
-        "colors": "#287577",
+        "colors": "#FFFFFF",
         "segmentation": 1
       },
       {
@@ -1449,19 +1449,19 @@
         "segmentation": 1
       },
       {
-        "colors": "#6ce8ea",
+        "colors": "#FFFFFF",
         "segmentation": 1
       },
       {
-        "colors": "#9adfe0",
+        "colors": "#FFFFFF",
         "segmentation": 1
       },
       {
-        "colors": "#27adb0",
+        "colors": "#FFFFFF",
         "segmentation": 1
       },
       {
-        "colors": "#287577",
+        "colors": "#FFFFFF",
         "segmentation": 1
       },
       {
@@ -1547,16 +1547,16 @@
     ],
     "wellsB": [
       {
-        "ct": 34
+        "ct": 18.534
       },
       {
-        "ct": 30.24
+        "ct": 18.498
       },
       {
-        "ct": 30.96
+        "ct": 18.476
       },
       {
-        "ct": 30.61
+        "ct": null
       },
       {
         "ct": null
@@ -1619,16 +1619,16 @@
         "ct": null
       },
       {
-        "ct": 34.59
+        "ct": 18.409
       },
       {
-        "ct": 30.94
+        "ct": 18.38
       },
       {
-        "ct": 31.2
+        "ct": 18.366
       },
       {
-        "ct": 30.7
+        "ct": null
       },
       {
         "ct": null
@@ -1691,16 +1691,16 @@
         "ct": null
       },
       {
-        "ct": 34.46
+        "ct": 21.922
       },
       {
-        "ct": 30.68
+        "ct": 22.077
       },
       {
-        "ct": 31.38
+        "ct": 21.952
       },
       {
-        "ct": 31.11
+        "ct": null
       },
       {
         "ct": null
@@ -1763,13 +1763,13 @@
         "ct": null
       },
       {
-        "ct": null
+        "ct": 23.541
       },
       {
-        "ct": null
+        "ct": 23.499
       },
       {
-        "ct": null
+        "ct": 24.228
       },
       {
         "ct": null
@@ -1835,16 +1835,16 @@
         "ct": null
       },
       {
-        "ct": 33.77
+        "ct": 25.037
       },
       {
-        "ct": 25.25
+        "ct": 25.044
       },
       {
-        "ct": 25.3
+        "ct": 25.001
       },
       {
-        "ct": 25.54
+        "ct": null
       },
       {
         "ct": null
@@ -1907,16 +1907,16 @@
         "ct": null
       },
       {
-        "ct": 34
+        "ct": 21.95
       },
       {
-        "ct": 25.42
+        "ct": 21.989
       },
       {
-        "ct": 25.5
+        "ct": 22.031
       },
       {
-        "ct": 25.96
+        "ct": null
       },
       {
         "ct": null
@@ -1979,16 +1979,16 @@
         "ct": null
       },
       {
-        "ct": 34.01
+        "ct": 21.025
       },
       {
-        "ct": 25.66
+        "ct": 21.023
       },
       {
-        "ct": 25.81
+        "ct": 20.963
       },
       {
-        "ct": 26.15
+        "ct": null
       },
       {
         "ct": null
@@ -2051,13 +2051,13 @@
         "ct": null
       },
       {
-        "ct": null
+        "ct": 26.037
       },
       {
-        "ct": null
+        "ct": 25.996
       },
       {
-        "ct": null
+        "ct": 26.002
       },
       {
         "ct": null
@@ -2123,16 +2123,16 @@
         "ct": null
       },
       {
-        "ct": 34.43
+        "ct": null
       },
       {
-        "ct": 30.36
+        "ct": null
       },
       {
-        "ct": 31.03
+        "ct": null
       },
       {
-        "ct": 31.29
+        "ct": null
       },
       {
         "ct": null
@@ -2195,16 +2195,16 @@
         "ct": null
       },
       {
-        "ct": 34.38
+        "ct": null
       },
       {
-        "ct": 30.97
+        "ct": null
       },
       {
-        "ct": 31.48
+        "ct": null
       },
       {
-        "ct": 30.64
+        "ct": null
       },
       {
         "ct": null
@@ -2267,16 +2267,16 @@
         "ct": null
       },
       {
-        "ct": 34.59
+        "ct": null
       },
       {
-        "ct": 31.21
+        "ct": null
       },
       {
-        "ct": 30.8
+        "ct": null
       },
       {
-        "ct": 31.56
+        "ct": null
       },
       {
         "ct": null
@@ -2483,16 +2483,16 @@
         "ct": null
       },
       {
-        "ct": 33.13
+        "ct": null
       },
       {
-        "ct": 24.74
+        "ct": null
       },
       {
-        "ct": 24.74
+        "ct": null
       },
       {
-        "ct": 25.22
+        "ct": null
       },
       {
         "ct": null
@@ -2555,16 +2555,16 @@
         "ct": null
       },
       {
-        "ct": 33.12
+        "ct": null
       },
       {
-        "ct": 25.05
+        "ct": null
       },
       {
-        "ct": 25.14
+        "ct": null
       },
       {
-        "ct": 25.15
+        "ct": null
       },
       {
         "ct": null
@@ -2627,16 +2627,16 @@
         "ct": null
       },
       {
-        "ct": 33.53
+        "ct": null
       },
       {
-        "ct": 25.13
+        "ct": null
       },
       {
-        "ct": 25.4
+        "ct": null
       },
       {
-        "ct": 25.83
+        "ct": null
       },
       {
         "ct": null
@@ -2699,196 +2699,142 @@
         "ct": null
       }
     ],
-    "selectedColor": "#287577",
     "samples": [
       {
-        "id": 1761478312601.1587,
-        "name": "HT_CCNA2_IgG",
+        "id": 5000,
+        "name": "GAPDH_IgG",
+        "target": "GAPDH",
+        "conditionName": "IgG",
+        "color": "#bdc3c7",
         "role": "Control",
+        "group": "Main Experiment"
+      },
+      {
+        "id": 5001,
+        "name": "GAPDH_Treated",
+        "target": "GAPDH",
+        "conditionName": "Treated",
+        "color": "#7f8c8d",
+        "role": "Condition",
+        "group": "Main Experiment"
+      },
+      {
+        "id": 5002,
+        "name": "CCNA2_IgG",
         "target": "CCNA2",
         "conditionName": "IgG",
-        "color": "#527560",
-        "group": "Group 1"
+        "color": "#3498db",
+        "role": "Control",
+        "group": "Main Experiment"
       },
       {
-        "id": 1761478321603.0396,
-        "name": "HT_HOXA1_IgG",
-        "role": "Control",
-        "target": "HOXA1",
-        "conditionName": "IgG",
-        "color": "#b1e2c5",
-        "group": "Group 1"
-      },
-      {
-        "id": 1761478333256.0188,
-        "name": "HT_HOXA2_IgG",
-        "role": "Control",
-        "target": "HOXA2",
-        "conditionName": "IgG",
-        "color": "#016a2b",
-        "group": "Group 1"
-      },
-      {
-        "id": 1761478345694.9973,
-        "name": "HT_HOXD1_IgG",
-        "role": "Control",
-        "target": "HOXD1",
-        "conditionName": "IgG",
-        "color": "#1b6538",
-        "group": "Group 1"
-      },
-      {
-        "id": 1761478355823.6711,
-        "name": "HT_CCNA2_IgG",
-        "role": "Control",
+        "id": 5003,
+        "name": "CCNA2_Treated",
         "target": "CCNA2",
-        "conditionName": "IgG",
-        "color": "#7961f5",
-        "group": "Group 2"
+        "conditionName": "Treated",
+        "color": "#2980b9",
+        "role": "Condition",
+        "group": "Main Experiment"
       },
       {
-        "id": 1761478363021.5386,
-        "name": "HT_HOXA1_IgG",
-        "role": "Control",
+        "id": 5004,
+        "name": "HOXA1_IgG",
         "target": "HOXA1",
         "conditionName": "IgG",
-        "color": "#3b22b9",
-        "group": "Group 2"
-      },
-      {
-        "id": 1761478369409.6785,
-        "name": "HT_HOXA2_IgG",
+        "color": "#e74c3c",
         "role": "Control",
-        "target": "HOXA2",
-        "conditionName": "IgG",
-        "color": "#917eec",
-        "group": "Group 2"
+        "group": "Main Experiment"
       },
       {
-        "id": 1761478375828.33,
-        "name": "HT_HOXD1_IgG",
+        "id": 5005,
+        "name": "HOXA1_Treated",
+        "target": "HOXA1",
+        "conditionName": "Treated",
+        "color": "#c0392b",
+        "role": "Condition",
+        "group": "Main Experiment"
+      },
+      {
+        "id": 5006,
+        "name": "MYC_IgG",
+        "target": "MYC",
+        "conditionName": "IgG",
+        "color": "#9b59b6",
         "role": "Control",
-        "target": "HOXD1",
-        "conditionName": "IgG",
-        "color": "#3419b8",
-        "group": "Group 2"
+        "group": "Main Experiment"
       },
       {
-        "id": 1761478498452.466,
-        "name": "HT_CCNA2_me3",
+        "id": 5007,
+        "name": "MYC_Treated",
+        "target": "MYC",
+        "conditionName": "Treated",
+        "color": "#8e44ad",
         "role": "Condition",
-        "target": "CCNA2",
-        "conditionName": "me3",
-        "color": "#57ff1a",
-        "group": "Group 1"
-      },
-      {
-        "id": 1761478507609.8972,
-        "name": "HT_HOXA1_me3",
-        "role": "Condition",
-        "target": "HOXA1",
-        "conditionName": "me3",
-        "color": "#76ab63",
-        "group": "Group 1"
-      },
-      {
-        "id": 1761478515654.9473,
-        "name": "HT_HOXA2_me3",
-        "role": "Condition",
-        "target": "HOXA2",
-        "conditionName": "me3",
-        "color": "#91e273",
-        "group": "Group 1"
-      },
-      {
-        "id": 1761478526435.8208,
-        "name": "HT_HOXD1_me3",
-        "role": "Condition",
-        "target": "HOXD1",
-        "conditionName": "me3",
-        "color": "#628656",
-        "group": "Group 1"
-      },
-      {
-        "id": 1761478542845.723,
-        "name": "HT_CCNA2_me3",
-        "role": "Condition",
-        "target": "CCNA2",
-        "conditionName": "me3",
-        "color": "#6ce8ea",
-        "group": "Group 2"
-      },
-      {
-        "id": 1761478553018.588,
-        "name": "HT_HOXA1_me3",
-        "role": "Condition",
-        "target": "HOXA1",
-        "conditionName": "me3",
-        "color": "#9adfe0",
-        "group": "Group 2"
-      },
-      {
-        "id": 1761478558066.993,
-        "name": "HT_HOXA2_me3",
-        "role": "Condition",
-        "target": "HOXA2",
-        "conditionName": "me3",
-        "color": "#27adb0",
-        "group": "Group 2"
-      },
-      {
-        "id": 1761478562778.137,
-        "name": "HT_HOXD1_me3",
-        "role": "Condition",
-        "target": "HOXD1",
-        "conditionName": "me3",
-        "color": "#287577",
-        "group": "Group 2"
+        "group": "Main Experiment"
       }
     ],
     "reagents": [
       {
-        "name": "Syber Green X2",
-        "perWell": 5
+        "name": "SYBR Green Master Mix (2X)",
+        "perWell": 5.0
       },
       {
-        "name": "H2O",
-        "perWell": 3
+        "name": "Forward/Reverse Primers (10uM)",
+        "perWell": 0.5
       },
       {
-        "name": "Primer",
-        "perWell": 1
+        "name": "Nuclease-Free Water",
+        "perWell": 3.5
+      },
+      {
+        "name": "cDNA Template (scaled)",
+        "perWell": 1.0
       }
     ],
     "extraWellsPerTarget": {
+      "GAPDH": 4,
       "CCNA2": 4,
       "HOXA1": 4,
-      "HOXA2": 4,
-      "HOXD1": 4
+      "MYC": 4
     },
     "groups": [
       {
-        "id": "g1761478312601.4468",
-        "name": "Group 1"
-      },
-      {
-        "id": "g1761478355823.8208",
-        "name": "Group 2"
+        "id": "pro_g1",
+        "name": "Main Experiment"
       }
     ],
     "groupSettings": {
-      "g1761478312601.4468": {
+      "pro_g1": {
         "controlType": "IgG",
-        "ctrlTarget": "CCNA2",
-        "chartCond": "me3"
-      },
-      "g1761478355823.8208": {
-        "controlType": "IgG",
-        "ctrlTarget": "CCNA2",
-        "chartCond": "me3"
+        "ctrlTarget": "GAPDH",
+        "chartCond": "Treated",
+        "useMultiRef": false,
+        "refTargets": []
       }
     },
-    "history": [],
-    "redo": []
+    "calcMode": "pow_ddct",
+    "experimentType": "qpcr",
+    "plateMode": "384",
+    "stats": {
+      "test": "ttest",
+      "fdr": "BH",
+      "starCuts": [
+        0.05,
+        0.01,
+        0.001
+      ]
+    },
+    "qc": {
+      "enabled": true,
+      "rule": "z",
+      "zThresh": 1.5
+    },
+    "chart": {
+      "errorBars": "sd",
+      "yScale": "linear"
+    },
+    "ui": {
+      "ctCompact": true
+    }
   }
 }
