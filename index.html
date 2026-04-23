@@ -1168,7 +1168,27 @@
     document.getElementById('exportMenu').addEventListener('click', (e) => { if (e.target.classList.contains('menu-item')) { setTimeout(closeMenu, 0) } })
     document.addEventListener('click', e => { if (!expMenu.contains(e.target) && e.target !== expBtn) closeMenu() });
     function buildPerFigureExportList() { const host = document.getElementById('perFigureExports'); host.innerHTML = ''; state.groups.forEach(g => { const panel = document.querySelector(`#groupsPanels .controls[data-group-id="${g.id}"]`), canvas = panel?.querySelector('canvas.group-chart'); if (!canvas) return; const base = safeFilename(state.meta?.name || 'qpcr'), cond = safeFilename(state.groupSettings[g.id]?.chartCond || 'cond'), mode = safeFilename(getModeForGroup(g.id)), gname = safeFilename(g.name || 'group'), fname = `${base}_${cond}_${mode}_${gname}`; const p = document.createElement('button'); p.className = 'menu-item'; p.textContent = `${g.name} chart (PNG)`; p.onclick = () => exportCanvasAsPNG(canvas, fname + '.png'); const d = document.createElement('button'); d.className = 'menu-item'; d.textContent = `${g.name} chart (PDF)`; d.onclick = () => exportCanvasAsPDF(canvas, fname + '.pdf', 'p'); host.appendChild(p); host.appendChild(d) }) }
+    function exportFullPageJson() {
+    try {
+      const payload = {
+        exportedAt: new Date().toISOString(),
+        storageKey: STORAGE_KEY,
+        version: "qpcr_allinone_v3",
+        state: state
+      };
 
+      const json = JSON.stringify(payload, null, 2);
+      const blob = new Blob([json], { type: "application/json;charset=utf-8" });
+
+      // Uses FileSaver CDN you already include
+      saveAs(blob, `qPCR-plate-planner_${new Date().toISOString().slice(0,10)}.json`);
+    } catch (err) {
+      console.error(err);
+      showErrorToast("JSON export failed. See console.");
+    }
+  }
+
+  document.getElementById("exportJsonBtn")?.addEventListener("click", exportFullPageJson);
     /* ===== Import JSON (Sample setup) and Delete All ===== */
     document.getElementById('importJsonBtnTop').onclick = () => { document.getElementById('importJsonInputTop').click() }
     document.getElementById('importJsonInputTop').addEventListener('change', async e => { const f = e.target.files?.[0]; if (!f) return; try { const txt = await f.text(), p = JSON.parse(txt), next = p && p.state ? p.state : p; if (!next || !Array.isArray(next.wellsA) || !Array.isArray(next.wellsB)) throw new Error('Invalid JSON'); Object.keys(state).forEach(k => delete state[k]); Object.assign(state, next); state.groups = state.groups || [{ id: 'g1', name: 'Group 1' }]; state.groupSettings = state.groupSettings || {}; state.perGroupMode = state.perGroupMode || {}; state.qc = state.qc || { enabled: false, rule: 'z', zThresh: 2.5 }; state.chart = state.chart || { errorBars: 'sd', yScale: 'linear' }; state.stats = state.stats || { test: 'ttest', fdr: 'BH', starCuts: [0.05, 0.01, 0.001] }; state.plate = state.plate || { showHeatmap: 'off' }; state.layout = state.layout || { enableHelpers: false }; state.calibrator = state.calibrator || { enabled: false, mode: 'manual', sampleName: '', shiftPerTarget: {}, globalShift: 0 }; state.export = state.export || { includeAnalysisStamp: true }; state.ui = state.ui || { ctCompact: true }; state.groups.forEach(g => { if (!state.groupSettings[g.id]) state.groupSettings[g.id] = { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3', useMultiRef: false, refTargets: [] } }); state.history = []; state.redo = []; saveState(); renderAll(); showErrorToast('JSON imported.') } catch (err) { console.error(err); showErrorToast('JSON import failed.') }; e.target.value = '' })
