@@ -4,8 +4,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>qPCR Plate Planner</title>
-  <link rel="icon" href="favicon.png" type="image/png">
+  <title>WellCraft</title>
+  <link rel="icon" href="app_icon.ico" type="image/x-icon">
   <!-- CDNs -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
@@ -28,6 +28,22 @@
       --primary-accent: #3b82f6;
       --danger-accent: #e11d48;
       --border-light: #e2e8f0;
+      --bg-app: #F8FAFC;
+      --input-bg: #ffffff;
+      --card-bg: #ffffff;
+    }
+
+    /* DARK MODE VARIABLES */
+    body.dark-mode {
+      --bg-app: #0f172a;
+      --surface: #1e293b;
+      --surface-hover: #334155;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --border-light: #334155;
+      --ok-border: #334155;
+      --input-bg: #0f172a;
+      --card-bg: #1e293b;
     }
 
     * {
@@ -38,27 +54,45 @@
       font-family: 'Inter', sans-serif;
       margin: 0;
       color: var(--text-primary);
-      background: #F8FAFC
+      background: var(--bg-app);
+      transition: background 0.3s ease, color 0.3s ease;
     }
 
     #app {
       margin: 16px auto;
-      padding: 20px;
-      max-width: 1200px;
+      padding: 0; /* Changed to 0 to let header/footer span full width of app container */
+      max-width: 1240px;
       background: var(--surface);
       border-radius: 16px;
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      overflow: hidden;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
     }
 
-    .app-title {
+    /* PRESTIGIOUS HEADER */
+    header {
+      background: url('header_banner.jpg') no-repeat center center;
+      background-size: cover;
+      height: 200px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 48px;
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 0 4px 15px rgba(0,0,0,0.8), 0 2px 4px rgba(0,0,0,0.5);
+      letter-spacing: -1.5px;
       text-align: center;
-      font-size: 28px;
-      font-weight: 800;
-      margin: 16px 0 20px
     }
 
-    .app-title span {
-      color: var(--danger-accent)
+    .main-content {
+      padding: 0 24px 24px;
     }
 
     h3 {
@@ -89,7 +123,7 @@
       border-radius: 6px;
       transition: all 0.2s ease;
       outline: none;
-      background: #fff;
+      background: var(--input-bg);
       color: var(--text-primary);
     }
 
@@ -193,30 +227,6 @@
       align-items: center
     }
 
-    .selector-pill {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      border: 2px solid var(--border-light);
-      border-radius: 999px;
-      padding: 6px 12px;
-      background: #fff;
-      cursor: pointer;
-      user-select: none;
-      transition: all 0.2s ease;
-    }
-
-    .selector-pill:hover {
-      border-color: #cbd5e1;
-      transform: translateY(-1px);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    }
-
-    .selector-pill.active {
-      border-color: var(--primary-accent);
-      background: #eff6ff;
-    }
-
     .selector-swatch {
       width: 16px;
       height: 16px;
@@ -264,10 +274,10 @@
     .well {
       position: relative;
       aspect-ratio: 1/1;
-      border: 1px solid #cbd5e1;
+      border: 1px solid var(--border-light);
       border-radius: 6px;
       cursor: pointer;
-      background: #fff;
+      background: var(--input-bg);
       overflow: hidden;
       transition: transform 0.1s ease, box-shadow 0.1s ease, border-color 0.2s ease;
     }
@@ -326,6 +336,7 @@
       border: 1px solid var(--border-light);
       border-radius: 8px;
       overflow: hidden;
+      background: var(--surface);
     }
 
     th,
@@ -335,11 +346,12 @@
       padding: 8px 12px;
       font-size: 13px;
       vertical-align: top;
-      background: #fff
+      background: var(--surface);
+      color: var(--text-primary);
     }
 
     th {
-      background: #f8fafc;
+      background: var(--surface-hover);
       text-align: left;
       font-weight: 600;
       color: var(--text-secondary);
@@ -405,7 +417,7 @@
       padding: 6px 10px;
       border: 1px solid var(--border-light);
       border-radius: 999px;
-      background: #fff;
+      background: var(--surface);
       font-size: 13px;
       font-weight: 500;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -551,25 +563,6 @@
       margin: 6px 0
     }
 
-    .heatmap-canvas {
-      position: absolute;
-      pointer-events: none;
-      opacity: .75
-    }
-
-    .heatmap-legend {
-      position: absolute;
-      right: 8px;
-      top: 8px;
-      background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      padding: 6px;
-      font-size: 12px;
-      pointer-events: none;
-      opacity: .95
-    }
-
     /* Compact Plate B */
     #ctTableGrid.compact {
       table-layout: fixed;
@@ -618,19 +611,20 @@
     }
 
     .help-card {
-      background: #fff;
+      background: var(--card-bg);
       border: 1px solid var(--border-light);
       border-left: 4px solid var(--primary-accent);
       border-radius: 8px;
       padding: 16px;
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
       font-size: 13px;
-      line-height: 1.5
+      line-height: 1.5;
+      color: var(--text-primary);
     }
 
     .help-card.warning-card {
       border-left-color: var(--danger-accent);
-      background: #fff9f9
+      background: var(--surface-hover);
     }
 
     .help-card strong.title {
@@ -660,55 +654,210 @@
       border-left-color: var(--primary-accent)
     }
 
-    /* Restored sample list compact style */
+    /* DARK MODE REFINEMENTS */
+    body.dark-mode .help-card {
+      background: #1e293b;
+      border-color: #334155;
+    }
+    body.dark-mode .help-card.tips-card {
+      background: #1e3a8a;
+      border-left-color: #3b82f6;
+      color: #bfdbfe;
+    }
+    body.dark-mode .help-card.tips-card li {
+      color: #93c5fd;
+    }
+    body.dark-mode .settings-bar {
+      background: #1e293b !important;
+      border-color: #334155;
+    }
+    body.dark-mode .settings-bar .group {
+      background: #0f172a !important;
+      border-color: #334155;
+    }
+    body.dark-mode .export-menu {
+      background: #1e293b;
+      border-color: #334155;
+      color: #f1f5f9;
+    }
+    body.dark-mode .menu-title {
+      color: #94a3b8;
+    }
+    body.dark-mode .menu-item {
+      color: #f1f5f9;
+    }
+    body.dark-mode .menu-item:hover {
+      background: #334155;
+    }
+    body.dark-mode .menu-sep {
+      background: #334155;
+    }
+
+    /* SAMPLE LIST REORGANIZATION */
     .sample-list {
       display: flex;
       flex-direction: column;
-      gap: 8px
+      gap: 4px;
+      margin-top: 10px;
     }
 
     .sample-row {
-      display: flex;
-      align-items: center;
+      display: flex !important;
+      align-items: center !important;
       gap: 12px;
       border: 1px solid var(--border-light);
-      border-radius: 10px;
-      padding: 10px 14px;
-      background: #fff;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+      border-radius: 6px;
+      padding: 4px 12px !important;
+      background: var(--card-bg);
+      transition: all 0.2s ease;
+      height: 42px !important; /* Strict fixed height */
+      overflow: hidden;
+    }
+
+    .sample-row:hover {
+      border-color: var(--primary-accent);
+      background: var(--surface-hover);
     }
 
     .sample-chip {
-      width: 18px;
-      height: 18px;
-      border-radius: 6px;
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
       border: 1px solid rgba(0, 0, 0, 0.1);
       flex: 0 0 auto;
-      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
     }
 
     .sample-main {
       display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      min-width: 0;
+      height: 100%;
+    }
+
+    .sample-identity {
+      display: flex;
       flex-direction: column;
-      gap: 2px;
-      min-width: 280px
+      justify-content: center;
+      flex: 1;
+      min-width: 0;
+      height: 100%;
     }
 
     .sample-title {
       font-weight: 700;
-      color: var(--text-primary)
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 13px;
+      line-height: 1.1;
     }
 
     .sample-meta {
-      font-size: 12px;
-      color: var(--text-secondary)
+      font-size: 10px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.1;
+    }
+
+    .sample-group-select {
+      flex: 0 0 150px;
+      padding: 2px 4px !important;
+      font-size: 11px !important;
+      height: 24px !important;
+      margin: 0 !important;
     }
 
     .inline-buttons {
       display: flex;
       align-items: center;
-      gap: 8px;
-      margin-left: auto
+      gap: 6px;
+      flex: 0 0 auto;
+    }
+
+    .sample-row .small-danger {
+      padding: 0 6px !important;
+      font-size: 10px;
+      height: 24px !important;
+      min-width: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* COLOR SELECTOR COMPACT & DARK MODE */
+    .selector-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid var(--border-light);
+      border-radius: 999px;
+      padding: 4px 12px;
+      background: var(--surface) !important;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+      color: var(--text-primary) !important;
+      font-size: 12px;
+    }
+
+    .selector-pill:hover {
+      border-color: var(--primary-accent);
+      transform: translateY(-1px);
+    }
+
+    .selector-pill.active {
+      border-color: var(--primary-accent) !important;
+      background: rgba(59, 130, 246, 0.1) !important;
+      box-shadow: 0 0 0 1px var(--primary-accent);
+    }
+
+    body.dark-mode .selector-pill {
+      background: #1e293b !important;
+      border-color: #334155 !important;
+      color: #f1f5f9 !important;
+    }
+
+    body.dark-mode .selector-pill.active {
+      background: rgba(59, 130, 246, 0.2) !important;
+      border-color: #3b82f6 !important;
+    }
+
+    /* AI Chat Robust Dark Mode */
+    #aiPlannerMessages {
+      background: var(--bg-app) !important;
+    }
+
+    .chat-msg-user {
+      background: var(--brand) !important;
+      color: #fff !important;
+    }
+
+    .chat-msg-assistant {
+      background: var(--surface) !important;
+      color: var(--text-primary) !important;
+      border: 1px solid var(--border-light);
+    }
+
+    /* Master Mix Table Fixes */
+    #mmExtraWells, #mmTable {
+      background: var(--surface);
+    }
+
+    /* Well Numbers Visibility */
+    .well-number {
+      color: var(--text-primary);
+      text-shadow: 0 0 4px var(--surface);
+    }
+
+    .seg-number {
+      background: var(--surface);
+      color: var(--text-primary);
+      border-color: var(--border-light);
     }
 
     @media print {
@@ -726,7 +875,205 @@
 
 <body>
   <div id="app">
-    <div class="app-title">qPCR Plate <span>Planner</span></div>
+    <header>
+      <h1>Well<span>Craft</span></h1>
+      <button id="darkModeToggle" onclick="toggleDarkMode()" style="position: absolute; top: 20px; right: 24px; background: rgba(255,255,255,0.1); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 8px 16px; border-radius: 999px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: all 0.2s ease; z-index: 10;">
+        <span id="themeIcon">🌙</span> <span id="themeText">Dark Mode</span>
+      </button>
+    </header>
+
+    <div class="main-content">
+      <!-- Master User Guide Section -->
+      <details id="masterUserGuide" class="controls" style="border-left: 4px solid #10b981; background: var(--surface); margin-bottom: 24px; padding: 12px 20px; border-radius: 12px; transition: all 0.3s ease;">
+        <summary style="cursor: pointer; font-weight: 800; font-size: 16px; color: #059669; display: flex; align-items: center; gap: 10px; list-style: none;">
+          <span style="font-size: 20px;">📖</span> Master User Guide & Scientific Principles
+          <span style="font-size: 12px; font-weight: 400; color: var(--text-secondary); margin-left: auto;">(Click to Expand)</span>
+        </summary>
+        
+        <div style="margin-top: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+          
+          <div class="help-card" style="grid-column: 1/-1; background: rgba(16, 185, 129, 0.05); border-left-color: #10b981;">
+            <strong class="title" style="color: #059669;">🚀 Quick Start Workflow</strong>
+            <ol style="margin: 0; padding-left: 20px; color: var(--text-secondary); font-size: 13px;">
+              <li><strong>Metadata:</strong> Enter experiment name and date.</li>
+              <li><strong>Sample Setup:</strong> Add samples with Name, Target, and Role (Control/Condition/Standard).</li>
+              <li><strong>Plate A:</strong> Select a sample color and click/paint wells to assign positions (typically technical triplicates).</li>
+              <li><strong>Plate B:</strong> Enter or paste Ct values directly from your qPCR machine export.</li>
+              <li><strong>Analysis:</strong> View dynamic charts and export your results (PDF/JPEG/JSON).</li>
+            </ol>
+          </div>
+
+          <div class="help-card">
+            <strong class="title">1. RT‑qPCR (2^-ΔΔCt)</strong>
+            <p style="margin-bottom: 8px;">The gold standard for relative gene expression.</p>
+            <ul style="font-size: 12px;">
+              <li><strong>ΔCt:</strong> Target gene Ct normalized to a reference (housekeeping) gene.</li>
+              <li><strong>ΔΔCt:</strong> Sample ΔCt relative to a control (e.g., WT or untreated).</li>
+              <li><strong>Fold Change:</strong> Calculated as 2 to the power of negative ΔΔCt.</li>
+            </ul>
+          </div>
+
+          <div class="help-card">
+            <strong class="title">2. Absolute Quant (Standard Curve)</strong>
+            <p style="margin-bottom: 8px;">Quantifies exact copy numbers or concentrations.</p>
+            <ul style="font-size: 12px;">
+              <li><strong>Regression:</strong> Maps Ct values against log10(Known Quantities).</li>
+              <li><strong>Efficiency:</strong> Calculated from the slope; standard is 90-110%.</li>
+              <li><strong>R²:</strong> Measures how well your standards fit the linear model.</li>
+            </ul>
+          </div>
+
+          <div class="help-card">
+            <strong class="title">3. Multi‑condition (ANOVA)</strong>
+            <p style="margin-bottom: 8px;">For experiments with 3+ biological groups.</p>
+            <ul style="font-size: 12px;">
+              <li><strong>Stats:</strong> Applies Welch's t-test for pairwise comparisons.</li>
+              <li><strong>FDR:</strong> Uses Benjamini-Hochberg (BH) correction to prevent false positives in large gene sets.</li>
+            </ul>
+          </div>
+
+          <div class="help-card">
+            <strong class="title">4. Dose‑Response / Time‑Course</strong>
+            <p style="margin-bottom: 8px;">Tracking kinetic shifts or drug sensitivity.</p>
+            <ul style="font-size: 12px;">
+              <li><strong>Visualization:</strong> Defaults to <strong>Log2 Y-axis</strong> to show symmetrical up/down regulation trends.</li>
+              <li><strong>Trend:</strong> Best for identifying IC50 or activation peaks.</li>
+            </ul>
+          </div>
+
+          <div class="help-card">
+            <strong class="title">5. Reference Gene Screening</strong>
+            <p style="margin-bottom: 8px;">Validating your normalization controls.</p>
+            <ul style="font-size: 12px;">
+              <li><strong>Multi-Ref:</strong> Allows you to select multiple housekeeping candidates.</li>
+              <li><strong>Logic:</strong> Averages the Ct values of selected refs for a more stable normalization baseline.</li>
+            </ul>
+          </div>
+
+          <div class="help-card">
+            <strong class="title">6. SNP Genotyping</strong>
+            <p style="margin-bottom: 8px;">Allelic discrimination between variants.</p>
+            <ul style="font-size: 12px;">
+              <li><strong>Cluster Plot:</strong> Uses 2-dye fluorescence (e.g., FAM/VIC) to group samples.</li>
+              <li><strong>Calls:</strong> Identifies Homozygous (Allele 1/2) and Heterozygous clusters.</li>
+            </ul>
+          </div>
+
+          <div class="help-card">
+            <strong class="title">7. Technical QC Plate</strong>
+            <p style="margin-bottom: 8px;">Validating pipetting and equipment precision.</p>
+            <ul style="font-size: 12px;">
+              <li><strong>Outliers:</strong> Uses <strong>Z-score</strong> or <strong>IQR</strong> to flag "bad wells" automatically.</li>
+              <li><strong>Precision:</strong> Monitors CV% (Coefficient of Variation) across replicates.</li>
+            </ul>
+          </div>
+
+          <div class="help-card">
+            <strong class="title">8. Epigenetic Enrichment</strong>
+            <p style="margin-bottom: 8px;">For Cut&Run, Cut&Tag, or ChIP-qPCR.</p>
+            <ul style="font-size: 12px;">
+              <li><strong>Control:</strong> Usually normalized against an IgG background.</li>
+              <li><strong>Result:</strong> Displays Fold Enrichment over the non-specific background.</li>
+            </ul>
+          </div>
+
+          <div class="help-card" style="grid-column: 1/-1; background: rgba(59, 130, 246, 0.05); border-left-color: #3b82f6;">
+            <strong class="title" style="color: #1d4ed8;">📊 Analytical Principles & Settings</strong>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 10px;">
+              <div>
+                <strong style="font-size:12px; color:var(--text-primary);">1. Calculation Mode</strong>
+                <ul style="font-size: 11px; padding-left: 15px; margin: 5px 0;">
+                  <li><strong>ΔCt:</strong> (Target - Reference). Raw expression.</li>
+                  <li><strong>2^-ΔCt:</strong> Relative expression level.</li>
+                  <li><strong>ΔΔCt:</strong> (ΔCt Sample - ΔCt Control).</li>
+                  <li><strong>2^-ΔΔCt:</strong> Fold Change relative to Control.</li>
+                </ul>
+              </div>
+              <div>
+                <strong style="font-size:12px; color:var(--text-primary);">2. QC (Outliers)</strong>
+                <ul style="font-size: 11px; padding-left: 15px; margin: 5px 0;">
+                  <li><strong>Z-score:</strong> Best for triplicates. Flags wells > N standard deviations from mean.</li>
+                  <li><strong>IQR:</strong> Removes values outside 1.5x the Interquartile Range.</li>
+                </ul>
+              </div>
+              <div>
+                <strong style="font-size:12px; color:var(--text-primary);">3. Error & Scale</strong>
+                <ul style="font-size: 11px; padding-left: 15px; margin: 5px 0;">
+                  <li><strong>SD / SEM:</strong> Deviation (spread) vs. Error (precision of mean).</li>
+                  <li><strong>Linear / Log2:</strong> Standard Y-axis vs. Symmetrical up/down regulation.</li>
+                </ul>
+              </div>
+              <div>
+                <strong style="font-size:12px; color:var(--text-primary);">4. Statistics</strong>
+                <ul style="font-size: 11px; padding-left: 15px; margin: 5px 0;">
+                  <li><strong>t-test:</strong> Compares two groups (e.g., WT vs KO).</li>
+                  <li><strong>ANOVA:</strong> Compares 3+ groups to prevent false discoveries.</li>
+                  <li><strong>BH (FDR):</strong> Corrects p-values for high-throughput (5+ genes).</li>
+                </ul>
+              </div>
+              <div>
+                <strong style="font-size:12px; color:var(--text-primary);">5. Advanced Normalization</strong>
+                <ul style="font-size: 11px; padding-left: 15px; margin: 5px 0;">
+                  <li><strong>Pfaffl:</strong> Adjusts for variable primer efficiency (e.g., 95% vs 100%).</li>
+                  <li><strong>Calibrator:</strong> Normalizes variation across multiple 384-well plates using an Inter-Run Calibrator (IRC).</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="help-card tips-card" style="grid-column: 1/-1;">
+            <strong>Quick Noise Cleanup:</strong> If your error bars are massive, tick <strong>QC (Z-score)</strong> in the settings bar and set <strong>Z to 1.5</strong>. This often cleans up technical noise from bad wells automatically.
+            <br><br>
+            <strong>💡 Pro Tip:</strong> If you are unsure about the math or setup, just type your question to the <strong>AI Research Consultant</strong> below. It is trained on all these scientific principles!
+          </div>
+
+        </div>
+      </details>
+
+      <!-- AI Smart Planner Section (v3.0 - Gemma Local) -->
+      <!--
+      <div id="aiPlannerSection" class="controls" style="border-left: 4px solid #3B82F6; background: var(--surface); margin-bottom: 24px; padding: 20px; border-radius: 12px; transition: all 0.3s ease;">
+        <h3 style="margin-top:0; display:flex; align-items:center; gap:8px; color: var(--text-primary);">
+          🤖 Gemma: AI Research Consultant 
+          <span id="aiStatusDot" style="width:10px; height:10px; border-radius:50%; background:#94a3b8; display:inline-block; margin-left:10px;" title="Neural Engine Loading..."></span>
+          <span id="aiStatusText" style="font-size:11px; font-weight:400; color:var(--text-secondary);">Waking up your private AI...</span>
+        </h3>
+
+        <!- Neural Engine Attribution & Safety Hint ->
+        <div style="margin-bottom: 20px; padding: 16px; background: rgba(59, 130, 246, 0.03); border: 1px solid rgba(59, 130, 246, 0.15); border-radius: 12px; font-size: 13px; line-height: 1.6; color: var(--text-secondary);">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; color: #3B82F6; font-weight: 700; font-size: 14px;">
+            <svg style="width: 18px; height: 18px;" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+            Private AI Assistant (Google Gemma 4)
+          </div>
+          
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; gap: 10px; align-items: flex-start;">
+              <span style="color: #10b981; font-size: 14px;">🛡️</span>
+              <span><strong>Data Safety:</strong> Works 100% offline. Your research and chat history stay on your computer and are never sent to the internet.</span>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: flex-start;">
+              <span style="color: #3b82f6; font-size: 14px;">📜</span>
+              <span><strong>Licensing:</strong> Powered by Gemma. Distributed under the <a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank" style="color: #3b82f6; text-decoration: underline; font-weight: 600;">Apache License 2.0</a>.</span>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: flex-start; margin-top: 4px; padding-top: 8px; border-top: 1px solid rgba(59, 130, 246, 0.1);">
+              <span style="color: #f59e0b; font-size: 14px;">💡</span>
+              <span style="font-style: italic; color: #3b82f6;"><strong>Friendly tip:</strong> Even experts make mistakes! Please verify the plate maps before starting your lab work.</span>
+            </div>
+          </div>
+        </div>
+        
+        <div id="aiPlannerMessages" style="height: 380px; margin-bottom:12px; border: 1px solid var(--border-light); background: var(--input-bg); overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; border-radius: 10px; transition: all 0.3s ease;">
+          <div style="background: var(--surface-hover); color: var(--text-primary); border: 1px solid var(--border-light); padding: 12px 16px; border-radius: 12px; align-self: flex-start; font-size: 13px; line-height: 1.6;">Hello! I am <strong>Gemma</strong>, your expert qPCR assistant.<br><br>Tell me about your experiment (e.g., cell lines, targets, controls). I will organize your samples into logical groups and prepare the shopping list for you. You can then manually plan the plate layout exactly how you want it!</div>
+        </div>
+        
+        <div style="display: flex; gap: 10px;">
+          <input type="text" id="aiPlannerInput" placeholder="Design an experiment or ask me about the scientific math..." style="flex: 1; padding: 12px 16px; border: 1px solid var(--border-light); background: var(--input-bg); color: var(--text-primary); border-radius: 8px; outline: none; font-size: 14px;" />
+          <button id="aiPlannerSendBtn" class="btn-primary" style="white-space: nowrap; padding: 10px 24px; font-weight: 700;">Send</button>
+          <button id="aiPlannerStopBtn" class="small-danger" style="display: none; white-space: nowrap; padding: 10px 24px; font-weight: 700;">Stop</button>
+        </div>
+      </div>
+      -->
+
 
     <div class="controls">
       <h3>Experiment metadata</h3>
@@ -745,9 +1092,9 @@
             <option value="multi">Multi‑condition (ANOVA)</option>
             <option value="dose">Dose‑response / Time‑course</option>
             <option value="ref">Reference gene screening</option>
+            <option value="snp">SNP Genotyping (Allelic Discrimination)</option>
             <option value="qc">Technical QC plate</option>
-            <option value="cutrun">Cut&Run (fold change only)</option>
-            <option value="cuttag">Cut&Tag (fold change only)</option>
+            <option value="epi">Epigenetic Enrichment (Cut&Run / Cut&Tag)</option>
             <option value="custom">Custom</option>
           </select></label>
         <div class="row" style="margin-left:auto;gap:6px">
@@ -764,6 +1111,7 @@
         <label>Role <select id="sampleRoleInput">
             <option>Control</option>
             <option>Condition</option>
+            <option>Standard</option>
           </select></label>
         <input id="targetInput" type="text" placeholder="Target (e.g., CCNA2)" required />
         <input id="conditionNameInput" type="text" placeholder="Condition (e.g., IgG or H3K27me3)" />
@@ -772,10 +1120,6 @@
         <button id="addSampleBtn" type="button" class="btn-primary">Add sample</button>
       </form>
       <div class="sample-list" id="sampleList" aria-live="polite"></div>
-
-      <h3>Color selection</h3>
-      <div class="selector-wrap" id="colorSelector"></div>
-    </div>
 
     <div id="countsRow" class="row" style="padding:0 12px 8px"></div>
 
@@ -794,11 +1138,9 @@
         <button id="undoBtn" type="button" class="btn-secondary" style="margin-left:auto">Undo</button>
         <button id="redoBtn" type="button" class="btn-secondary">Redo</button>
       </div>
-      <div class="legend-title">Legend</div>
-      <div class="sample-legend" id="sampleLegend"></div>
+      <div class="legend-title">Sample Selector & Legend (Click to paint wells)</div>
+      <div class="selector-wrap" id="colorSelector"></div>
       <div class="plate-grid" id="plateGrid"></div>
-      <canvas id="plateHeatmap" class="heatmap-canvas" width="0" height="0" style="display:none"></canvas>
-      <div id="heatmapLegend" class="heatmap-legend" style="display:none"></div>
     </div>
 
     <div class="controls">
@@ -852,7 +1194,7 @@
       <h3>Plate B — Enter Ct values</h3>
       <div class="row" style="margin:6px 0 8px">
         <button id="resetPlateBButton" type="button" class="small-danger">Clear Plate B</button>
-        <label><input type="checkbox" id="ctCompactToggle" checked /> Compact view (fit to page)</label>
+        <input type="checkbox" id="ctCompactToggle" checked style="display:none" />
         <span style="margin-left:auto"></span>
         <button type="button" class="btn-secondary" id="undoBtnPlateB">Undo</button>
         <button type="button" class="btn-secondary" id="redoBtnPlateB">Redo</button>
@@ -870,48 +1212,6 @@
 
     <div class="controls" id="ctExportWrap">
       <h3>Ct summary — All Groups</h3>
-      <div class="help-guide no-export">
-        <div class="help-card">
-          <strong class="title">1. Calculation Mode</strong>
-          <ul>
-            <li><strong>ΔCt</strong>: (Target - Reference). Raw expression.</li>
-            <li><strong>2^-ΔCt</strong>: Relative expression level.</li>
-            <li><strong>ΔΔCt</strong>: (ΔCt Sample - ΔCt Control).</li>
-            <li><strong>2^-ΔΔCt</strong>: Fold Change (Relative to Control).</li>
-          </ul>
-        </div>
-        <div class="help-card warning-card">
-          <strong class="title">2. QC (Outliers)</strong>
-          <ul>
-            <li><strong>Z-score</strong>: Best for triplicates. Removes wells > N standard deviations away from the
-              mean.</li>
-            <li><strong>IQR</strong>: Removes values outside 1.5x the Interquartile Range (box-plot method).</li>
-          </ul>
-        </div>
-        <div class="help-card">
-          <strong class="title">3. Error & Scale</strong>
-          <ul>
-            <li><strong>SD / SEM</strong>: Standard Deviation (spread) vs. Standard Error (precision of mean).</li>
-            <li><strong>Linear</strong>: Standard Y-axis (0, 1, 2...).</li>
-            <li><strong>Log2</strong>: Symmetry for up/down regulation (-1, 0, 1...).</li>
-          </ul>
-        </div>
-        <div class="help-card">
-          <strong class="title">4. Statistics</strong>
-          <ul>
-            <li><strong>t-test</strong>: Compares <strong>two groups</strong> (e.g., WT vs. KO). Measures if the
-              difference between means is larger than random noise.</li>
-            <li><strong>ANOVA</strong>: Compares <strong>3+ groups</strong>. Prevents "false discoveries" that happen
-              when running many t-tests on the same data.</li>
-            <li><strong>BH (FDR)</strong>: Essential for high-throughput (5+ genes) to correct p-values.</li>
-          </ul>
-        </div>
-        <div class="help-card tips-card">
-          <strong>💡 Quick Tip:</strong>
-          If your error bars are massive, tick <strong>QC (Z-score)</strong> and set <strong>Z to 1.5</strong>. This
-          often cleans up technical noise from bad wells automatically.
-        </div>
-      </div>
       <div id="settingsBar" class="settings-bar no-export">
         <div class="group"><label>Calculation</label><select id="calcModeSelect">
             <option value="dct">ΔCt</option>
@@ -961,6 +1261,9 @@
             <button class="menu-item" id="exportPlateAJpegBtn">Export Plate A (JPEG)</button>
             <button class="menu-item" id="exportPlateAPdfBtn">Export Plate A (PDF)</button>
             <div class="menu-sep"></div>
+            <div class="menu-title">Bench Protocol</div>
+            <button class="menu-item" id="exportBenchBtn">Export Bench Protocol (PDF)</button>
+            <div class="menu-sep"></div>
             <div class="menu-title">Ct summaries (full section)</div>
             <button class="menu-item" id="exportCtJpegBtn">Export Ct summaries (JPEG)</button>
             <button class="menu-item" id="exportCtPdfBtn">Export Ct summaries (PDF)</button>
@@ -979,13 +1282,41 @@
       </div>
       <div id="groupsPanels"></div>
     </div>
-  </div>
+    </div> <!-- Close main-content -->
+  </div> <!-- Close app -->
   <div id="errorToast" role="alert"></div>
 
   <script>
     /* ===== Core constants and state ===== */
     const TOTAL_ROWS = 16, TOTAL_COLS = 24, MAX_COLORS = 4, DEFAULT_COLOR = '#FFFFFF', STORAGE_KEY = 'qpcr_allinone_v3';
-    const state = { experimentType: 'qpcr', meta: { name: '', date: '', notes: '' }, wellsA: [], wellsB: [], selectedColor: null, samples: [], reagents: [], extraWellsPerTarget: {}, groups: [], groupSettings: {}, calcMode: 'ddct', perGroupMode: {}, qc: { enabled: false, rule: 'z', zThresh: 2.5 }, chart: { errorBars: 'sd', yScale: 'linear' }, stats: { test: 'ttest', fdr: 'BH', starCuts: [0.05, 0.01, 0.001] }, plate: { showHeatmap: 'off' }, layout: { enableHelpers: false }, calibrator: { enabled: false, mode: 'manual', sampleName: '', shiftPerTarget: {}, globalShift: 0 }, export: { includeAnalysisStamp: true }, ui: { ctCompact: true }, history: [], redo: [] };
+    const state = { experimentType: 'qpcr', meta: { name: '', date: '', notes: '' }, wellsA: [], wellsB: [], selectedColor: null, samples: [], reagents: [], extraWellsPerTarget: {}, groups: [], groupSettings: {}, calcMode: 'ddct', perGroupMode: {}, qc: { enabled: false, rule: 'z', zThresh: 2.5 }, chart: { errorBars: 'sd', yScale: 'linear' }, stats: { test: 'ttest', fdr: 'BH', starCuts: [0.05, 0.01, 0.001] }, pfaffl: { enabled: false, efficiencies: {} }, export: { includeAnalysisStamp: true }, ui: { ctCompact: true }, history: [], redo: [] };
+
+    /* ===== Theme Management ===== */
+    function toggleDarkMode() {
+        const body = document.body;
+        const icon = document.getElementById('themeIcon');
+        const text = document.getElementById('themeText');
+        
+        body.classList.toggle('dark-mode');
+        const isDark = body.classList.contains('dark-mode');
+        
+        icon.textContent = isDark ? '☀️' : '🌙';
+        text.textContent = isDark ? 'Light Mode' : 'Dark Mode';
+        
+        state.ui.theme = isDark ? 'dark' : 'light';
+        saveState();
+        
+        // Re-render charts to update their colors if needed (Chart.js defaults might need manual overrides)
+        renderAllGroups();
+    }
+
+    function applyInitialTheme() {
+        if (state.ui.theme === 'dark') {
+            document.body.classList.add('dark-mode');
+            document.getElementById('themeIcon').textContent = '☀️';
+            document.getElementById('themeText').textContent = 'Light Mode';
+        }
+    }
 
     /* ===== Utilities ===== */
     function showErrorToast(m) { const e = document.getElementById('errorToast'); e.textContent = m; e.style.display = 'block'; setTimeout(() => e.style.display = 'none', 6000) }
@@ -1007,6 +1338,33 @@
     function welchT(a, b) { const na = a.length, nb = b.length; if (na < 2 || nb < 2) return { t: null, p: null }; const ma = mean(a), mb = mean(b), sa2 = variance(a), sb2 = variance(b); if (sa2 == null || sb2 == null) return { t: null, p: null }; const t = (ma - mb) / Math.sqrt(sa2 / na + sb2 / nb), df = Math.pow(sa2 / na + sb2 / nb, 2) / ((Math.pow(sa2 / na, 2) / (na - 1)) + (Math.pow(sb2 / nb, 2) / (nb - 1))); let p; if (df > 30) { p = 2 * (1 - normalCdf(Math.abs(t))) } else { const z = Math.abs(t) * Math.sqrt(df / Math.max(1, df - 2)); p = 2 * (1 - normalCdf(z)) } return { t, p, df } }
     function bhAdjust(p) { const n = p.length, arr = p.map((v, i) => ({ p: v, i })).sort((a, b) => a.p - b.p); let out = Array(n).fill(1), m = 1; for (let k = n; k >= 1; k--) { m = Math.min(m, arr[k - 1].p * n / k); out[arr[k - 1].i] = Math.min(1, m) } return out }
     function starsForP(p, c = [0.05, 0.01, 0.001]) { if (p == null) return 'ns'; if (p < c[2]) return '***'; if (p < c[1]) return '**'; if (p < c[0]) return '*'; return 'ns' }
+    function sanitizeColors() {
+      const usedColors = new Set();
+      const palette = ['#E74C3C', '#3498DB', '#2ECC71', '#F1C40F', '#9B59B6', '#E67E22', '#1ABC9C', '#27AE60', '#2980B9', '#8E44AD', '#FF8C00', '#FF1493', '#00CED1', '#9400D3', '#7FFF00'];
+      state.samples.forEach((s, i) => {
+        const oldCol = String(s.color || '').toUpperCase();
+        let newCol = oldCol;
+        if (!newCol || newCol === '#FFFFFF' || newCol === '#000000' || usedColors.has(newCol)) {
+          newCol = palette[i % palette.length];
+          let attempts = 0;
+          while(usedColors.has(newCol) && attempts < 50) {
+            newCol = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0').toUpperCase();
+            attempts++;
+          }
+          // Migrate wellsA to use the new color
+          state.wellsA.forEach(w => {
+            if (Array.isArray(w.colors)) {
+              w.colors = w.colors.map(c => c.toUpperCase() === oldCol ? newCol : c);
+            } else if (String(w.colors).toUpperCase() === oldCol) {
+              w.colors = newCol;
+            }
+          });
+          s.color = newCol;
+        }
+        usedColors.add(newCol);
+      });
+    }
+
     function safeFilename(s, fallback = 'file') { if (!s) return fallback; let x = String(s); x = x.replace(/&/g, 'and').replace(/\+/g, 'plus').replace(/[\/\\:;,"'`<>|?*]/g, '-'); x = x.normalize('NFKD').replace(/[\u0300-\u036f]/g, ''); x = x.replace(/\s+/g, '_').toLowerCase(); x = x.replace(/[^a-z0-9._-]/g, ''); x = x.replace(/_+/g, '_').replace(/-+/g, '-').replace(/\.+/g, '.'); x = x.replace(/^[_\.-]+/, '').replace(/[_\.-]+$/, ''); return x || fallback }
 
     /* ===== State init & storage (quota-safe) ===== */
@@ -1017,6 +1375,7 @@
     function saveStateThrottled() { if (saveRaf) return; saveRaf = requestAnimationFrame(() => { saveRaf = null; saveState() }) }
     function loadState() {
       try { const s = localStorage.getItem(STORAGE_KEY); if (s) Object.assign(state, JSON.parse(s)) } catch (e) { console.error(e) }
+      sanitizeColors();
       if (!state.wellsA?.length) initEmptyPlate(); if (!state.wellsB?.length) initEmptyCtTable(); if (!Array.isArray(state.groups) || !state.groups.length) { state.groups = [{ id: 'g1', name: 'Group 1' }]; state.samples.forEach(s => { if (!('group' in s)) s.group = 'Group 1' }) }
       state.groups.forEach(g => { if (!state.groupSettings[g.id]) state.groupSettings[g.id] = { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3', useMultiRef: false, refTargets: [] } })
       state.calcMode = state.calcMode || 'ddct'; state.perGroupMode = state.perGroupMode || {}; state.qc = state.qc || { enabled: false, rule: 'z', zThresh: 2.5 }; state.chart = state.chart || { errorBars: 'sd', yScale: 'linear' }; state.stats = state.stats || { test: 'ttest', fdr: 'BH', starCuts: [0.05, 0.01, 0.001] }; state.plate = state.plate || { showHeatmap: 'off' }; state.layout = state.layout || { enableHelpers: false }; state.calibrator = state.calibrator || { enabled: false, mode: 'manual', sampleName: '', shiftPerTarget: {}, globalShift: 0 }; state.export = state.export || { includeAnalysisStamp: true }; state.experimentType = state.experimentType || 'qpcr'; state.ui = state.ui || { ctCompact: true }
@@ -1034,7 +1393,13 @@
     document.getElementById('metaDate').onchange = () => { state.meta.date = document.getElementById('metaDate').value; saveState() }
     document.getElementById('metaNotes').onchange = () => { state.meta.notes = document.getElementById('metaNotes').value; saveState() }
     document.getElementById('expTypeSelect').onchange = e => applyExperimentPreset(e.target.value)
-    function parseNameTriplet(n) { const p = String(n || '').split('_'); if (p.length === 1) return { target: '', condition: '' }; if (p.length === 2) return { target: p[1], condition: '' }; return { target: p[p.length - 2], condition: p[p.length - 1] } }
+    function parseNameTriplet(n) { 
+      const p = String(n || '').split('_'); 
+      if (p.length <= 1) return { target: '', condition: '' }; 
+      if (p.length === 2) return { target: p[1], condition: '' }; 
+      // The convention is Name_Target_Condition, so we take the last two parts
+      return { target: p[p.length - 2], condition: p[p.length - 1] }; 
+    }
     document.getElementById('sampleNameInput').addEventListener('input', () => { const n = document.getElementById('sampleNameInput'), t = document.getElementById('targetInput'), c = document.getElementById('conditionNameInput'); const { target, condition } = parseNameTriplet(n.value); if (document.activeElement !== t) t.value = target; if (document.activeElement !== c) c.value = condition })
 
     /* ===== Plate A ===== */
@@ -1043,19 +1408,130 @@
       for (let r = 0; r < TOTAL_ROWS; r++) {
         const rh1 = document.createElement('div'); rh1.classList.add('row-header'); rh1.textContent = rowLetter(r); grid.appendChild(rh1);
         for (let c = 0; c < TOTAL_COLS; c++) {
-          const i = idx(r, c), w = state.wellsA[i], colors = Array.isArray(w.colors) ? w.colors : [w.colors], seg = w.segmentation || 1, well = document.createElement('div'); well.classList.add('well'); well.dataset.i = i; if (seg > 1) { well.classList.add('split-' + seg); for (let s = 0; s < seg; s++)well.style.setProperty('--c' + (s + 1), colors[s] || DEFAULT_COLOR) } else { well.style.backgroundColor = colors[0] || DEFAULT_COLOR }
+          const i = idx(r, c), w = state.wellsA[i], colors = Array.isArray(w.colors) ? w.colors : [w.colors], seg = w.segmentation || 1, well = document.createElement('div'); 
+          well.classList.add('well'); 
+          well.dataset.i = i; 
+          if (seg > 1) { 
+            well.classList.add('split-' + seg); 
+            for (let s = 0; s < seg; s++) {
+              const c = colors[s] || DEFAULT_COLOR;
+              well.style.setProperty('--c' + (s + 1), c === DEFAULT_COLOR ? 'var(--input-bg)' : c);
+            }
+          } else { 
+            const c = colors[0] || DEFAULT_COLOR;
+            well.style.backgroundColor = (c === DEFAULT_COLOR) ? '' : c;
+          }
           well.onclick = () => { const col = state.selectedColor || DEFAULT_COLOR; pushHistory(); if (col === DEFAULT_COLOR) { state.wellsA[i].colors = DEFAULT_COLOR; state.wellsA[i].segmentation = 1 } else { const WC = Array.isArray(state.wellsA[i].colors) ? state.wellsA[i].colors : [state.wellsA[i].colors], segm = state.wellsA[i].segmentation || 1; if (col === WC[WC.length - 1]) { WC.pop(); if (!WC.length) { state.wellsA[i].colors = DEFAULT_COLOR; state.wellsA[i].segmentation = 1 } else { state.wellsA[i].colors = WC.length === 1 ? WC[0] : WC; state.wellsA[i].segmentation = Math.max(1, WC.length) } } else if (segm < MAX_COLORS) { const nc = [...WC.filter(x => x !== DEFAULT_COLOR), col]; state.wellsA[i].colors = nc.length === 1 ? nc[0] : nc; state.wellsA[i].segmentation = nc.length } } saveState(); renderPlateA(); updateCounts(); updateMasterMixTotals(); renderAllGroups(); maybeRenderHeatmap() }
+          
+          // Apply Layout Helpers (Technical Triplicate Outlines)
+          if (state.layout.enableHelpers) {
+              const posInTrip = i % 3;
+              well.classList.add('helper-active');
+              if (posInTrip === 0) well.classList.add('helper-start');
+              else if (posInTrip === 1) well.classList.add('helper-mid');
+              else if (posInTrip === 2) well.classList.add('helper-end');
+          }
+
           if (seg > 1) { const pos = [{ x: 25, y: 50 }, { x: 75, y: 50 }, { x: 75, y: 25 }, { x: 25, y: 25 }]; for (let s = 0; s < Math.min(MAX_COLORS, seg); s++) { const col = colors[s]; if (!col || col === DEFAULT_COLOR) continue; const sample = getSampleByColor(col); if (!sample) continue; const num = getSampleNumberById(sample.id); if (!num) continue; const b = document.createElement('div'); b.className = 'seg-number'; b.textContent = num; b.style.left = pos[s].x + '%'; b.style.top = pos[s].y + '%'; well.appendChild(b) } } else { const col = colors[0]; if (col && col !== DEFAULT_COLOR) { const sample = getSampleByColor(col); if (sample) { const num = getSampleNumberById(sample.id); if (num) { const lab = document.createElement('div'); lab.className = 'well-number'; lab.textContent = num; well.appendChild(lab) } } } }
           grid.appendChild(well)
         }
         const rh2 = document.createElement('div'); rh2.classList.add('row-header'); rh2.textContent = rowLetter(r); grid.appendChild(rh2)
       }
-      grid.appendChild(document.createElement('div')).classList.add('corner'); for (let c = 0; c < TOTAL_COLS; c++) { const h = document.createElement('div'); h.classList.add('col-header'); h.textContent = c + 1; grid.appendChild(h) } grid.appendChild(document.createElement('div')).classList.add('corner'); renderSampleLegend()
+      grid.appendChild(document.createElement('div')).classList.add('corner'); for (let c = 0; c < TOTAL_COLS; c++) { const h = document.createElement('div'); h.classList.add('col-header'); h.textContent = c + 1; grid.appendChild(h) } grid.appendChild(document.createElement('div')).classList.add('corner'); renderSelector()
     }
-    function renderSampleLegend() { const el = document.getElementById('sampleLegend'); el.innerHTML = ''; state.samples.forEach(s => { const it = document.createElement('div'); it.classList.add('sample-item'); const dot = document.createElement('span'); dot.classList.add('sample-dot'); dot.style.backgroundColor = s.color; const name = document.createElement('span'); const num = getSampleNumberById(s.id); name.textContent = `#${num} ${s.name}` + (s.group ? ` [${s.group}]` : ''); it.appendChild(dot); it.appendChild(name); el.appendChild(it) }) }
+
 
     /* ===== Samples ===== */
-    function renderSamples() { const list = document.getElementById('sampleList'); list.innerHTML = ''; state.samples.forEach((s, i) => { const row = document.createElement('div'); row.className = 'sample-row'; const chip = document.createElement('div'); chip.className = 'sample-chip'; chip.style.backgroundColor = s.color; const main = document.createElement('div'); main.className = 'sample-main'; const title = document.createElement('div'); title.className = 'sample-title'; const num = getSampleNumberById(s.id); title.textContent = `#${num} ${s.name}`; const meta = document.createElement('div'); meta.className = 'sample-meta'; meta.textContent = `Target: ${s.target}  •  Cond: ${s.conditionName || '—'}  •  Role: ${s.role}  •  Group: ${s.group || '—'}`; main.appendChild(title); main.appendChild(meta); const btns = document.createElement('div'); btns.className = 'inline-buttons'; const gsel = document.createElement('select'); Array.from(new Set(state.groups.map(g => g.name))).forEach(n => { const o = document.createElement('option'); o.value = n; o.textContent = n; if (s.group === n) o.selected = true; gsel.appendChild(o) }); gsel.onchange = () => { pushHistory(); s.group = gsel.value; saveState(); renderSamples(); renderAllGroups() }; const del = document.createElement('button'); del.textContent = '✕'; del.title = 'Delete sample'; del.onclick = () => { pushHistory(); state.samples.splice(i, 1); saveState(); renderSamples(); renderSelector(); renderPlateA(); renderCtTable(); refreshMasterMix(); updateCounts(); renderAllGroups(); maybeRenderHeatmap() }; btns.appendChild(gsel); btns.appendChild(del); row.appendChild(chip); row.appendChild(main); row.appendChild(btns); list.appendChild(row) }) }
+    function renderSamples() { 
+      const list = document.getElementById('sampleList'); 
+      list.innerHTML = ''; 
+      state.samples.forEach((s, i) => { 
+        const row = document.createElement('div'); 
+        row.className = 'sample-row'; 
+        
+        const chip = document.createElement('div'); 
+        chip.className = 'sample-chip'; 
+        chip.style.backgroundColor = s.color; 
+        
+        const main = document.createElement('div'); 
+        main.className = 'sample-main'; 
+        
+        const identity = document.createElement('div');
+        identity.className = 'sample-identity';
+        
+        const title = document.createElement('div'); 
+        title.className = 'sample-title'; 
+        const num = getSampleNumberById(s.id); 
+        title.textContent = `#${num} ${s.name}`; 
+        
+        const meta = document.createElement('div'); 
+        meta.className = 'sample-meta'; 
+        meta.textContent = `Target: ${s.target} • Cond: ${s.conditionName || '—'} • Role: ${s.role}`; 
+        
+        identity.appendChild(title); 
+        identity.appendChild(meta);
+        main.appendChild(identity);
+
+        const gsel = document.createElement('select'); 
+        gsel.className = 'sample-group-select';
+        Array.from(new Set(state.groups.map(g => g.name))).forEach(n => { 
+          const o = document.createElement('option'); 
+          o.value = n; o.textContent = n; 
+          if (s.group === n) o.selected = true; 
+          gsel.appendChild(o) 
+        }); 
+        const newOpt = document.createElement('option'); 
+        newOpt.value = "__NEW__"; 
+        newOpt.textContent = "+ Add New Group..."; 
+        gsel.appendChild(newOpt); 
+        
+        gsel.onchange = () => { 
+          if (gsel.value === "__NEW__") { 
+            const n = prompt("New group name:"); 
+            if (n && n.trim()) { 
+              pushHistory(); 
+              let g = state.groups.find(x => x.name === n.trim()); 
+              if (!g) { 
+                g = { id: 'g' + (Date.now() + Math.random()), name: n.trim() }; 
+                state.groups.push(g); 
+                state.groupSettings[g.id] = { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3', useMultiRef: false, refTargets: [] } 
+              } 
+              s.group = g.name; saveState(); renderSamples(); renderAllGroups() 
+            } else renderSamples() 
+          } else { 
+            pushHistory(); s.group = gsel.value; saveState(); renderSamples(); renderAllGroups() 
+          } 
+        }; 
+        
+        main.appendChild(gsel);
+
+        const btns = document.createElement('div'); 
+        btns.className = 'inline-buttons'; 
+        const del = document.createElement('button'); 
+        del.className = 'small-danger';
+        del.textContent = '✕'; 
+        del.title = 'Delete sample'; 
+        del.onclick = () => { 
+          pushHistory(); 
+          state.samples.splice(i, 1); 
+          saveState(); 
+          renderSamples(); 
+          renderSelector(); 
+          renderPlateA(); 
+          renderCtTable(); 
+          refreshMasterMix(); 
+          updateCounts(); 
+          renderAllGroups(); 
+          maybeRenderHeatmap() 
+        }; 
+        btns.appendChild(del); 
+        
+        row.appendChild(chip); 
+        row.appendChild(main); 
+        row.appendChild(btns); 
+        list.appendChild(row) 
+      }) 
+    }
     function handleAddSample(e) {
       if (e) e.preventDefault(); const name = document.getElementById('sampleNameInput').value.trim(), role = document.getElementById('sampleRoleInput').value, target = document.getElementById('targetInput').value.trim(), conditionName = document.getElementById('conditionNameInput').value.trim(), groupName = document.getElementById('groupNameInput').value.trim() || 'Group 1', color = document.getElementById('sampleColorInput').value; if (!name || !target) return; if (colorExistsInSamples(color)) { showErrorToast('Color already used.'); document.getElementById('sampleColorInput').focus(); return }
       pushHistory(); let group = state.groups.find(g => g.name === groupName); if (!group) { group = { id: 'g' + (Date.now() + Math.random()), name: groupName }; state.groups.push(group); state.groupSettings[group.id] = { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3', useMultiRef: false, refTargets: [] } }
@@ -1064,7 +1540,7 @@
     document.getElementById('addForm').addEventListener('submit', handleAddSample); document.getElementById('addSampleBtn').onclick = handleAddSample
 
     /* ===== Selector ===== */
-    function renderSelector() { const d = document.getElementById('colorSelector'); d.innerHTML = ''; const clear = document.createElement('div'); clear.classList.add('selector-pill'); if (state.selectedColor === null || state.selectedColor === DEFAULT_COLOR) clear.classList.add('active'); clear.onclick = () => { state.selectedColor = DEFAULT_COLOR; saveState(); renderSelector() }; const cs = document.createElement('div'); cs.classList.add('selector-swatch'); cs.style.backgroundColor = DEFAULT_COLOR; const cn = document.createElement('div'); cn.classList.add('selector-name'); cn.textContent = 'Clear'; clear.appendChild(cs); clear.appendChild(cn); d.appendChild(clear); state.samples.forEach(s => { const opt = document.createElement('div'); opt.classList.add('selector-pill'); if (state.selectedColor === s.color) opt.classList.add('active'); opt.onclick = () => { state.selectedColor = s.color; saveState(); renderSelector() }; const sw = document.createElement('div'); sw.classList.add('selector-swatch'); sw.style.backgroundColor = s.color; const nm = document.createElement('div'); nm.classList.add('selector-name'); const num = getSampleNumberById(s.id); nm.textContent = `#${num} ${s.name}`; opt.appendChild(sw); opt.appendChild(nm); d.appendChild(opt) }) }
+    function renderSelector() { const d = document.getElementById('colorSelector'); if (!d) return; d.innerHTML = ''; const clear = document.createElement('div'); clear.classList.add('selector-pill'); if (state.selectedColor === null || state.selectedColor === DEFAULT_COLOR) clear.classList.add('active'); clear.onclick = () => { state.selectedColor = DEFAULT_COLOR; saveState(); renderSelector() }; const cs = document.createElement('div'); cs.classList.add('selector-swatch'); cs.style.backgroundColor = DEFAULT_COLOR; const cn = document.createElement('div'); cn.classList.add('selector-name'); cn.textContent = 'Clear'; clear.appendChild(cs); clear.appendChild(cn); d.appendChild(clear); state.samples.forEach(s => { const opt = document.createElement('div'); opt.classList.add('selector-pill'); if (state.selectedColor === s.color) opt.classList.add('active'); opt.onclick = () => { state.selectedColor = s.color; saveState(); renderSelector() }; const sw = document.createElement('div'); sw.classList.add('selector-swatch'); sw.style.backgroundColor = s.color; const nm = document.createElement('div'); nm.classList.add('selector-name'); const num = getSampleNumberById(s.id); nm.textContent = `#${num} ${s.name}` + (s.group ? ` [${s.group}]` : ''); opt.appendChild(sw); opt.appendChild(nm); d.appendChild(opt) }) }
 
     /* ===== Partial reset & wiring ===== */
     document.getElementById('partialApplyBtn').onclick = () => { const type = document.getElementById('partialResetSelect').value, input = document.getElementById('partialInput').value.trim().toUpperCase(); if (!type || !input) return; pushHistory(); if (type === 'row') { const r = input.charCodeAt(0) - 65; if (r >= 0 && r < TOTAL_ROWS) { for (let c = 0; c < TOTAL_COLS; c++) { const i = idx(r, c); state.wellsA[i] = { colors: DEFAULT_COLOR, segmentation: 1 }; state.wellsB[i] = { ct: null } } } } else if (type === 'col') { const c = parseInt(input, 10) - 1; if (c >= 0 && c < TOTAL_COLS) { for (let r = 0; r < TOTAL_ROWS; r++) { const i = idx(r, c); state.wellsA[i] = { colors: DEFAULT_COLOR, segmentation: 1 }; state.wellsB[i] = { ct: null } } } } saveState(); renderPlateA(); renderCtTable(); updateCounts(); updateMasterMixTotals(); renderAllGroups(); maybeRenderHeatmap() }
@@ -1074,8 +1550,8 @@
     document.getElementById('resetPlateBButton').onclick = () => { if (!confirm('Clear Plate B Ct values?')) return; pushHistory(); initEmptyCtTable(); saveState(); renderCtTable(); renderAllGroups(); maybeRenderHeatmap() }
 
     /* ===== Master Mix ===== */
-    function calculateCounts() { const byT = {}; getTargets().forEach(t => byT[t] = 0); for (let i = 0; i < state.wellsA.length; i++) { const w = state.wellsA[i], cols = Array.isArray(w.colors) ? w.colors : [w.colors], used = cols.filter(c => c !== DEFAULT_COLOR); for (const color of used) { const s = state.samples.find(s => s.color.toLowerCase() === String(color).toLowerCase()); if (s && s.target) byT[s.target] = (byT[s.target] || 0) + 1 } } return byT }
-    function updateCounts() { const row = document.getElementById('countsRow'); if (!row) return; const byS = {}; for (let i = 0; i < state.wellsA.length; i++) { const w = state.wellsA[i], cols = Array.isArray(w.colors) ? w.colors : [w.colors], used = cols.filter(c => c !== DEFAULT_COLOR); for (const color of used) { const s = state.samples.find(s => s.color.toLowerCase() === String(color).toLowerCase()); if (s) byS[s.id] = (byS[s.id] || 0) + 1 } } row.innerHTML = '<strong>Well counts:</strong> ' + state.samples.map(s => { const n = byS[s.id] || 0, num = getSampleNumberById(s.id); return `<span class="sum-pill">#${num} ${s.name}: ${n}</span>` }).join(' ') }
+    function calculateCounts() { const byT = {}; getTargets().forEach(t => byT[t] = 0); for (let i = 0; i < state.wellsA.length; i++) { const w = state.wellsA[i], cols = Array.isArray(w.colors) ? w.colors : [w.colors], used = cols.filter(c => c !== DEFAULT_COLOR); for (const color of used) { const s = state.samples.find(s => s && s.color && s.color.toLowerCase() === String(color).toLowerCase()); if (s && s.target) byT[s.target] = (byT[s.target] || 0) + 1 } } return byT }
+    function updateCounts() { const row = document.getElementById('countsRow'); if (!row) return; const byS = {}; for (let i = 0; i < state.wellsA.length; i++) { const w = state.wellsA[i], cols = Array.isArray(w.colors) ? w.colors : [w.colors], used = cols.filter(c => c !== DEFAULT_COLOR); for (const color of used) { const s = state.samples.find(s => s && s.color && s.color.toLowerCase() === String(color).toLowerCase()); if (s) byS[s.id] = (byS[s.id] || 0) + 1 } } row.innerHTML = '<strong>Well counts:</strong> ' + state.samples.map(s => { const n = byS[s.id] || 0, num = getSampleNumberById(s.id); return `<span class="sum-pill">#${num} ${s.name}: ${n}</span>` }).join(' ') }
     function renderExtraWellsTable() { const counts = calculateCounts(), tb = document.querySelector('#mmExtraWells tbody'); tb.innerHTML = ''; getTargets().forEach(t => { const assigned = counts[t] || 0, extra = +(state.extraWellsPerTarget?.[t] || 0), tr = document.createElement('tr'); tr.innerHTML = `<td>${t}</td><td class="assigned" data-target="${t}">${assigned}</td><td><input type="number" step="1" min="0" value="${extra}" style="width:90px" data-target="${t}" class="extraWellsInput"/></td><td class="total-used" data-target="${t}">${assigned + extra}</td>`; tb.appendChild(tr) }); tb.querySelectorAll('.extraWellsInput').forEach(inp => { inp.oninput = () => { pushHistory(); const t = inp.dataset.target, v = Math.max(0, Math.floor(+inp.value || 0)); state.extraWellsPerTarget[t] = v; saveState(); updateMasterMixTotals() } }) }
     function renderReagents() { const h1 = document.getElementById('mmHeadRow1'), h2 = document.getElementById('mmHeadRow2'), body = document.getElementById('mmBody'), targets = getTargets(); h1.innerHTML = '<th>Reagent</th><th>µL per well</th>' + targets.map(() => '<th></th>').join('') + '<th></th>'; h2.innerHTML = '<th colspan="2" class="note">Totals per target</th>' + targets.map(t => `<th>${t}</th>`).join('') + '<th></th>'; body.innerHTML = ''; state.reagents.forEach((r, i) => { const tr = document.createElement('tr'); tr.innerHTML = `<td>${r.name}</td><td>${(+r.perWell).toFixed(1)}</td>` + targets.map(() => '<td class="mm-cell"></td>').join('') + `<td><button type="button" data-i="${i}" class="delR">✕</button></td>`; body.appendChild(tr) }); body.querySelectorAll('.delR').forEach(btn => btn.onclick = () => { pushHistory(); const i = +btn.dataset.i; state.reagents.splice(i, 1); saveState(); renderReagents(); updateMasterMixTotals() }) }
     function updateMasterMixTotals() { const counts = calculateCounts(), targets = getTargets(); targets.forEach(t => { const a = document.querySelector(`.assigned[data-target="${t}"]`), u = document.querySelector(`.total-used[data-target="${t}"]`); if (a) a.textContent = counts[t] || 0; if (u) { const e = +state.extraWellsPerTarget[t] || 0; u.textContent = (counts[t] || 0) + e } }); const eff = {}; targets.forEach(t => eff[t] = (counts[t] || 0) + (+state.extraWellsPerTarget[t] || 0)); const rows = Array.from(document.querySelectorAll('#mmBody tr')), grand = {}; targets.forEach(t => grand[t] = 0); rows.forEach((tr, ri) => { const r = state.reagents[ri] || { perWell: 0 }, per = r.perWell || 0, cells = Array.from(tr.querySelectorAll('td.mm-cell')); targets.forEach((t, ti) => { const tot = per * (eff[t] || 0); grand[t] += tot; cells[ti].textContent = (+tot).toFixed(1) }) }); const perWellSum = state.reagents.reduce((a, r) => a + (r.perWell || 0), 0), f1 = document.getElementById('mmFootPerWell'), f2 = document.getElementById('mmFootGrand'); f1.innerHTML = '<th colspan="2">Total per well (µL)</th>'; f2.innerHTML = '<th colspan="2">Master tube total per target (µL)</th>'; targets.forEach(t => { const td1 = document.createElement('td'); td1.textContent = (+perWellSum).toFixed(1); f1.appendChild(td1); const td2 = document.createElement('td'); td2.textContent = (+grand[t]).toFixed(1); f2.appendChild(td2) }); f1.appendChild(document.createElement('td')); f2.appendChild(document.createElement('td')) }
@@ -1086,7 +1562,7 @@
     function renderCtTable() { const thead = document.getElementById('ctHead'), tbody = document.getElementById('ctBody'); thead.innerHTML = ''; tbody.innerHTML = ''; const trh = document.createElement('tr'); trh.appendChild(document.createElement('th')); for (let c = 1; c <= TOTAL_COLS; c++) { const th = document.createElement('th'); th.textContent = c; trh.appendChild(th) } thead.appendChild(trh); for (let r = 0; r < TOTAL_ROWS; r++) { const tr = document.createElement('tr'), rh = document.createElement('th'); rh.textContent = rowLetter(r); tr.appendChild(rh); for (let c = 0; c < TOTAL_COLS; c++) { const td = document.createElement('td'), i = idx(r, c), inp = document.createElement('input'); inp.type = 'text'; if (state.wellsB[i].ct != null) inp.value = String(state.wellsB[i].ct); inp.onchange = () => { pushHistory(); const v = parseFloat(inp.value); state.wellsB[i].ct = isFinite(v) ? v : null; saveStateThrottled(); renderAllGroupsDebounced(); maybeRenderHeatmap() }; inp.addEventListener('paste', e => { e.preventDefault(); const t = (e.clipboardData || window.clipboardData).getData('text'); if (!t) return; pushHistory(); const rows = t.split(/\r?\n/).filter(Boolean); let rr = r, cc = c; for (let ri = 0; ri < rows.length && rr < TOTAL_ROWS; ri++) { const cols = rows[ri].split('\t'); cc = c; for (let ci = 0; ci < cols.length && cc < TOTAL_COLS; ci++) { const num = parseFloat(cols[ci].trim()), at = idx(rr, cc); state.wellsB[at].ct = isFinite(num) ? num : null; const cell = tbody.querySelector(`tr:nth-child(${rr + 1}) td:nth-child(${cc + 2}) input`); if (cell) cell.value = isFinite(num) ? String(num) : ''; cc++ } rr++ } saveStateThrottled(); renderAllGroupsDebounced(); maybeRenderHeatmap() }); td.appendChild(inp); tr.appendChild(td) } tbody.appendChild(tr) } (function applyPlateBCompactAndScale() { const t = document.getElementById('ctTableGrid'); if (!t) return; t.classList.toggle('compact', !!state.ui.ctCompact); requestAnimationFrame(scalePlateBToFit) })() }
 
     /* ===== Settings bar ===== */
-    function wireSettingsBar() { const c = document.getElementById('calcModeSelect'); c.value = state.calcMode; c.onchange = () => { pushHistory(); state.calcMode = c.value; saveState(); renderAllGroups() }; const qE = document.getElementById('qcEnabled'), qR = document.getElementById('qcRule'), qZ = document.getElementById('qcZ'); qE.checked = !!state.qc.enabled; qR.value = state.qc.rule || 'z'; qZ.value = state.qc.zThresh ?? 2.5; qE.onchange = () => { pushHistory(); state.qc.enabled = qE.checked; saveState(); renderAllGroups() }; qR.onchange = () => { pushHistory(); state.qc.rule = qR.value; saveState(); renderAllGroups() }; qZ.onchange = () => { pushHistory(); state.qc.zThresh = parseFloat(qZ.value) || 2.5; saveState(); renderAllGroups() }; const eB = document.getElementById('chartError'), yS = document.getElementById('chartY'); eB.value = state.chart.errorBars || 'sd'; yS.value = state.chart.yScale || 'linear'; eB.onchange = () => { pushHistory(); state.chart.errorBars = eB.value; saveState(); renderAllGroups() }; yS.onchange = () => { pushHistory(); state.chart.yScale = yS.value; saveState(); renderAllGroups() }; const h = document.getElementById('heatmapMode'); h.value = state.plate.showHeatmap || 'off'; h.onchange = () => { pushHistory(); state.plate.showHeatmap = h.value; saveState(); maybeRenderHeatmap() }; const sT = document.getElementById('statsTest'), sF = document.getElementById('statsFdr'); sT.value = state.stats.test || 'ttest'; sF.value = state.stats.fdr || 'BH'; sT.onchange = () => { pushHistory(); state.stats.test = sT.value; saveState(); renderAllGroups() }; sF.onchange = () => { pushHistory(); state.stats.fdr = sF.value; saveState(); renderAllGroups() }; const lay = document.getElementById('layoutHelpersToggle'); lay.checked = !!state.layout.enableHelpers; lay.onchange = () => { pushHistory(); state.layout.enableHelpers = lay.checked; saveState(); if (lay.checked) showErrorToast('Layout helpers enabled.') }; const ctToggle = document.getElementById('ctCompactToggle'); if (ctToggle) { ctToggle.checked = !!state.ui.ctCompact; ctToggle.onchange = () => { state.ui.ctCompact = ctToggle.checked; saveState(); renderCtTable() } } const cE = document.getElementById('calibEnabled'), cM = document.getElementById('calibMode'), cN = document.getElementById('calibName'); cE.checked = !!state.calibrator.enabled; cM.value = state.calibrator.mode || 'manual'; cN.value = state.calibrator.sampleName || ''; cE.onchange = () => { pushHistory(); state.calibrator.enabled = cE.checked; saveState(); renderAllGroups() }; cM.onchange = () => { pushHistory(); state.calibrator.mode = cM.value; saveState() }; cN.onchange = () => { pushHistory(); state.calibrator.sampleName = cN.value; saveState() }; document.getElementById('calibComputeBtn').onclick = () => { if (!state.calibrator.enabled) { showErrorToast('Enable calibrator first.'); return } if (state.calibrator.mode === 'global') { const v = parseFloat(prompt('Global ΔCt shift to apply (positive adds to ΔCt):', '0')); if (!isNaN(v)) { pushHistory(); state.calibrator.globalShift = v; saveState(); renderAllGroups() } } else if (state.calibrator.mode === 'manual') { const targets = getTargets(); const pre = targets.map(t => `${t}=${state.calibrator.shiftPerTarget[t] || 0}`).join('\n'); const msg = 'Enter shifts as "TARGET=shift" per line.'; const input = prompt(msg, pre); if (input != null) { const next = {}; input.split(/\r?\n/).forEach(line => { const m = line.split('=').map(x => x.trim()); if (m.length === 2 && m[0]) { const num = parseFloat(m[1]); if (!isNaN(num)) next[m[0]] = num } }); pushHistory(); state.calibrator.shiftPerTarget = next; saveState(); renderAllGroups() } } else if (state.calibrator.mode === 'csv') { showErrorToast('CSV: paste into manual prompt for now.') } else if (state.calibrator.mode === 'paste') { showErrorToast('Paste calibrator Ct: not implemented.') } else if (state.calibrator.mode === 'json') { showErrorToast('From JSON: import baseline and set shifts manually.') } } }
+    function wireSettingsBar() { const c = document.getElementById('calcModeSelect'); c.value = state.calcMode; c.onchange = () => { pushHistory(); state.calcMode = c.value; saveState(); renderAllGroups() }; const qE = document.getElementById('qcEnabled'), qR = document.getElementById('qcRule'), qZ = document.getElementById('qcZ'); qE.checked = !!state.qc.enabled; qR.value = state.qc.rule || 'z'; qZ.value = state.qc.zThresh ?? 2.5; qE.onchange = () => { pushHistory(); state.qc.enabled = qE.checked; saveState(); renderAllGroups() }; qR.onchange = () => { pushHistory(); state.qc.rule = qR.value; saveState(); renderAllGroups() }; qZ.onchange = () => { pushHistory(); state.qc.zThresh = parseFloat(qZ.value) || 2.5; saveState(); renderAllGroups() }; const eB = document.getElementById('chartError'), yS = document.getElementById('chartY'); eB.value = state.chart.errorBars || 'sd'; yS.value = state.chart.yScale || 'linear'; eB.onchange = () => { pushHistory(); state.chart.errorBars = eB.value; saveState(); renderAllGroups() }; yS.onchange = () => { pushHistory(); state.chart.yScale = yS.value; saveState(); renderAllGroups() }; const h = document.getElementById('heatmapMode'); h.value = state.plate.showHeatmap || 'off'; h.onchange = () => { pushHistory(); state.plate.showHeatmap = h.value; saveState(); maybeRenderHeatmap() }; const sT = document.getElementById('statsTest'), sF = document.getElementById('statsFdr'); sT.value = state.stats.test || 'ttest'; sF.value = state.stats.fdr || 'BH'; sT.onchange = () => { pushHistory(); state.stats.test = sT.value; saveState(); renderAllGroups() }; sF.onchange = () => { pushHistory(); state.stats.fdr = sF.value; saveState(); renderAllGroups() }; const lay = document.getElementById('layoutHelpersToggle'); lay.checked = !!state.layout.enableHelpers; lay.onchange = () => { pushHistory(); state.layout.enableHelpers = lay.checked; saveState(); if (lay.checked) showErrorToast('Layout helpers enabled.') }; const ctToggle = document.getElementById('ctCompactToggle'); ctToggle.checked = !!state.ui.ctCompact; ctToggle.onchange = () => { state.ui.ctCompact = ctToggle.checked; saveState(); renderCtTable() }; document.getElementById('calibEnabled').checked = !!state.calibrator.enabled; document.getElementById('calibEnabled').onchange = e => { state.calibrator.enabled = e.target.checked; saveState(); renderAllGroups() }; document.getElementById('calibMode').value = state.calibrator.mode || 'manual'; document.getElementById('calibMode').onchange = e => { state.calibrator.mode = e.target.value; saveState() }; document.getElementById('calibName').value = state.calibrator.sampleName || ''; document.getElementById('calibName').onchange = e => { state.calibrator.sampleName = e.target.value; saveState() }; document.getElementById('calibComputeBtn').onclick = () => { const name = state.calibrator.sampleName; if (!name) { showErrorToast('Enter calibrator sample name.'); return } const samples = state.samples.filter(s => s.name === name); if (!samples.length) { showErrorToast('Calibrator sample not found.'); return } pushHistory(); const shifts = {}; samples.forEach(s => { const arr = []; for (let i = 0; i < state.wellsA.length; i++) { const w = state.wellsA[i], colors = Array.isArray(w.colors) ? w.colors : [w.colors]; if (colors.some(c => getSampleByColor(c)?.id === s.id)) { const ct = state.wellsB[i]?.ct; if (isFinite(ct)) arr.push(ct) } } if (arr.length) shifts[s.target] = -mean(arr) }); state.calibrator.shiftPerTarget = shifts; state.calibrator.enabled = true; document.getElementById('calibEnabled').checked = true; saveState(); renderAllGroups(); showErrorToast('Shifts computed.') }; wireSettingsBarVisibility() }
     function wireSettingsBarVisibility() { const s = state.experimentType, gs = [...document.querySelectorAll('#settingsBar .group')], [Gcalc, Gqc, Gerr, Gheat, Gstats, Glay, Gcal] = gs; gs.forEach(g => g.style.display = 'flex'); if (s === 'qpcr') { Gheat.style.display = 'none'; Glay.style.display = 'none'; Gcal.style.display = 'none' } if (s === 'multi') { Gheat.style.display = 'none'; Glay.style.display = 'none'; Gcal.style.display = 'none' } if (s === 'dose') { Glay.style.display = 'none'; Gcal.style.display = 'none' } if (s === 'ref') { Gstats.style.display = 'none'; Gheat.style.display = 'none'; Glay.style.display = 'none'; Gcal.style.display = 'none' } if (s === 'qc') { Gstats.style.display = 'none'; Glay.style.display = 'none'; Gcal.style.display = 'none' } if (s === 'cutrun' || s === 'cuttag') { Gstats.style.display = 'none'; Glay.style.display = 'none'; Gcal.style.display = 'none'; Gqc.style.display = 'none'; Gheat.style.display = 'none' } }
     function applyExperimentPreset(t) { state.experimentType = t; switch (t) { case 'qpcr': state.calcMode = 'pow_ddct'; state.chart = { errorBars: 'sd', yScale: 'linear' }; state.stats = { test: 'ttest', fdr: 'BH', starCuts: [0.05, 0.01, 0.001] }; state.qc.enabled = false; state.plate.showHeatmap = 'off'; Object.values(state.groupSettings).forEach(gs => gs.useMultiRef = false); state.calibrator.enabled = false; break; case 'absolute': state.calcMode = 'dct'; state.chart = { errorBars: 'sd', yScale: 'linear' }; state.stats = { test: 'none', fdr: 'none', starCuts: [0.05, 0.01, 0.001] }; state.qc.enabled = false; state.plate.showHeatmap = 'off'; break; case 'multi': state.calcMode = 'pow_ddct'; state.chart = { errorBars: 'sd', yScale: 'linear' }; state.stats = { test: 'anova', fdr: 'BH', starCuts: [0.05, 0.01, 0.001] }; state.qc.enabled = false; break; case 'dose': state.calcMode = 'pow_ddct'; state.chart = { errorBars: 'sd', yScale: 'log2' }; state.stats = { test: 'ttest', fdr: 'BH', starCuts: [0.05, 0.01, 0.001] }; state.qc.enabled = false; break; case 'ref': state.calcMode = 'dct'; state.chart = { errorBars: 'sd', yScale: 'linear' }; state.stats = { test: 'none', fdr: 'none', starCuts: [0.05, 0.01, 0.001] }; Object.values(state.groupSettings).forEach(gs => gs.useMultiRef = true); break; case 'qc': state.calcMode = 'dct'; state.chart = { errorBars: 'sd', yScale: 'linear' }; state.stats = { test: 'none', fdr: 'none', starCuts: [0.05, 0.01, 0.001] }; state.qc = { enabled: true, rule: 'z', zThresh: 2.5 }; state.plate.showHeatmap = 'ct'; break; case 'cutrun': case 'cuttag': state.calcMode = 'pow_ddct'; state.chart = { errorBars: 'sd', yScale: 'linear' }; state.stats = { test: 'none', fdr: 'none', starCuts: [0.05, 0.01, 0.001] }; state.qc.enabled = false; state.plate.showHeatmap = 'off'; break; default: break }saveState(); wireSettingsBarVisibility(); renderAllGroups(); maybeRenderHeatmap() }
 
@@ -1097,37 +1573,451 @@
     function getModeForGroup(gid) { return state.perGroupMode?.[gid] || state.calcMode || 'ddct' }
     function bindGroupInputsAndCompute() { document.querySelectorAll('#groupsPanels .row[data-group-id]').forEach(row => { const gid = row.dataset.groupId, ct = row.querySelector('.ctrl-type'), tgt = row.querySelector('.ctrl-target'), ch = row.querySelector('.chart-cond'), md = row.querySelector('.group-mode'), mr = row.querySelector('.use-mref'), ml = row.querySelector('.ref-targets'); const upd = () => { pushHistory(); state.groupSettings[gid] = state.groupSettings[gid] || { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3', useMultiRef: false, refTargets: [] }; state.groupSettings[gid].controlType = ct.value; state.groupSettings[gid].ctrlTarget = tgt.value; state.groupSettings[gid].chartCond = ch.value; state.groupSettings[gid].useMultiRef = mr.checked; state.groupSettings[gid].refTargets = Array.from(ml.selectedOptions).map(o => o.value); if (md.value) state.perGroupMode[gid] = md.value; else delete state.perGroupMode[gid]; saveState(); computeGroup(gid) };[ct, tgt, ch, md, mr, ml].forEach(e => { e.addEventListener('change', upd); e.addEventListener('input', upd) }) }); state.groups.forEach(g => computeGroup(g.id)) }
     function computeGroup(gid) {
-      const group = state.groups.find(g => g.id === gid); if (!group) return; const gname = group.name, st = state.groupSettings[gid] || { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3', useMultiRef: false, refTargets: [] }, ctrlType = (st.controlType || '').toLowerCase(), ctrlTarget = st.ctrlTarget || '', mode = getModeForGroup(gid), foldOnly = (state.experimentType === 'cutrun' || state.experimentType === 'cuttag'); const colorMap = new Map(state.samples.filter(s => s.group === gname).map(s => [s.color.toLowerCase(), s])); const buckets = new Map(); for (let i = 0; i < state.wellsA.length; i++) { const w = state.wellsA[i], cols = Array.isArray(w.colors) ? w.colors : [w.colors], ct = state.wellsB[i]?.ct; if (ct == null || !isFinite(ct)) continue; for (const col of cols) { if (!col || col === DEFAULT_COLOR) continue; const s = colorMap.get(String(col).toLowerCase()); if (!s) continue; if (!buckets.has(s.id)) buckets.set(s.id, { vals: [], sample: s }); buckets.get(s.id).vals.push(ct) } } const gSamples = state.samples.filter(s => s.group === gname); const rows = gSamples.map(s => { const b = buckets.get(s.id), raw = b ? b.vals.filter(v => isFinite(v)) : [], q = qcFilter(raw), m = q.nUsed ? mean(q.used) : null, sdv = q.nUsed > 1 ? stddev(q.used) : null, cv = (m != null && sdv != null && m !== 0) ? (sdv / m * 100) : null; return { id: s.id, sample: s, nTotal: q.nTotal, nUsed: q.nUsed, vals: q.used, meanCt: m, sd: sdv, cv, dCt: null, ddCt: null, val: null, sd_dCt: null, excluded: q.excluded } }); const targets = Array.from(new Set(gSamples.map(s => s.target).filter(Boolean))).sort(), byTarget = {}, dctMap = {}; targets.forEach(t => { const tRows = rows.filter(r => r.sample.target === t); let refRow = null; if (ctrlType) refRow = tRows.find(r => (String(r.sample.conditionName || '').toLowerCase()).includes(ctrlType)) || null; if (!refRow) refRow = tRows[0] || null; tRows.forEach(r => { if (!refRow || r.meanCt == null || refRow.meanCt == null) { r.dCt = null; return } if (r.vals.length && refRow.vals.length && r.vals.length === refRow.vals.length) { const diffs = r.vals.map((v, k) => v - refRow.vals[k]), qd = qcFilter(diffs); r.dCt = qd.nUsed ? mean(qd.used) : (r.meanCt - refRow.meanCt) } else r.dCt = r.meanCt - refRow.meanCt; r.sd_dCt = (r.sd != null || refRow.sd != null) ? Math.sqrt(((r.sd || 0) ** 2) + ((refRow.sd || 0) ** 2)) : null }); const cmap = {}; tRows.forEach(r => { const n = normalizeCond(r.sample.conditionName || ''); if (n && r.dCt != null) cmap[n] = r.dCt }); byTarget[t] = tRows; dctMap[t] = cmap }); function shiftDct(target, x) { if (x == null) return x; if (!state.calibrator.enabled) return x; const s = state.calibrator.shiftPerTarget?.[target], g = state.calibrator.globalShift || 0; return x + (s != null ? s : 0) + g }
-      targets.forEach(t => { (byTarget[t] || []).forEach(r => { const cname = normalizeCond(r.sample.conditionName || ''); r.dCt = shiftDct(t, r.dCt); const base = dctMap[ctrlTarget]?.[cname], baseShift = (base != null) ? shiftDct(ctrlTarget, base) : null; if (r.dCt != null && baseShift != null) r.ddCt = r.dCt - baseShift }) })
-      rows.forEach(r => { if (mode === 'dct') r.val = (r.dCt != null && isFinite(r.dCt)) ? r.dCt : null; else if (mode === 'pow_dct') r.val = (r.dCt != null && isFinite(r.dCt)) ? Math.pow(2, -r.dCt) : null; else if (mode === 'ddct') r.val = (r.ddCt != null && isFinite(r.ddCt)) ? r.ddCt : null; else if (mode === 'pow_ddct') r.val = (r.ddCt != null && isFinite(r.ddCt)) ? Math.pow(2, -r.ddCt) : null })
-      let perTargetStats = {}; let missingReps = false; if (!foldOnly && state.stats.test !== 'none') { const pvals = [], keys = []; targets.forEach(t => { const tr = byTarget[t] || [], A = tr.filter(x => normalizeCond(x.sample.conditionName || '') === normalizeCond(st.chartCond || '')).flatMap(x => x.vals).filter(v => isFinite(v)); let ref = tr.filter(x => (String(x.sample.conditionName || '').toLowerCase()).includes(ctrlType)); if (!ref.length && tr.length) ref = [tr[0]]; const B = ref.flatMap(x => x.vals).filter(v => isFinite(v)); if (A.length >= 2 && B.length >= 2) { const { p } = welchT(A, B); if (p != null) { pvals.push(p); keys.push(t) } } else if (A.length > 0 && B.length > 0) { missingReps = true } }); let padj = pvals; if (state.stats.fdr === 'BH' && pvals.length > 1) padj = bhAdjust(pvals); keys.forEach((t, i) => { const p = pvals[i], pa = padj[i]; perTargetStats[t] = { p, pAdj: pa ?? p, stars: starsForP(pa ?? p, state.stats.starCuts) } }) }
-      const panel = document.querySelector(`#groupsPanels .controls[data-group-id="${gid}"]`); if (!panel) return; const tb = panel.querySelector('table.ct-detail tbody'); tb.innerHTML = ''; const showD = (mode === 'dct' || mode === 'pow_dct' || mode === 'ddct' || mode === 'pow_ddct'), showDD = (mode === 'ddct' || mode === 'pow_ddct'), valLabel = (mode === 'dct') ? 'ΔCt' : (mode === 'pow_dct') ? '2^-ΔCt' : (mode === 'ddct') ? 'ΔΔCt' : '2^-ΔΔCt'; panel.querySelector('table.ct-detail thead tr th:last-child').textContent = valLabel;
-      let warnEl = panel.querySelector('.stats-warn'); if (!warnEl) { warnEl = document.createElement('div'); warnEl.className = 'stats-warn note'; warnEl.style.color = '#86181d'; warnEl.style.fontWeight = '700'; warnEl.style.marginBottom = '8px'; panel.querySelector('table.ct-detail').parentNode.insertBefore(warnEl, panel.querySelector('table.ct-detail')) }
-      warnEl.innerHTML = missingReps ? '⚠️ Statistical tests require at least 2 valid biological/technical replicates per condition. Not enough valid replicates found to compute p-values for all targets.' : ''; warnEl.style.display = missingReps ? 'block' : 'none';
-      targets.forEach(t => { (byTarget[t] || []).forEach(r => { const raw = (buckets.get(r.sample.id)?.vals || []).filter(v => isFinite(v)).map(v => fmt2(v)).join(', '), tr = document.createElement('tr'); tr.innerHTML = `<td>${t}</td><td>#${getSampleNumberById(r.sample.id)} ${r.sample.name}</td><td>${r.sample.role}</td><td>${r.sample.conditionName || ''}</td><td>${raw}</td><td>${r.meanCt != null ? fmt3(r.meanCt) : ''}</td><td>${r.nUsed || 0} / ${r.nTotal || 0}${(r.excluded && r.excluded.length) ? ' •' : ''}</td><td>${r.sd != null ? fmt3(r.sd) : ''}</td><td>${r.cv != null ? fmt2(r.cv) : ''}</td><td>${showD && r.dCt != null ? fmt3(r.dCt) : ''}</td><td>${showDD && r.ddCt != null ? fmt3(r.ddCt) : ''}</td><td>${r.val != null ? fmt3(r.val) : ''}</td>`; tb.appendChild(tr) }) })
-      const labels = [], data = [], errP = [], errM = [], brackets = []; let chartLabel = 'Value', yTitle = 'Value'; if (mode === 'dct') { chartLabel = 'ΔCt'; yTitle = 'ΔCt' } if (mode === 'pow_dct') { chartLabel = 'Relative expression (2^-ΔCt)'; yTitle = 'Relative expression' } if (mode === 'ddct') { chartLabel = 'ΔΔCt'; yTitle = 'ΔΔCt' } if (mode === 'pow_ddct') { chartLabel = 'Fold Change (2^-ΔΔCt)'; yTitle = 'Fold Change' }
+      const group = state.groups.find(g => g.id === gid); if (!group) return; 
+      const gname = group.name, 
+            st = state.groupSettings[gid] || { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3', useMultiRef: false, refTargets: [] }, 
+            ctrlType = (st.controlType || '').toLowerCase(), 
+            ctrlTarget = st.ctrlTarget || '', 
+            mode = getModeForGroup(gid), 
+            isAbsolute = (state.experimentType === 'absolute'), 
+            isEpi = (state.experimentType === 'cutrun' || state.experimentType === 'cuttag' || state.experimentType === 'epi'),
+            foldOnly = isEpi; 
+            
+      const colorMap = new Map(state.samples.filter(s => s.group === gname).map(s => [s.color.toLowerCase(), s])); 
+      const buckets = new Map(); 
+      for (let i = 0; i < state.wellsA.length; i++) { 
+        const w = state.wellsA[i], cols = Array.isArray(w.colors) ? w.colors : [w.colors], ct = state.wellsB[i]?.ct; 
+        if (ct == null || !isFinite(ct)) continue; 
+        for (const col of cols) { 
+          if (!col || col === DEFAULT_COLOR) continue; 
+          const s = colorMap.get(String(col).toLowerCase()); 
+          if (!s) continue; 
+          if (!buckets.has(s.id)) buckets.set(s.id, { vals: [], sample: s }); 
+          buckets.get(s.id).vals.push(ct) 
+        } 
+      } 
+      
+      const gSamples = state.samples.filter(s => s.group === gname); 
+      const rows = gSamples.map(s => { 
+        const b = buckets.get(s.id), raw = b ? b.vals.filter(v => isFinite(v)) : [], q = qcFilter(raw), m = q.nUsed ? mean(q.used) : null, sdv = q.nUsed > 1 ? stddev(q.used) : null, cv = (m != null && sdv != null && m !== 0) ? (sdv / m * 100) : null; 
+        return { id: s.id, sample: s, nTotal: q.nTotal, nUsed: q.nUsed, vals: q.used, meanCt: m, sd: sdv, cv, dCt: null, ddCt: null, val: null, sd_dCt: null, excluded: q.excluded, qty: null } 
+      }); 
+      
+      const targets = Array.from(new Set(gSamples.map(s => s.target).filter(Boolean))).sort();
+      
+      // Multi-Ref Baseline Calculation
+      let compositeRefMean = null;
+      let compositeRefSD = 0;
+      if (st.useMultiRef && st.refTargets && st.refTargets.length > 0) {
+          const refMeans = [];
+          const refVars = [];
+          st.refTargets.forEach(t => {
+              const tr = rows.filter(r => r.sample.target === t);
+              // Find the 'Control' role samples for this target in this group
+              const ctrls = tr.filter(r => r.sample.role === 'Control');
+              if (ctrls.length > 0) {
+                  const m = mean(ctrls.map(c => c.meanCt).filter(v => v != null));
+                  const v = variance(ctrls.flatMap(c => c.vals).filter(v => v != null));
+                  if (m != null) {
+                      refMeans.push(m);
+                      if (v != null) refVars.push(v);
+                  }
+              }
+          });
+          if (refMeans.length > 0) {
+              compositeRefMean = mean(refMeans);
+              // Pooled SD for the composite reference
+              if (refVars.length > 0) compositeRefSD = Math.sqrt(mean(refVars));
+          }
+      }
+
+      // Absolute Quant Regression
+      let regressionLines = {};
+      if (isAbsolute) {
+          targets.forEach(t => {
+              const standards = rows.filter(r => r.sample.target === t && r.sample.role === 'Standard');
+              const dataPoints = [];
+              standards.forEach(r => {
+                  const qty = parseFloat(r.sample.conditionName);
+                  if (!isNaN(qty) && qty > 0 && r.meanCt != null) {
+                      dataPoints.push({ x: Math.log10(qty), y: r.meanCt });
+                  }
+              });
+
+              if (dataPoints.length >= 2) {
+                  const n = dataPoints.length;
+                  const sumX = dataPoints.reduce((s, p) => s + p.x, 0);
+                  const sumY = dataPoints.reduce((s, p) => s + p.y, 0);
+                  const sumXY = dataPoints.reduce((s, p) => s + p.x * p.y, 0);
+                  const sumX2 = dataPoints.reduce((s, p) => s + p.x * p.x, 0);
+                  
+                  const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+                  const intercept = (sumY - slope * sumX) / n;
+                  
+                  // R2 calculation
+                  const yMean = sumY / n;
+                  const ssTot = dataPoints.reduce((s, p) => s + Math.pow(p.y - yMean, 2), 0);
+                  const ssRes = dataPoints.reduce((s, p) => s + Math.pow(p.y - (slope * p.x + intercept), 2), 0);
+                  const r2 = 1 - (ssRes / ssTot);
+                  const efficiency = (Math.pow(10, -1 / slope) - 1) * 100;
+
+                  regressionLines[t] = { slope, intercept, r2, efficiency };
+              }
+          });
+
+          rows.forEach(r => {
+              const line = regressionLines[r.sample.target];
+              if (line && r.meanCt != null) {
+                  r.qty = Math.pow(10, (r.meanCt - line.intercept) / line.slope);
+                  r.val = r.qty;
+              }
+          });
+      }
+
+      const byTarget = {}, dctMap = {}; 
+      targets.forEach(t => { 
+          const tRows = rows.filter(r => r.sample.target === t); 
+          let refRow = null; 
+          if (ctrlType) refRow = tRows.find(r => (String(r.sample.conditionName || '').toLowerCase()).includes(ctrlType)) || null; 
+          if (!refRow) refRow = tRows[0] || null; 
+          
+          tRows.forEach(r => { 
+              // NORMALIZATION LOGIC
+              const currentRefMean = (st.useMultiRef && compositeRefMean != null) ? compositeRefMean : refRow.meanCt;
+              const currentRefSD = (st.useMultiRef && compositeRefMean != null) ? compositeRefSD : (refRow.sd || 0);
+
+              if (currentRefMean == null || r.meanCt == null) { 
+                  r.dCt = null; 
+                  return 
+              } 
+              
+              // Delta Ct calculation
+              r.dCt = r.meanCt - currentRefMean; 
+              // Standard error propagation for dCt
+              r.sd_dCt = Math.sqrt(((r.sd || 0) ** 2) + (currentRefSD ** 2)); 
+          }); 
+          
+          const cmap = {}; 
+          tRows.forEach(r => { 
+              const n = normalizeCond(r.sample.conditionName || ''); 
+              if (n && r.dCt != null) cmap[n] = r.dCt 
+          }); 
+          byTarget[t] = tRows; 
+          dctMap[t] = cmap 
+      }); 
+
+      function shiftDct(target, x) { if (x == null) return x; if (!state.calibrator.enabled) return x; const s = state.calibrator.shiftPerTarget?.[target], g = state.calibrator.globalShift || 0; return x + (s != null ? s : 0) + g }
+      
+      targets.forEach(t => { 
+          (byTarget[t] || []).forEach(r => { 
+              const cname = normalizeCond(r.sample.conditionName || ''); 
+              r.dCt = shiftDct(t, r.dCt); 
+              const base = dctMap[ctrlTarget]?.[cname], baseShift = (base != null) ? shiftDct(ctrlTarget, base) : null; 
+              if (r.dCt != null && baseShift != null) r.ddCt = r.dCt - baseShift 
+          }) 
+      })
+      
+      if (!isAbsolute) {
+          rows.forEach(r => { 
+              if (mode === 'dct') r.val = (r.dCt != null && isFinite(r.dCt)) ? r.dCt : null; 
+              else if (mode === 'pow_dct') r.val = (r.dCt != null && isFinite(r.dCt)) ? Math.pow(2, -r.dCt) : null; 
+              else if (mode === 'ddct') r.val = (r.ddCt != null && isFinite(r.ddCt)) ? r.ddCt : null; 
+              else if (mode === 'pow_ddct') r.val = (r.ddCt != null && isFinite(r.ddCt)) ? Math.pow(2, -r.ddCt) : null 
+          })
+      }
+
+      let perTargetStats = {}; 
+      let missingReps = false; 
+      if (!foldOnly && state.stats.test !== 'none') { 
+          const pvals = [], keys = []; 
+          targets.forEach(t => { 
+              const tr = byTarget[t] || [], 
+                    A = tr.filter(x => normalizeCond(x.sample.conditionName || '') === normalizeCond(st.chartCond || '')).flatMap(x => x.vals).filter(v => isFinite(v)); 
+              let ref = tr.filter(x => (String(x.sample.conditionName || '').toLowerCase()).includes(ctrlType)); 
+              if (!ref.length && tr.length) ref = [tr[0]]; 
+              const B = ref.flatMap(x => x.vals).filter(v => isFinite(v)); 
+              if (A.length >= 2 && B.length >= 2) { 
+                  const { p } = welchT(A, B); 
+                  if (p != null) { pvals.push(p); keys.push(t) } 
+              } else if (A.length > 0 && B.length > 0) { 
+                  missingReps = true 
+              } 
+          }); 
+          let padj = pvals; 
+          if (state.stats.fdr === 'BH' && pvals.length > 1) padj = bhAdjust(pvals); 
+          keys.forEach((t, i) => { 
+              const p = pvals[i], pa = padj[i]; 
+              perTargetStats[t] = { p, pAdj: pa ?? p, stars: starsForP(pa ?? p, state.stats.starCuts) } 
+          }) 
+      }
+
+      const panel = document.querySelector(`#groupsPanels .controls[data-group-id="${gid}"]`); 
+      if (!panel) return; 
+      const tb = panel.querySelector('table.ct-detail tbody'); 
+      tb.innerHTML = ''; 
+      const showD = (mode === 'dct' || mode === 'pow_dct' || mode === 'ddct' || mode === 'pow_ddct'), 
+            showDD = (mode === 'ddct' || mode === 'pow_ddct');
+      
+      // terminology adjustment
+      const labelD = isEpi ? 'Enrichment (dCt)' : 'ΔCt';
+      const labelPowD = isEpi ? 'Enrichment (2^-dCt)' : '2^-ΔCt';
+      const labelDD = isEpi ? 'Rel. Enrichment (ddCt)' : 'ΔΔCt';
+      const labelPowDD = isEpi ? 'Fold Enrichment (2^-ddCt)' : '2^-ΔΔCt';
+
+      const valLabel = isAbsolute ? 'Quantity' : (mode === 'dct') ? labelD : (mode === 'pow_dct') ? labelPowD : (mode === 'ddct') ? labelDD : labelPowDD; 
+      panel.querySelector('table.ct-detail thead tr th:last-child').textContent = valLabel;
+      
+      let warnEl = panel.querySelector('.stats-warn'); 
+      if (!warnEl) { 
+          warnEl = document.createElement('div'); 
+          warnEl.className = 'stats-warn note'; 
+          warnEl.style.color = '#86181d'; 
+          warnEl.style.fontWeight = '700'; 
+          warnEl.style.marginBottom = '8px'; 
+          panel.querySelector('table.ct-detail').parentNode.insertBefore(warnEl, panel.querySelector('table.ct-detail')) 
+      }
+      
+      let absInfo = '';
+      if (isAbsolute) {
+          absInfo = '<div style="margin-bottom:12px; display:flex; gap:16px; flex-wrap:wrap;">';
+          targets.forEach(t => {
+              const l = regressionLines[t];
+              if (l) absInfo += `<div class="sum-pill" style="background:#f0fdf4; color:#166534; border-color:#bbf7d0;"><strong>${t}:</strong> Efficiency=${l.efficiency.toFixed(1)}% | R²=${l.r2.toFixed(3)}</div>`;
+          });
+          absInfo += '</div>';
+      }
+      warnEl.innerHTML = (isAbsolute ? absInfo : '') + (missingReps ? '⚠️ Statistical tests require at least 2 valid biological/technical replicates per condition.' : ''); warnEl.style.display = (isAbsolute || missingReps) ? 'block' : 'none';
+      
+      targets.forEach(t => { 
+          (byTarget[t] || []).forEach(r => { 
+              const raw = (buckets.get(r.sample.id)?.vals || []).filter(v => isFinite(v)).map(v => fmt2(v)).join(', '), tr = document.createElement('tr'); 
+              tr.innerHTML = `<td>${t}</td><td>#${getSampleNumberById(r.sample.id)} ${r.sample.name}</td><td>${r.sample.role}</td><td>${r.sample.conditionName || ''}</td><td>${raw}</td><td>${r.meanCt != null ? fmt3(r.meanCt) : ''}</td><td>${r.nUsed || 0} / ${r.nTotal || 0}${(r.excluded && r.excluded.length) ? ' •' : ''}</td><td>${r.sd != null ? fmt3(r.sd) : ''}</td><td>${r.cv != null ? fmt2(r.cv) : ''}</td><td>${showD && r.dCt != null ? fmt3(r.dCt) : ''}</td><td>${showDD && r.ddCt != null ? fmt3(r.ddCt) : ''}</td><td>${r.val != null ? (isAbsolute ? r.val.toExponential(2) : fmt3(r.val)) : ''}</td>`; 
+              tb.appendChild(tr) 
+          }) 
+      })
+
+      const chartContainer = panel.querySelector('.charts-wrapper') || (() => {
+          const w = document.createElement('div');
+          w.className = 'charts-wrapper';
+          w.style.display = 'flex';
+          w.style.flexDirection = 'column';
+          w.style.gap = '20px';
+          panel.querySelector('table.ct-detail').parentNode.appendChild(w);
+          return w;
+      })();
+      chartContainer.innerHTML = '';
+
+      // Standard Curves
+      if (isAbsolute) {
+          targets.forEach(t => {
+              const line = regressionLines[t];
+              if (line) {
+                  const standards = rows.filter(r => r.sample.target === t && r.sample.role === 'Standard');
+                  const pts = standards.map(r => ({ x: Math.log10(parseFloat(r.sample.conditionName)), y: r.meanCt })).filter(p => !isNaN(p.x) && p.y != null);
+                  
+                  const div = document.createElement('div');
+                  div.className = 'controls';
+                  div.innerHTML = `<div class="chart-title">Standard Curve: ${t} (Eff: ${line.efficiency.toFixed(1)}%, R²: ${line.r2.toFixed(3)})</div><canvas class="std-curve-chart" width="720" height="250"></canvas>`;
+                  chartContainer.appendChild(div);
+                  drawStandardCurve(div.querySelector('canvas'), pts, line, t);
+              }
+          });
+      }
+
+      const labels = [], data = [], errP = [], errM = [], brackets = []; let chartLabel = 'Value', yTitle = 'Value'; 
+      if (isAbsolute) { chartLabel = 'Quantity'; yTitle = 'Quantity' }
+      else if (mode === 'dct') { chartLabel = labelD; yTitle = labelD } 
+      else if (mode === 'pow_dct') { chartLabel = isEpi ? 'Enrichment' : 'Relative expression (2^-ΔCt)'; yTitle = isEpi ? 'Enrichment' : 'Relative expression' } 
+      else if (mode === 'ddct') { chartLabel = labelDD; yTitle = labelDD } 
+      else if (mode === 'pow_ddct') { chartLabel = isEpi ? 'Fold Enrichment' : 'Fold Change (2^-ΔΔCt)'; yTitle = isEpi ? 'Fold Enrichment' : 'Fold Change' }
+      
       targets.forEach(t => {
-        const tr = byTarget[t] || []; const ctrl = tr.find(x => (String(x.sample.conditionName || '').toLowerCase()).includes(ctrlType)); const treat = tr.find(x => normalizeCond(x.sample.conditionName || '') === normalizeCond(st.chartCond || '')); if (!treat || treat.val == null || !isFinite(treat.val)) return; if (ctrl && ctrl.val != null && isFinite(ctrl.val)) { labels.push(t + ' (Ctrl)'); data.push(ctrl.val); let eb = 0; if (state.chart.errorBars !== 'none') { const s = ctrl.sd_dCt ?? ctrl.sd, n = ctrl.nUsed || 0; if (s != null) { eb = (state.chart.errorBars === 'sem' && n > 1) ? (s / Math.sqrt(n)) : s; if (mode === 'pow_ddct' || mode === 'pow_dct') { const base = Math.pow(2, -(ctrl.dCt ?? 0)); eb = (eb != null) ? (Math.log(2) * base * eb) : 0 } } } errP.push(eb); errM.push(eb) }
-        labels.push(t); data.push(treat.val); let ebT = 0; if (state.chart.errorBars !== 'none') { const s = treat.sd_dCt ?? treat.sd, n = treat.nUsed || 0; if (s != null) { ebT = (state.chart.errorBars === 'sem' && n > 1) ? (s / Math.sqrt(n)) : s; if (mode === 'pow_ddct' || mode === 'pow_dct') { const base = Math.pow(2, -(treat.dCt ?? 0)); ebT = (ebT != null) ? (Math.log(2) * base * ebT) : 0 } } } errP.push(ebT); errM.push(ebT);
-        const stt = perTargetStats[t]; if (state.stats.test !== 'none' && stt && stt.stars !== 'ns' && t !== ctrlTarget) { const iTreat = data.length - 1, iCtrl = data.length - 2; const y = Math.max(data[iTreat] + errP[iTreat], data[iCtrl] + errP[iCtrl]); brackets.push({ x1: iCtrl, x2: iTreat, y: y, text: stt.pAdj != null ? `p=${fmt3(stt.pAdj)}` : '', stars: stt.stars }) }
-      }); const canvas = panel.querySelector('canvas.group-chart'); drawGroupChart(canvas, labels, data, errP, errM, chartLabel, yTitle, brackets, mode, gid)
+        const tr = byTarget[t] || []; 
+        if (isAbsolute) {
+            tr.filter(x => x.sample.role !== 'Standard').forEach(x => {
+                if (x.val != null && isFinite(x.val)) {
+                    labels.push(`${x.sample.name} (${t})`);
+                    data.push(x.val);
+                    errP.push(0); errM.push(0);
+                }
+            });
+        } else {
+            const ctrl = tr.find(x => (String(x.sample.conditionName || '').toLowerCase()).includes(ctrlType)); 
+            const treat = tr.find(x => normalizeCond(x.sample.conditionName || '') === normalizeCond(st.chartCond || '')); 
+            if (!treat || treat.val == null || !isFinite(treat.val)) return; 
+            
+            if (ctrl && ctrl.val != null && isFinite(ctrl.val)) { 
+                labels.push(t + ' (Ctrl)'); 
+                data.push(ctrl.val); 
+                let eb = 0; 
+                if (state.chart.errorBars !== 'none') { 
+                    const s = ctrl.sd_dCt ?? ctrl.sd, n = ctrl.nUsed || 0; 
+                    if (s != null) { 
+                        eb = (state.chart.errorBars === 'sem' && n > 1) ? (s / Math.sqrt(n)) : s; 
+                        if (mode === 'pow_ddct' || mode === 'pow_dct') { 
+                            const base = Math.pow(2, -(ctrl.dCt ?? 0)); 
+                            eb = (eb != null) ? (Math.log(2) * base * eb) : 0 
+                        } 
+                    } 
+                } 
+                errP.push(eb); errM.push(eb) 
+            }
+            
+            labels.push(t); 
+            data.push(treat.val); 
+            let ebT = 0; 
+            if (state.chart.errorBars !== 'none') { 
+                const s = treat.sd_dCt ?? treat.sd, n = treat.nUsed || 0; 
+                if (s != null) { 
+                    ebT = (state.chart.errorBars === 'sem' && n > 1) ? (s / Math.sqrt(n)) : s; 
+                    if (mode === 'pow_ddct' || mode === 'pow_dct') { 
+                        const base = Math.pow(2, -(treat.dCt ?? 0)); 
+                        ebT = (ebT != null) ? (Math.log(2) * base * ebT) : 0 
+                    } 
+                } 
+            } 
+            errP.push(ebT); errM.push(ebT);
+            
+            const stt = perTargetStats[t]; 
+            if (state.stats.test !== 'none' && stt && stt.stars !== 'ns' && t !== ctrlTarget) { 
+                const iTreat = data.length - 1, iCtrl = data.length - 2; 
+                const y = Math.max(data[iTreat] + errP[iTreat], data[iCtrl] + errP[iCtrl]); 
+                brackets.push({ x1: iCtrl, x2: iTreat, y: y, text: stt.pAdj != null ? `p=${fmt3(stt.pAdj)}` : '', stars: stt.stars }) 
+            }
+        }
+      });
+      
+      const mainChartDiv = document.createElement('div');
+      mainChartDiv.className = 'controls';
+      mainChartDiv.innerHTML = `<div class="chart-title">Analysis — ${group.name}</div><canvas class="group-chart" width="720" height="220"></canvas>`;
+      chartContainer.appendChild(mainChartDiv);
+      const canvas = mainChartDiv.querySelector('canvas.group-chart'); 
+      drawGroupChart(canvas, labels, data, errP, errM, chartLabel, yTitle, brackets, isAbsolute ? 'absolute' : mode, gid)
+    }
+
+    function drawStandardCurve(canvas, pts, line, target) {
+        const ctx = canvas.getContext('2d');
+        const isDark = document.body.classList.contains('dark-mode');
+        const textColor = isDark ? '#f1f5f9' : '#000';
+        
+        // Regression line points
+        const minX = Math.min(...pts.map(p => p.x)) - 0.5;
+        const maxX = Math.max(...pts.map(p => p.x)) + 0.5;
+        const regPoints = [
+            { x: minX, y: line.slope * minX + line.intercept },
+            { x: maxX, y: line.slope * maxX + line.intercept }
+        ];
+
+        new Chart(ctx, {
+            type: 'scatter',
+            data: {
+                datasets: [
+                    {
+                        label: 'Standards',
+                        data: pts,
+                        backgroundColor: '#3b82f6',
+                        pointRadius: 6
+                    },
+                    {
+                        label: 'Regression',
+                        data: regPoints,
+                        type: 'line',
+                        borderColor: '#ef4444',
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: false,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { type: 'linear', title: { display: true, text: 'log10(Quantity)', color: textColor }, ticks: { color: textColor } },
+                    y: { title: { display: true, text: 'Ct Value', color: textColor }, ticks: { color: textColor } }
+                },
+                plugins: { legend: { labels: { color: textColor } } }
+            }
+        });
     }
 
     /* ===== Chart drawing ===== */
     function makePattern(ctx, type, fg = '#000', bg = '#d0d0d0') { const s = 8, c = document.createElement('canvas'); c.width = c.height = s; const g = c.getContext('2d'); g.fillStyle = bg; g.fillRect(0, 0, s, s); g.strokeStyle = fg; g.lineWidth = 1; if (type === 'diag45') { g.beginPath(); g.moveTo(-2, 10); g.lineTo(10, -2); g.stroke() } else if (type === 'diag135') { g.beginPath(); g.moveTo(-2, -2); g.lineTo(10, 10); g.stroke() } else if (type === 'cross') { g.beginPath(); g.moveTo(-2, 10); g.lineTo(10, -2); g.moveTo(-2, -2); g.lineTo(10, 10); g.stroke() } else if (type === 'dots') { g.fillStyle = fg; g.beginPath(); g.arc(2, 2, 1, 0, Math.PI * 2); g.fill(); g.beginPath(); g.arc(6, 6, 1, 0, Math.PI * 2); g.fill() } return ctx.createPattern(c, 'repeat') }
     function drawGroupChart(canvas, labels, data, errsPlus, errsMinus, chartLabel, yTitle, brackets, mode, gid) {
       const ctx = canvas.getContext('2d'); try { const ex = Chart.getChart ? Chart.getChart(canvas) : (canvas._chart || null); if (ex && ex.destroy) ex.destroy() } catch (e) { }
+      const isDark = document.body.classList.contains('dark-mode');
+      const textColor = isDark ? '#f1f5f9' : '#000';
+      const gridColor = isDark ? 'rgba(241, 245, 249, 0.1)' : 'rgba(0,0,0,0.1)';
+      const borderColor = isDark ? '#94a3b8' : '#000';
+
       let plotData = [...data], plotErrP = [...errsPlus], plotErrM = [...errsMinus], yAxisTitle = yTitle; if ((mode === 'pow_dct' || mode === 'pow_ddct') && state.chart.yScale === 'log2') { plotData = plotData.map(v => v > 0 ? Math.log2(v) : null); plotErrP = plotErrP.map((e, i) => data[i] > 0 && e > 0 ? (e / (data[i] * Math.log(2))) : 0); plotErrM = plotErrM.map((e, i) => data[i] > 0 && e > 0 ? (e / (data[i] * Math.log(2))) : 0); yAxisTitle = 'log2(' + yTitle + ')' }
-      const fills = labels.map((l, i) => (l.endsWith('(Ctrl)') ? '#E0E0E0' : '#4A4A4A'));
+      
+      // Theme-aware fills: Controls are lighter/muted, conditions are brand/vibrant
+      const fills = labels.map((l, i) => {
+          if (l.endsWith('(Ctrl)')) return isDark ? '#475569' : '#E0E0E0';
+          return isDark ? '#3b82f6' : '#4A4A4A';
+      });
+
       const bounds = (() => { let min = Infinity, max = -Infinity; for (let i = 0; i < plotData.length; i++) { const v = plotData[i]; if (v == null || !isFinite(v)) continue; const up = v + (plotErrP[i] || 0), dn = v - (plotErrM[i] || 0); min = Math.min(min, dn, v); max = Math.max(max, up, v) } if (!isFinite(min) || !isFinite(max)) return null; const pad = (max - min) * 0.15 || 0.5; let sMin = min - pad; if (yAxisTitle === 'Fold Change' && min >= 0) sMin = 0; return { suggestedMin: sMin, suggestedMax: max + pad } })();
+      
       const plugin = {
         id: 'errbar_brackets', afterDatasetsDraw(chart) {
-          const { ctx, scales: { y } } = chart; ctx.save(); ctx.strokeStyle = '#000'; ctx.lineWidth = 1.5; const meta = chart.getDatasetMeta(0); const points = (meta && meta.data) ? meta.data.filter(d => Number.isFinite(d?.x) && Number.isFinite(d?.y)) : []; if (!points.length) { ctx.restore(); return }
-          points.forEach((bar, i) => { const vx = bar.x; const val = plotData[i]; if (val == null) return; const yTop = y.getPixelForValue(val + (plotErrP[i] || 0)), yBot = y.getPixelForValue(val - (plotErrM[i] || 0)); ctx.beginPath(); ctx.moveTo(vx, yTop); ctx.lineTo(vx, yBot); ctx.moveTo(vx - 5, yTop); ctx.lineTo(vx + 5, yTop); ctx.moveTo(vx - 5, yBot); ctx.lineTo(vx + 5, yBot); ctx.stroke() });
-          brackets.forEach(bk => { const x1 = points[bk.x1]?.x, x2 = points[bk.x2]?.x; if (x1 == null || x2 == null) return; const yMaxVal = Math.max(plotData[bk.x1] + (plotErrP[bk.x1] || 0), plotData[bk.x2] + (plotErrP[bk.x2] || 0)); const yBase = y.getPixelForValue(yMaxVal), yLine = yBase - 15; ctx.beginPath(); ctx.moveTo(x1, yLine); ctx.lineTo(x2, yLine); ctx.moveTo(x1, yLine); ctx.lineTo(x1, yLine + 6); ctx.moveTo(x2, yLine); ctx.lineTo(x2, yLine + 6); ctx.stroke(); const label = (bk.stars && bk.stars !== 'ns') ? bk.stars : ''; if (label) { ctx.font = 'bold 16px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillStyle = '#000'; ctx.fillText(label, (x1 + x2) / 2, yLine - 2) } }); ctx.restore()
+          const { ctx, scales: { y } } = chart; ctx.save(); 
+          ctx.strokeStyle = textColor; 
+          ctx.lineWidth = 1.5; 
+          const meta = chart.getDatasetMeta(0); 
+          const points = (meta && meta.data) ? meta.data.filter(d => Number.isFinite(d?.x) && Number.isFinite(d?.y)) : []; 
+          if (!points.length) { ctx.restore(); return }
+          
+          points.forEach((bar, i) => { 
+              const vx = bar.x; const val = plotData[i]; if (val == null) return; 
+              const yTop = y.getPixelForValue(val + (plotErrP[i] || 0)), yBot = y.getPixelForValue(val - (plotErrM[i] || 0)); 
+              ctx.beginPath(); ctx.moveTo(vx, yTop); ctx.lineTo(vx, yBot); ctx.moveTo(vx - 5, yTop); ctx.lineTo(vx + 5, yTop); ctx.moveTo(vx - 5, yBot); ctx.lineTo(vx + 5, yBot); ctx.stroke() 
+          });
+          
+          brackets.forEach(bk => { 
+              const x1 = points[bk.x1]?.x, x2 = points[bk.x2]?.x; if (x1 == null || x2 == null) return; 
+              const yMaxVal = Math.max(plotData[bk.x1] + (plotErrP[bk.x1] || 0), plotData[bk.x2] + (plotErrP[bk.x2] || 0)); 
+              const yBase = y.getPixelForValue(yMaxVal), yLine = yBase - 15; 
+              ctx.beginPath(); ctx.moveTo(x1, yLine); ctx.lineTo(x2, yLine); ctx.moveTo(x1, yLine); ctx.lineTo(x1, yLine + 6); ctx.moveTo(x2, yLine); ctx.lineTo(x2, yLine + 6); ctx.stroke(); 
+              const label = (bk.stars && bk.stars !== 'ns') ? bk.stars : ''; 
+              if (label) { 
+                  ctx.font = 'bold 16px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillStyle = textColor; ctx.fillText(label, (x1 + x2) / 2, yLine - 2) 
+              } 
+          }); 
+          ctx.restore()
         }
       };
-      const maxLabelLen = Math.max(...labels.map(l => l.length)); const bottomPad = Math.max(100, maxLabelLen * 8); canvas.height = 240 + bottomPad; const chart = new Chart(ctx, { type: 'bar', data: { labels, datasets: [{ label: chartLabel, data: plotData, backgroundColor: fills, borderColor: '#000', borderWidth: 1.5, hoverBackgroundColor: '#333', maxBarThickness: 55 }] }, options: { responsive: false, maintainAspectRatio: false, layout: { padding: { top: 30, right: 20, bottom: bottomPad, left: 10 } }, plugins: { legend: { display: false }, tooltip: { backgroundColor: '#fff', borderColor: '#000', borderWidth: 1, titleColor: '#111', bodyColor: '#111', titleFont: { family: 'Arial', size: 13 }, bodyFont: { family: 'Arial', size: 13 } } }, scales: { y: { beginAtZero: !(yAxisTitle === 'ΔCt' || yAxisTitle === 'ΔΔCt'), ...(bounds || {}), title: { display: true, text: yAxisTitle, color: '#000', font: { family: 'Arial', weight: 'bold', size: 14 } }, ticks: { color: '#000', font: { family: 'Arial', size: 13 } }, grid: { color: 'rgba(0,0,0,0)', tickColor: '#000', tickWidth: 1.5, drawBorder: true, borderColor: '#000', borderWidth: 2 } }, x: { title: { display: true, text: 'Target', color: '#000', font: { family: 'Arial', weight: 'bold', size: 14 }, padding: { top: 40 } }, ticks: { color: '#000', font: { family: 'Arial', size: 12 }, maxRotation: 45, minRotation: 45, autoSkip: false }, grid: { color: 'rgba(0,0,0,0)', tickColor: '#000', tickWidth: 1.5, drawBorder: true, borderColor: '#000', borderWidth: 2 } } } }, plugins: [plugin] }); canvas._chart = chart
+
+      const maxLabelLen = Math.max(...labels.map(l => l.length)); const bottomPad = Math.max(100, maxLabelLen * 8); canvas.height = 240 + bottomPad; 
+      const chart = new Chart(ctx, { 
+          type: 'bar', 
+          data: { labels, datasets: [{ label: chartLabel, data: plotData, backgroundColor: fills, borderColor: borderColor, borderWidth: 1.5, hoverBackgroundColor: isDark ? '#60a5fa' : '#333', maxBarThickness: 55 }] }, 
+          options: { 
+              responsive: false, 
+              maintainAspectRatio: false, 
+              layout: { padding: { top: 30, right: 20, bottom: bottomPad, left: 10 } }, 
+              plugins: { 
+                  legend: { display: false }, 
+                  tooltip: { backgroundColor: isDark ? '#1e293b' : '#fff', borderColor: borderColor, borderWidth: 1, titleColor: textColor, bodyColor: textColor, titleFont: { family: 'Arial', size: 13 }, bodyFont: { family: 'Arial', size: 13 } } 
+              }, 
+              scales: { 
+                  y: { 
+                      beginAtZero: !(yAxisTitle === 'ΔCt' || yAxisTitle === 'ΔΔCt'), 
+                      ...(bounds || {}), 
+                      title: { display: true, text: yAxisTitle, color: textColor, font: { family: 'Arial', weight: 'bold', size: 14 } }, 
+                      ticks: { color: textColor, font: { family: 'Arial', size: 13 } }, 
+                      grid: { color: gridColor, tickColor: textColor, tickWidth: 1.5, drawBorder: true, borderColor: borderColor, borderWidth: 2 } 
+                  }, 
+                  x: { 
+                      title: { display: true, text: 'Target', color: textColor, font: { family: 'Arial', weight: 'bold', size: 14 }, padding: { top: 40 } }, 
+                      ticks: { color: textColor, font: { family: 'Arial', size: 12 }, maxRotation: 45, minRotation: 45, autoSkip: false }, 
+                      grid: { color: 'transparent', tickColor: textColor, tickWidth: 1.5, drawBorder: true, borderColor: borderColor, borderWidth: 2 } 
+                  } 
+              } 
+          }, 
+          plugins: [plugin] 
+      }); canvas._chart = chart
     }
 
     /* ===== Debounced groups render ===== */
@@ -1158,7 +2048,7 @@
 
     document.getElementById('exportPlateAJpegBtn').onclick = async () => { try { await withHiddenForExport(async () => { const el = document.getElementById('plateAExportWrap'), c = await renderWithMetaCanvas(el), a = document.createElement('a'); a.href = c.toDataURL('image/jpeg', 0.95); a.download = `${safeFilename(state.meta?.name || 'platea')}_plateA.jpg`; a.click() }) } catch (e) { console.error(e); showErrorToast('Export failed.') } }; document.getElementById('exportPlateAPdfBtn').onclick = async () => { try { await withHiddenForExport(async () => { const el = document.getElementById('plateAExportWrap'), c = await renderWithMetaCanvas(el), url = c.toDataURL('image/jpeg', 0.95), { jsPDF } = window.jspdf, pdf = new jsPDF({ orientation: 'l', unit: 'pt', format: 'a4' }), m = 20, pw = pdf.internal.pageSize.getWidth(), ph = pdf.internal.pageSize.getHeight(), img = new Image(); img.src = url; await new Promise(r => img.onload = r); const maxW = pw - 2 * m, maxH = ph - 2 * m; let w = img.width, h = img.height, sc = Math.min(maxW / w, maxH / h); w *= sc; h *= sc; pdf.addImage(url, 'JPEG', m + (maxW - w) / 2, m + (maxH - h) / 2, w, h); pdf.save(`${safeFilename(state.meta?.name || 'platea')}_plateA.pdf`) }) } catch (e) { console.error(e); showErrorToast('Export failed.') } }
     document.getElementById('exportCtJpegBtn').onclick = async () => { try { await withHiddenForExport(async () => { const el = document.getElementById('ctExportWrap'), c = await renderWithMetaCanvas(el), a = document.createElement('a'); a.href = c.toDataURL('image/jpeg', 0.95); a.download = `${safeFilename(state.meta?.name || 'qpcr')}_ct_summary.jpg`; a.click() }) } catch (e) { console.error(e); showErrorToast('Export failed.') } }; document.getElementById('exportCtPdfBtn').onclick = async () => { try { await withHiddenForExport(async () => { const el = document.getElementById('ctExportWrap'), c = await renderWithMetaCanvas(el), url = c.toDataURL('image/jpeg', 0.95), { jsPDF } = window.jspdf, pdf = new jsPDF({ orientation: 'p', unit: 'pt', format: 'a4' }), m = 20, pw = pdf.internal.pageSize.getWidth(), ph = pdf.internal.pageSize.getHeight(), img = new Image(); img.src = url; await new Promise(r => img.onload = r); const maxW = pw - 2 * m, maxH = ph - 2 * m; let w = img.width, h = img.height, sc = Math.min(maxW / w, maxH / h); w *= sc; h *= sc; pdf.addImage(url, 'JPEG', m + (maxW - w) / 2, m, w, h); pdf.save(`${safeFilename(state.meta?.name || 'qpcr')}_ct_summary.pdf`) }) } catch (e) { console.error(e); showErrorToast('Export failed.') } }
-    document.getElementById('exportAllChartsPdf').onclick = async () => { try { const { jsPDF } = window.jspdf, pdf = new jsPDF({ orientation: 'p', unit: 'pt', format: 'a4' }), m = 20, pw = pdf.internal.pageSize.getWidth(), ph = pdf.internal.pageSize.getHeight(), canvases = [...document.querySelectorAll('#groupsPanels canvas.group-chart')]; if (!canvases.length) { showErrorToast('No charts.'); return } for (let i = 0; i < canvases.length; i++) { const c = canvases[i], w = c.width, h = c.height, tmp = document.createElement('canvas'); tmp.width = w; tmp.height = h; const g = tmp.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, w, h); g.drawImage(c, 0, 0); const url = tmp.toDataURL('image/jpeg', 0.95); if (i) pdf.addPage(); const img = new Image(); img.src = url; await new Promise(r => img.onload = r); const maxW = pw - 2 * m, maxH = ph - 2 * m; let dw = img.width, dh = img.height, sc = Math.min(maxW / dw, maxH / dh); dw *= sc; dh *= sc; pdf.addImage(url, 'JPEG', m + (maxW - dw) / 2, m + (maxH - dh) / 2, dw, dh) } const base = safeFilename(state.meta?.name || 'qpcr'); pdf.save(`${base}_all_charts.pdf`) } catch (e) { console.error(e); showErrorToast('Export failed.') } }; document.getElementById('exportAllChartsZip').onclick = async () => { try { const zip = new JSZip(), canvases = [...document.querySelectorAll('#groupsPanels canvas.group-chart')]; if (!canvases.length) { showErrorToast('No charts.'); return } for (const c of canvases) { const panel = c.closest('.controls[data-group-id]'), gid = panel?.dataset.groupId, base = safeFilename(state.meta?.name || 'qpcr'), cond = safeFilename(state.groupSettings[gid]?.chartCond || 'cond'), mode = safeFilename(getModeForGroup(gid)), gname = safeFilename(state.groups.find(x => x.id === gid)?.name || 'group'), file = `${base}_${cond}_${mode}_${gname}.png`, w = c.width, h = c.height, tmp = document.createElement('canvas'); tmp.width = w; tmp.height = h; const g = tmp.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, w, h); g.drawImage(c, 0, 0); const url = tmp.toDataURL('image/png'); zip.file(file, url.split(',')[1], { base64: true }) } const base = safeFilename(state.meta?.name || 'qpcr'), blob = await zip.generateAsync({ type: 'blob' }); saveAs(blob, `${base}_charts.zip`) } catch (e) { console.error(e); showErrorToast('ZIP export failed.') } }
+    document.getElementById('exportAllChartsPdf').onclick = async () => { try { const { jsPDF } = window.jspdf, pdf = new jsPDF({ orientation: 'p', unit: 'pt', format: 'a4' }), m = 20, pw = pdf.internal.pageSize.getWidth(), ph = pdf.internal.pageSize.getHeight(), canvases = [...document.querySelectorAll('#groupsPanels canvas.group-chart')]; if (!canvases.length) { showErrorToast('No charts.'); return } for (let i = 0; i < canvases.length; i++) { const c = canvases[i], w = c.width, h = c.height, tmp = document.createElement('canvas'); tmp.width = w; tmp.height = h; const g = tmp.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, w, h); g.drawImage(c, 0, 0); const url = tmp.toDataURL('image/jpeg', 0.95); if (i) pdf.addPage(); const img = new Image(); img.src = url; await new Promise(r => img.onload = r); const maxW = pw - 2 * m, maxH = ph - 2 * m; let dw = img.width, dh = img.height, sc = Math.min(maxW / dw, maxH / dh); dw *= sc; dh *= sc; pdf.addImage(url, 'JPEG', m + (maxW - dw) / 2, m + (maxH - dh) / 2, dw, dh) } const base = safeFilename(state.meta?.name || 'qpcr'); pdf.save(`${base}_all_charts.pdf`) } catch (e) { console.error(e); showErrorToast('Export failed.') } }; document.getElementById('exportAllChartsZip').onclick = async () => { try { const zip = new JSZip(), canvases = [...document.querySelectorAll('#groupsPanels canvas.group-chart')]; if (!canvases.length) { showErrorToast('No charts.'); return } for (const c of canvases) { const panel = c.closest('.controls[data-group-id]'), gid = panel?.dataset.groupId, base = safeFilename(state.meta?.name || 'qpcr'), cond = safeFilename(state.groupSettings[gid]?.chartCond || 'cond'), mode = safeFilename(getModeForGroup(gid)), gname = safeFilename(state.groups.find(x => x.id === gid)?.name || 'group'), file = `${base}_${cond}_${mode}_${gname}.png`, w = c.width, h = c.height, tmp = document.createElement('canvas'); tmp.width = w; tmp.height = h; const g = tmp.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, w, h); g.drawImage(c, 0, 0); const url = tmp.toDataURL('image/png').split(',')[1]; zip.file(file, url, { base64: true }) } const b = await zip.generateAsync({ type: 'blob' }), a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `${safeFilename(state.meta?.name || 'qpcr')}_charts.zip`; a.click() } catch (e) { console.error(e); showErrorToast('Export failed.') } }
 
     /* Export dropdown */
     const expBtn = document.getElementById('exportToggleBtn'), expMenu = document.getElementById('exportMenu');
@@ -1168,47 +2058,560 @@
     document.getElementById('exportMenu').addEventListener('click', (e) => { if (e.target.classList.contains('menu-item')) { setTimeout(closeMenu, 0) } })
     document.addEventListener('click', e => { if (!expMenu.contains(e.target) && e.target !== expBtn) closeMenu() });
     function buildPerFigureExportList() { const host = document.getElementById('perFigureExports'); host.innerHTML = ''; state.groups.forEach(g => { const panel = document.querySelector(`#groupsPanels .controls[data-group-id="${g.id}"]`), canvas = panel?.querySelector('canvas.group-chart'); if (!canvas) return; const base = safeFilename(state.meta?.name || 'qpcr'), cond = safeFilename(state.groupSettings[g.id]?.chartCond || 'cond'), mode = safeFilename(getModeForGroup(g.id)), gname = safeFilename(g.name || 'group'), fname = `${base}_${cond}_${mode}_${gname}`; const p = document.createElement('button'); p.className = 'menu-item'; p.textContent = `${g.name} chart (PNG)`; p.onclick = () => exportCanvasAsPNG(canvas, fname + '.png'); const d = document.createElement('button'); d.className = 'menu-item'; d.textContent = `${g.name} chart (PDF)`; d.onclick = () => exportCanvasAsPDF(canvas, fname + '.pdf', 'p'); host.appendChild(p); host.appendChild(d) }) }
-    function exportFullPageJson() {
-    try {
-      const payload = {
-        exportedAt: new Date().toISOString(),
-        storageKey: STORAGE_KEY,
-        version: "qpcr_allinone_v3",
-        state: state
-      };
 
-      const json = JSON.stringify(payload, null, 2);
-      const blob = new Blob([json], { type: "application/json;charset=utf-8" });
-
-      // Uses FileSaver CDN you already include
-      saveAs(blob, `qPCR-plate-planner_${new Date().toISOString().slice(0,10)}.json`);
-    } catch (err) {
-      console.error(err);
-      showErrorToast("JSON export failed. See console.");
-    }
-  }
-
-  document.getElementById("exportJsonBtn")?.addEventListener("click", exportFullPageJson);
     /* ===== Import JSON (Sample setup) and Delete All ===== */
     document.getElementById('importJsonBtnTop').onclick = () => { document.getElementById('importJsonInputTop').click() }
-    document.getElementById('importJsonInputTop').addEventListener('change', async e => { const f = e.target.files?.[0]; if (!f) return; try { const txt = await f.text(), p = JSON.parse(txt), next = p && p.state ? p.state : p; if (!next || !Array.isArray(next.wellsA) || !Array.isArray(next.wellsB)) throw new Error('Invalid JSON'); Object.keys(state).forEach(k => delete state[k]); Object.assign(state, next); state.groups = state.groups || [{ id: 'g1', name: 'Group 1' }]; state.groupSettings = state.groupSettings || {}; state.perGroupMode = state.perGroupMode || {}; state.qc = state.qc || { enabled: false, rule: 'z', zThresh: 2.5 }; state.chart = state.chart || { errorBars: 'sd', yScale: 'linear' }; state.stats = state.stats || { test: 'ttest', fdr: 'BH', starCuts: [0.05, 0.01, 0.001] }; state.plate = state.plate || { showHeatmap: 'off' }; state.layout = state.layout || { enableHelpers: false }; state.calibrator = state.calibrator || { enabled: false, mode: 'manual', sampleName: '', shiftPerTarget: {}, globalShift: 0 }; state.export = state.export || { includeAnalysisStamp: true }; state.ui = state.ui || { ctCompact: true }; state.groups.forEach(g => { if (!state.groupSettings[g.id]) state.groupSettings[g.id] = { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3', useMultiRef: false, refTargets: [] } }); state.history = []; state.redo = []; saveState(); renderAll(); showErrorToast('JSON imported.') } catch (err) { console.error(err); showErrorToast('JSON import failed.') }; e.target.value = '' })
+    document.getElementById('importJsonInputTop').addEventListener('change', async e => { const f = e.target.files?.[0]; if (!f) return; try { const txt = await f.text(), p = JSON.parse(txt), next = p && p.state ? p.state : p; if (!next || !Array.isArray(next.wellsA) || !Array.isArray(next.wellsB)) throw new Error('Invalid JSON'); Object.keys(state).forEach(k => delete state[k]); Object.assign(state, next); sanitizeColors(); state.groups = state.groups || [{ id: 'g1', name: 'Group 1' }]; state.groupSettings = state.groupSettings || {}; state.perGroupMode = state.perGroupMode || {}; state.qc = state.qc || { enabled: false, rule: 'z', zThresh: 2.5 }; state.chart = state.chart || { errorBars: 'sd', yScale: 'linear' }; state.stats = state.stats || { test: 'ttest', fdr: 'BH', starCuts: [0.05, 0.01, 0.001] }; state.plate = state.plate || { showHeatmap: 'off' }; state.layout = state.layout || { enableHelpers: false }; state.calibrator = state.calibrator || { enabled: false, mode: 'manual', sampleName: '', shiftPerTarget: {}, globalShift: 0 }; state.export = state.export || { includeAnalysisStamp: true }; state.ui = state.ui || { ctCompact: true }; state.groups.forEach(g => { if (!state.groupSettings[g.id]) state.groupSettings[g.id] = { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3', useMultiRef: false, refTargets: [] } }); state.history = []; state.redo = []; saveState(); renderAll(); showErrorToast('JSON imported.') } catch (err) { console.error(err); showErrorToast('JSON import failed.') }; e.target.value = '' })
     document.getElementById('deleteAllBtn').onclick = () => { if (!confirm('Delete all data (samples, plates, settings)? This cannot be undone.')) return; try { localStorage.removeItem(STORAGE_KEY); try { localStorage.removeItem('qpcr_allinone_v2') } catch (e) { } Object.keys(state).forEach(k => delete state[k]); Object.assign(state, { experimentType: 'qpcr', meta: { name: '', date: '', notes: '' }, wellsA: [], wellsB: [], selectedColor: null, samples: [], reagents: [], extraWellsPerTarget: {}, groups: [{ id: 'g1', name: 'Group 1' }], groupSettings: { 'g1': { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3', useMultiRef: false, refTargets: [] } }, calcMode: 'ddct', perGroupMode: {}, qc: { enabled: false, rule: 'z', zThresh: 2.5 }, chart: { errorBars: 'sd', yScale: 'linear' }, stats: { test: 'ttest', fdr: 'BH', starCuts: [0.05, 0.01, 0.001] }, plate: { showHeatmap: 'off' }, layout: { enableHelpers: false }, calibrator: { enabled: false, mode: 'manual', sampleName: '', shiftPerTarget: {}, globalShift: 0 }, export: { includeAnalysisStamp: true }, ui: { ctCompact: true }, history: [], redo: [] }); initEmptyPlate(); initEmptyCtTable(); saveState(); renderAll(); showErrorToast('All data cleared.') } catch (e) { console.error(e); showErrorToast('Delete All failed.') } }
 
     /* ===== Render orchestration ===== */
     function renderAll() { document.getElementById('metaName').value = state.meta.name || ''; document.getElementById('metaDate').value = state.meta.date || ''; document.getElementById('metaNotes').value = state.meta.notes || ''; document.getElementById('expTypeSelect').value = state.experimentType || 'qpcr'; renderSamples(); renderSelector(); renderPlateA(); renderCtTable(); refreshMasterMix(); updateCounts(); wireSettingsBar(); wireSettingsBarVisibility(); renderAllGroups(); updateUndoRedoButtons(); maybeRenderHeatmap(); if (state.ui?.ctCompact) requestAnimationFrame(scalePlateBToFit) }
-    function renderAllGroups() { ensureDefaultGroup(); pruneEmptyGroups(); const container = document.getElementById('groupsPanels'); container.innerHTML = ''; state.groups.forEach(group => { const set = state.groupSettings[group.id] || { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3', useMultiRef: false, refTargets: [] }, tgts = getTargetsInGroup(group.name); if (!set.ctrlTarget && tgts.length) { set.ctrlTarget = tgts[0]; state.groupSettings[group.id] = set; saveState() } const panel = document.createElement('div'); panel.classList.add('controls'); panel.dataset.groupId = group.id; const m = state.perGroupMode[group.id] || ''; panel.innerHTML = `<h3>Ct summary — Group: ${group.name}</h3><div class="row" data-group-id="${group.id}"><label>Control type for ΔCt <input type="text" class="ctrl-type" value="${set.controlType || ''}" style="width:120px"/></label><label>Control Target for ΔΔCt <select class="ctrl-target">${tgts.map(t => `<option value="${t}" ${set.ctrlTarget === t ? 'selected' : ''}>${t}</option>`).join('')}</select></label><label>Condition for chart <input type="text" class="chart-cond" value="${set.chartCond || ''}" style="width:120px"/></label><label>Mode <select class="group-mode"><option value="">Use global</option><option value="dct" ${m === 'dct' ? 'selected' : ''}>ΔCt</option><option value="pow_dct" ${m === 'pow_dct' ? 'selected' : ''}>2^-ΔCt</option><option value="ddct" ${m === 'ddct' ? 'selected' : ''}>ΔΔCt</option><option value="pow_ddct" ${m === 'pow_ddct' ? 'selected' : ''}>2^-ΔΔCt</option></select></label><label>Multi‑ref</label><input type="checkbox" class="use-mref" ${set.useMultiRef ? 'checked' : ''}/><label>Refs</label><select class="ref-targets" multiple size="1" style="min-width:140px">${tgts.map(t => `<option value="${t}" ${set.refTargets?.includes(t) ? 'selected' : ''}>${t}</option>`).join('')}</select><span class="note">ΔΔCt(Target, condition) = ΔCt(Target, condition) − ΔCt(ControlTarget, condition).</span></div><table class="ct-detail"><thead><tr><th>Target</th><th>Sample</th><th>Role</th><th>Condition</th><th>Raw Ct values</th><th>Mean Ct</th><th>n used / n</th><th>SD</th><th>CV%</th><th>ΔCt</th><th>ΔΔCt</th><th>Value</th></tr></thead><tbody></tbody></table><div class="controls" style="margin-top:8px"><div class="chart-title">Chart — ${group.name}</div><canvas class="group-chart" width="720" height="220"></canvas></div>`; container.appendChild(panel) }); bindGroupInputsAndCompute(); buildPerFigureExportList(); maybeRenderHeatmap() }
+    function renderAllGroups() { ensureDefaultGroup(); pruneEmptyGroups(); const container = document.getElementById('groupsPanels'); container.innerHTML = ''; state.groups.forEach(group => { const set = state.groupSettings[group.id] || { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3', useMultiRef: false, refTargets: [] }, tgts = getTargetsInGroup(group.name); if (!set.ctrlTarget && tgts.length) { set.ctrlTarget = tgts[0]; state.groupSettings[group.id] = set; saveState() } const panel = document.createElement('div'); panel.classList.add('controls'); panel.dataset.groupId = group.id; const m = state.perGroupMode[group.id] || ''; panel.innerHTML = `<h3>Ct summary — Group: ${group.name}</h3><div class="row" data-group-id="${group.id}"><label>Control type for ΔCt <input type="text" class="ctrl-type" value="${set.controlType || ''}" style="width:120px"/></label><label>Control Target for ΔΔCt <select class="ctrl-target">${tgts.map(t => `<option value="${t}" ${set.ctrlTarget === t ? 'selected' : ''}>${t}</option>`).join('')}</select></label><label>Condition for chart <input type="text" class="chart-cond" value="${set.chartCond || ''}" style="width:120px"/></label><label>Mode <select class="group-mode"><option value="">Use global</option><option value="dct" ${m === 'dct' ? 'selected' : ''}>ΔCt</option><option value="pow_dct" ${m === 'pow_dct' ? 'selected' : ''}>2^-ΔCt</option><option value="ddct" ${m === 'ddct' ? 'selected' : ''}>ΔΔCt</option><option value="pow_ddct" ${m === 'pow_ddct' ? 'selected' : ''}>2^-ΔΔCt</option></select></label><label>Multi‑ref</label><input type="checkbox" class="use-mref" ${set.useMultiRef ? 'checked' : ''}/><label>Refs</label><select class="ref-targets" multiple size="1" style="min-width:140px">${tgts.map(t => `<option value="${t}" ${set.refTargets?.includes(t) ? 'selected' : ''}>${t}</option>`).join('')}</select><span class="note">ΔΔCt(Target, condition) = ΔCt(Target, condition) − ΔCt(ControlTarget, condition).</span></div><table class="ct-detail"><thead><tr><th>Target</th><th>Sample</th><th>Role</th><th>Cond</th><th>Raw Ct</th><th>Mean Ct</th><th>Wells</th><th>SD</th><th>CV%</th><th>dCt</th><th>ddCt</th><th>Value</th></tr></thead><tbody></tbody></table>`; container.appendChild(panel) }); bindGroupInputsAndCompute() }
+
+    
+    /* ===== Export & Bench Functions ===== */
+    const runExportV41 = () => {
+      const d = { version: "groups_v1", state: snapshotState() };
+      const b = new Blob([JSON.stringify(d, null, 2)], { type: 'application/json' });
+      const u = URL.createObjectURL(b);
+      const a = document.createElement('a'); a.href = u; a.download = `${safeFilename(state.meta?.name || 'qpcr')}.json`; a.click(); URL.revokeObjectURL(u);
+    };
+    document.getElementById('exportJsonBtn').onclick = runExportV41;
+
+    document.getElementById('exportBenchBtn')?.addEventListener('click', async () => {
+      try {
+        await withHiddenForExport(async () => {
+          const { jsPDF } = window.jspdf;
+          const pdf = new jsPDF({ orientation: 'p', unit: 'pt', format: 'a4' });
+          const margin = 40;
+          const pageWidth = pdf.internal.pageSize.getWidth();
+          const pageHeight = pdf.internal.pageSize.getHeight();
+          const availableWidth = pageWidth - (margin * 2);
+
+          // 1. Title & Metadata
+          pdf.setFontSize(18); // Reduced from 22
+          pdf.setTextColor(15, 23, 42); // Navy
+          
+          const fullTitle = "Bench Protocol: " + (state.meta.name || "qPCR Plan");
+          const splitTitle = pdf.splitTextToSize(fullTitle, availableWidth);
+          pdf.text(splitTitle, margin, 60);
+          
+          // Calculate height of title to offset the rest
+          const titleHeight = (splitTitle.length * 20);
+          const metaY = 60 + titleHeight;
+
+          pdf.setFontSize(10); // Reduced from 11
+          pdf.setTextColor(71, 85, 105); // Slate
+          pdf.text(`Date: ${state.meta.date || "---"}`, margin, metaY);
+          pdf.text(`Generated: ${new Date().toLocaleString()}`, margin, metaY + 15);
+
+          // 2. Plate A Capture
+          const plateEl = document.getElementById('plateAExportWrap');
+          const plateCanvas = await html2canvas(plateEl, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
+          const plateImg = plateCanvas.toDataURL('image/jpeg', 0.95);
+          
+          let dw = availableWidth;
+          let dh = (plateCanvas.height * dw) / plateCanvas.width;
+          
+          pdf.setFontSize(14); // Reduced from 16
+          pdf.setTextColor(59, 130, 246); // Blue
+          pdf.text("1. Plate Layout (384-well)", margin, metaY + 45);
+          pdf.addImage(plateImg, 'JPEG', margin, metaY + 55, dw, dh);
+
+          // 3. Master Mix & Reagents
+          pdf.addPage();
+          pdf.setFontSize(16);
+          pdf.text("2. Master Mix & Reagents", margin, 60);
+
+          const mmSection = document.getElementById('mmExtraWells').closest('.controls');
+          const mmCanvas = await html2canvas(mmSection, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
+          const mmImg = mmCanvas.toDataURL('image/jpeg', 0.95);
+          
+          let mmW = availableWidth;
+          let mmH = (mmCanvas.height * mmW) / mmCanvas.width;
+          
+          // Check if MM table fits, else scale down more or handle overflow
+          if (mmH > pageHeight - 150) {
+              mmH = pageHeight - 150;
+              mmW = (mmCanvas.width * mmH) / mmCanvas.height;
+          }
+          
+          pdf.addImage(mmImg, 'JPEG', margin, 80, mmW, mmH);
+
+          const base = safeFilename(state.meta.name || 'qpcr');
+          pdf.save(`${base}_bench_protocol.pdf`);
+          showErrorToast('Bench Protocol Exported Successfully.');
+        });
+      } catch (e) {
+        console.error(e);
+        showErrorToast('Bench Protocol Export Failed.');
+      }
+    });
+
+    /* ===== AI Assistant Logic (v3.0 - Gemma Local) ===== */
+    if (false) {
+    const aiPlannerMessages = document.getElementById('aiPlannerMessages');
+    const aiPlannerInput = document.getElementById('aiPlannerInput');
+    const aiPlannerSendBtn = document.getElementById('aiPlannerSendBtn');
+    const aiPlannerStopBtn = document.getElementById('aiPlannerStopBtn');
+    const aiStatusDot = document.getElementById('aiStatusDot');
+    const aiStatusText = document.getElementById('aiStatusText');
+    let aiConversationHistory = [];
+    let aiAbortController = null;
+    let isUserAtBottom = true;
+
+    // Scroll Tracking: Fixes the 'yank to bottom' bug
+    aiPlannerMessages.addEventListener('scroll', () => {
+      const { scrollTop, scrollHeight, clientHeight } = aiPlannerMessages;
+      // If user is within 50px of bottom, consider them at bottom
+      isUserAtBottom = (scrollHeight - scrollTop - clientHeight) < 50;
+    });
+
+    const AI_SYSTEM_PROMPT = `You are Gemma, a PhD-level qPCR Research Engine. Your goal is to guide researchers through experimental design and organize their samples into logical, machine-readable JSON blueprints.
+
+### 0. DATA SOVEREIGNTY (Crucial)
+- **Strict Adherence:** You MUST use the user's exact spelling for genes, cell lines, and conditions.
+- **Blind to Examples:** The names used in the "EXAMPLES" section below (like "Cyclon", "HeLa", "HU") are for structural reference ONLY.
+- **Never Default:** Never suggest or use the example names in a real user interaction unless the user explicitly mentions them. If you don't know a name, ASK.
+
+### I. THE COGNITIVE INTERVIEW PHASE (Mandatory)
+Before generating any JSON, you must act as a supportive scientific consultant. Your goal is to fill the following "Knowledge Matrix":
+1.  **Experiment Type:** (RT-qPCR, CUT&RUN, CUT&TAG, Absolute Quantification, etc.)
+2.  **Biological Groups/Cell Lines:** (e.g., WT vs Knockout, HuH7 vs HeLa)
+3.  **Targets:** (Genes of interest + Housekeeping/Normalization controls)
+4.  **Conditions/Roles:** (e.g., Treatment A, Treatment B, Control/IgG, Standard Curve concentrations)
+
+**Interview Guidelines:**
+- **Initial Interaction:** If the user starts with a vague intent (e.g., "Hi" or "I'm doing a knockdown"), acknowledge them warmly and ask for the missing matrix items.
+- **Persistence without Frustration:** If a user provides partial info (e.g., "I have 3 cell lines"), thank them and ask for the *next* missing piece (e.g., "Great. And which genes are we targeting in these cell lines?").
+- **Clarity Check:** If a user's answer is ambiguous, ask for clarification (e.g., "I see you mentioned 'Actin'—is that your target gene or your housekeeping control?").
+
+### II. THE DRAFTING & CONFIRMATION PHASE (NEW)
+Once the Knowledge Matrix is complete, you MUST NOT jump straight to JSON. Instead, provide a concise "Experiment Draft" and ask for approval:
+- **Summary:** "I have all the details. Here is the plan: [List Targets, Groups, and Conditions in bullet points]."
+- **Call to Action:** Ask the user: 
+  "1. **Confirm:** Looks good, generate the blueprint.
+   2. **Edit:** Change specific details.
+   3. **Cancel:** Stop this design."
+- **Constraint:** DO NOT output a JSON block until the user says "Confirm", "Yes", "Go ahead", or similar.
+
+### III. SCIENTIFIC LOGIC & TERMINOLOGY
+Align your reasoning with the specific experiment type:
+1.  **RT-qPCR (Relative Expression):**
+    - Logic: 2^-ΔΔCt method.
+    - Controls: Housekeeping genes (e.g., GAPDH, TBP).
+    - Multi-Ref: If using multiple housekeeping genes, explain that the software will average their Cq values for a stable baseline.
+2.  **CUT&RUN / CUT&TAG (Enrichment):**
+    - Logic: Fold Enrichment over IgG or % Input.
+    - Terminology: Use "Enrichment" or "Occupancy" rather than "Expression".
+    - Controls: IgG (negative control) is the reference for normalization.
+3.  **Absolute Quantification:**
+    - Logic: Standard Curve (Cq vs log10[Qty]).
+    - Controls: Serial dilutions of a known standard.
+
+### IV. JSON BLUEPRINT SPECIFICATIONS
+When the user confirms the draft, output exactly ONE JSON block.
+1. **update_mode:** Set to "replace" (default for new designs) OR "merge" (if the user asks to add/modify samples in an existing experiment).
+2. **NAMING:** Strictly follow "Name_Target_Condition" (e.g., "UserCell_UserGene_UserTreat").
+3. **GROUPING:** Use the cell line or biological group as the "group" field.
+4. **ROLE:** Set as "Control", "Condition", or "Standard".
+5. **STRICT CARTESIAN MIRRORING:** Every "Biological Condition" (e.g., HeLa_Dox+) MUST be a perfect container.
+    - If Target A exists for Condition X, then ALL Reference Genes (GAPDH, TBP, etc.) MUST also exist for Condition X.
+    - **NEVER** skip a reference gene for a subset of samples. If you have 10 conditions, you must have 10 GAPDH samples and 10 TBP samples.
+6. **STRICT NAMING CONVENTION:** You MUST use the format: \`[Cell]_[Target]_[Condition]\`.
+    - *Example:* \`HuH7_Cyclon_DoxPlus\`, \`HuH7_GAPDH_DoxPlus\`.
+    - **Consistency is King:** Ensure the [Condition] string is identical across the target and its references (don't swap "DoxPlus" for "+Dox").
+7. **STRICT JSON ONLY:** The output block MUST be 100% valid, standard JSON. Do NOT include any comments (like /* Group 1 */) inside the JSON. Standard JSON parsers will fail if comments are present.
+
+=== EXAMPLE STRUCTURE: (DO NOT COPY NAMES FROM HERE) ===
+{
+  "experiment_name": "User Study",
+  "experimentType": "qpcr",
+  "samples": [
+    { "name": "Cell_Ref_Ctrl", "target": "Ref", "role": "Control", "group": "Cell", "wells": [], "color": "#E0E0E0" },
+    { "name": "Cell_Ref_Treat", "target": "Ref", "role": "Control", "group": "Cell", "wells": [], "color": "#E0E0E0" },
+    { "name": "Cell_Target_Ctrl", "target": "Target", "role": "Control", "group": "Cell", "wells": [], "color": "#3B82F6" },
+    { "name": "Cell_Target_Treat", "target": "Target", "role": "Condition", "group": "Cell", "wells": [], "color": "#3B82F6" }
+  ],
+  "notes": "Structural reference for Cartesian mapping."
+}
+============================================================`;
+
+    // AI Neural Engine Status Polling
+    async function pollAIStatus() {
+      try {
+        const resp = await fetch('/api/status');
+        const data = await resp.json();
+        if (data.model === 'ready') {
+          aiStatusDot.style.background = '#10b981'; // Green
+          aiStatusText.textContent = 'Gemma is Active (Secure & Internet-Free)';
+          aiStatusDot.title = 'AI Assistant is Ready - Running privately on your computer.';
+        } else {
+          setTimeout(pollAIStatus, 2000);
+        }
+      } catch(e) {
+        setTimeout(pollAIStatus, 3000);
+      }
+    }
+    pollAIStatus();
+
+    // Unified AI Design Interpreter - Handles both "Blueprints" and "Full States"
+    function applyAiDesign(input) {
+      try {
+        pushHistory();
+        const data = (typeof input === 'string') ? JSON.parse(input.replace(/\n/g, "\\n")) : input;
+        
+        // Mode detection: "replace" (default) or "merge"
+        const updateMode = data.update_mode || "replace";
+
+        // 1. Meta & Experiment Type
+        if (data.experiment_name) state.meta.name = data.experiment_name;
+        if (data.experimentType) state.experimentType = data.experimentType;
+        if (data.notes) state.meta.notes = data.notes;
+        if (data.meta) {
+            if (data.meta.name) state.meta.name = data.meta.name;
+            if (data.meta.notes) state.meta.notes = data.meta.notes;
+        }
+        if (!state.meta.date) state.meta.date = new Date().toISOString().split('T')[0];
+
+        // 2. Clear Plate A only if in replace mode
+        if (updateMode === "replace") {
+            initEmptyPlate();
+        }
+
+        // 3. Process Samples
+        if (Array.isArray(data.samples)) {
+          const usedColors = new Set(state.samples.map(s => s.color.toUpperCase()));
+          const palette = ['#E74C3C', '#3498DB', '#2ECC71', '#F1C40F', '#9B59B6', '#E67E22', '#1ABC9C', '#27AE60', '#2980B9', '#8E44AD', '#FF8C00', '#FF1493', '#00CED1', '#9400D3', '#7FFF00'];
+          
+          const newSamples = [];
+
+          data.samples.forEach((s, i) => {
+            const groupName = s.group || "Group 1";
+            let group = state.groups.find(g => g.name === groupName);
+            if (!group) {
+              group = { id: 'g' + (Date.now() + Math.random()), name: groupName };
+              state.groups.push(group);
+              state.groupSettings[group.id] = { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3', useMultiRef: false, refTargets: [] };
+            }
+
+            // Naming convention enforcement: Name_Target_Condition
+            const triplet = parseNameTriplet(s.name);
+            const finalTarget = s.target || triplet.target || "";
+            const finalCondition = s.condition || s.conditionName || triplet.condition || "";
+
+            // Check if sample already exists in "merge" mode
+            let targetSample = null;
+            if (updateMode === "merge") {
+                targetSample = state.samples.find(existing => existing.name === s.name);
+            }
+
+            if (targetSample) {
+                // Update existing sample
+                targetSample.target = finalTarget;
+                targetSample.conditionName = finalCondition;
+                targetSample.role = s.role || targetSample.role;
+                targetSample.group = groupName;
+                if (s.color) targetSample.color = s.color;
+            } else {
+                // Create new sample
+                let col = String(s.color || '').toUpperCase();
+                if (!col || col === '#FFFFFF' || col === '#000000' || usedColors.has(col)) {
+                    col = palette[Math.floor(Math.random() * palette.length)];
+                    let attempts = 0;
+                    while(usedColors.has(col) && attempts < 50) {
+                        col = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0').toUpperCase();
+                        attempts++;
+                    }
+                }
+                usedColors.add(col);
+
+                const newS = {
+                    id: Date.now() + Math.random() + i,
+                    name: s.name,
+                    role: s.role || "Condition",
+                    target: finalTarget,
+                    conditionName: finalCondition,
+                    color: col,
+                    group: groupName,
+                    wells: s.wells
+                };
+                
+                if (updateMode === "replace") newSamples.push(newS);
+                else state.samples.push(newS);
+                
+                targetSample = newS;
+            }
+
+            // 4. Map Wells for this sample (Blueprint Mode)
+            if (Array.isArray(s.wells)) {
+                s.wells.forEach(wCode => {
+                    const idx = parseWellCode(wCode);
+                    if (idx !== null) {
+                        state.wellsA[idx].colors = targetSample.color;
+                        state.wellsA[idx].segmentation = 1;
+                    }
+                });
+            }
+          });
+
+          if (updateMode === "replace") {
+              state.samples = newSamples;
+          }
+        }
+
+        // 5. Handle Legacy "wellMapping" coordinate map
+        if (data.wellMapping) {
+          if (updateMode === "replace") initEmptyPlate();
+          for (const [coord, value] of Object.entries(data.wellMapping)) {
+            const i = parseWellCode(coord);
+            if (i !== null) {
+              if (typeof value === 'number') {
+                state.wellsB[i].ct = value;
+              } else {
+                const sample = state.samples.find(s => s.name === value);
+                if (sample) {
+                  state.wellsA[i].colors = sample.color;
+                  state.wellsA[i].segmentation = 1;
+                }
+              }
+            }
+          }
+        }
+
+        sanitizeColors();
+        saveState();
+        renderAll();
+        showErrorToast("Design applied successfully!");
+      } catch (e) {
+        console.error("AI Application Error:", e);
+        showErrorToast("Failed to apply design: " + e.message);
+      }
+    }
+
+    // Helper: Convert "A1" to 0, "B1" to 24, etc.
+    function parseWellCode(code) {
+        if (!code) return null;
+        const m = code.trim().toUpperCase().match(/^([A-P])(\d+)$/);
+        if (!m) return null;
+        const r = m[1].charCodeAt(0) - 65;
+        const c = parseInt(m[2], 10) - 1;
+        if (r >= 0 && r < TOTAL_ROWS && c >= 0 && c < TOTAL_COLS) return idx(r, c);
+        return null;
+    }
+
+    function addPlannerMessage(text, role) {
+      const msg = document.createElement('div');
+      msg.className = "chat-msg-" + role;
+      msg.style.padding = "12px 16px"; msg.style.borderRadius = "12px"; msg.style.fontSize = "13px";
+      msg.style.maxWidth = "85%"; msg.style.lineHeight = "1.6";
+      msg.style.position = "relative";
+      
+      if(role === 'user') { 
+          msg.style.background = "#3B82F6"; msg.style.color = "white"; msg.style.alignSelf = "flex-end"; 
+      } else { 
+          msg.style.background = "var(--surface-hover)"; msg.style.color = "var(--text-primary)"; msg.style.alignSelf = "flex-start"; 
+          msg.style.border = "1px solid var(--border-light)";
+      }
+
+      const textNode = document.createElement('div');
+      textNode.className = "text-content";
+      textNode.style.whiteSpace = "pre-wrap";
+      
+      // Extraction: Detect JSON block or raw JSON string
+      if (role === 'assistant') {
+        const jsonMatch = text.match(/```json([\s\S]*?)```/) || text.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          let rawJson = jsonMatch[1] || jsonMatch[0];
+          
+          // Strip comments (/*...*/ and //...) as standard JSON.parse fails on them
+          rawJson = rawJson.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '');
+
+          // Robust JSON cleaning: Replace raw newlines inside strings that AI often outputs
+          rawJson = rawJson.replace(/":\s*"(.*?)"/g, (match, p1) => {
+              return '": "' + p1.replace(/\n/g, "\\n") + '"';
+          });
+
+          try {
+            const data = JSON.parse(rawJson);
+            const btn = document.createElement('button');
+            btn.className = "btn-primary";
+            btn.style.marginTop = "10px";
+            btn.style.width = "100%";
+            
+            const expName = data.experiment_name || "New Experiment";
+            const sampleCount = data.samples ? data.samples.length : 0;
+            btn.innerHTML = `🧬 Apply Design: ${expName} (${sampleCount} Samples)`;
+            
+            btn.onclick = () => {
+              applyAiDesign(data);
+              btn.innerHTML = "✅ Design Applied — Make sure you fill in Plate A and Plate B";
+              btn.disabled = true;
+            };
+            
+            // Show only the text, replace JSON block with a clean spacer
+            textNode.textContent = text.replace(jsonMatch[0], "").trim();
+            msg.appendChild(textNode);
+            msg.appendChild(btn);
+          } catch(e) {
+            console.warn("JSON Parse Failed:", e, rawJson);
+            textNode.textContent = text;
+            msg.appendChild(textNode);
+          }
+        } else {
+          textNode.textContent = text;
+          msg.appendChild(textNode);
+        }
+      } else {
+        textNode.textContent = text;
+        msg.appendChild(textNode);
+      }
+      
+      aiPlannerMessages.appendChild(msg); 
+      if (isUserAtBottom) aiPlannerMessages.scrollTop = aiPlannerMessages.scrollHeight;
+      return msg;
+    }
+
+    async function callBackendAI(history) {
+      aiAbortController = new AbortController();
+      aiPlannerSendBtn.style.display = 'none';
+      aiPlannerStopBtn.style.display = 'inline-block';
+      
+      // BUILD COMPRESSED SCIENTIFIC AWARENESS (Save tokens)
+      const sampleMap = {};
+      state.wellsA.forEach((w, i) => {
+          if (w.colors !== DEFAULT_COLOR) {
+              const s = getSampleByColor(Array.isArray(w.colors) ? w.colors[0] : w.colors);
+              if (s) {
+                  const coord = rowLetter(Math.floor(i/TOTAL_COLS)) + (i%TOTAL_COLS + 1);
+                  if (!sampleMap[s.name]) sampleMap[s.name] = [];
+                  sampleMap[s.name].push(coord);
+              }
+          }
+      });
+      
+      const compressedPlateA = {};
+      for (const [sName, wells] of Object.entries(sampleMap)) {
+          compressedPlateA[sName] = wells.length > 5 ? `${wells[0]}-${wells[wells.length-1]} (${wells.length} wells)` : wells.join(", ");
+      }
+
+      const plateBValues = state.wellsB.map((w, i) => w.ct).filter(v => v !== null);
+
+      const currentStateSummary = {
+          meta: state.meta,
+          experimentType: state.experimentType,
+          samples: state.samples.map(s => ({ name: s.name, target: s.target, role: s.role, group: s.group })),
+          plateALayout: compressedPlateA, 
+          plateBStats: { filled: plateBValues.length, avgCt: plateBValues.length ? (plateBValues.reduce((a,b)=>a+b,0)/plateBValues.length).toFixed(2) : "N/A" },
+          analysisConfig: { mode: state.calcMode, stats: state.stats.test }
+      };
+
+      const rawHistory = aiConversationHistory.filter(item => item.role === 'user' || item.role === 'assistant');
+      const sanitizedHistory = [];
+      let lastRole = null;
+      for (const msg of rawHistory) {
+          if (msg.role !== lastRole) {
+              sanitizedHistory.push(msg);
+              lastRole = msg.role;
+          }
+      }
+      
+      // Larger window (20) to handle complex iterative discussions
+      const conversationWindow = deepClone(sanitizedHistory.slice(-20));
+      if (conversationWindow.length > 0) {
+          const first = conversationWindow[0];
+          const systemPayload = `${AI_SYSTEM_PROMPT}\n\nCURRENT DASHBOARD DATA (UI STATE):\n${JSON.stringify(currentStateSummary, null, 2)}\n\n---\n\n`;
+          first.content = systemPayload + first.content;
+      }
+
+      try {
+          const response = await fetch('/api/chat', { 
+              method: 'POST', 
+              headers: { 'Content-Type': 'application/json' }, 
+              body: JSON.stringify({ messages: conversationWindow }),
+              signal: aiAbortController.signal
+          });
+
+          if (!response.ok) throw new Error("AI Backend Offline");
+
+          const reader = response.body.getReader();
+          const decoder = new TextDecoder();
+          let fullText = "";
+          const msgNode = addPlannerMessage("", "assistant");
+          const textContent = msgNode.querySelector('.text-content');
+
+          while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
+              const chunk = decoder.decode(value, { stream: true });
+              fullText += chunk;
+              textContent.textContent = fullText;
+              if (isUserAtBottom) aiPlannerMessages.scrollTop = aiPlannerMessages.scrollHeight;
+          }
+
+          // Replace the "..." message with final message that has the button
+          aiPlannerMessages.removeChild(msgNode);
+          addPlannerMessage(fullText, "assistant");
+          aiConversationHistory.push({ role: "assistant", content: fullText });
+
+      } catch(e) {
+          if (e.name !== 'AbortError') {
+              addPlannerMessage("Connection Error: Please ensure the backend is running.", "assistant");
+          }
+      } finally {
+          aiPlannerSendBtn.style.display = 'inline-block';
+          aiPlannerStopBtn.style.display = 'none';
+          aiAbortController = null;
+      }
+    }
+
+    aiPlannerSendBtn.onclick = async () => {
+      const val = aiPlannerInput.value.trim(); if (!val) return;
+      aiConversationHistory.push({ role: "user", content: val });
+      addPlannerMessage(val, 'user'); 
+      aiPlannerInput.value = '';
+      await callBackendAI(aiConversationHistory);
+    };
+
+    // UX Upgrade: Enter key to send
+    aiPlannerInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        aiPlannerSendBtn.click();
+      }
+    });
+
+    aiPlannerStopBtn.onclick = () => {
+        if (aiAbortController) aiAbortController.abort();
+    };
+    }
 
     /* ===== Init ===== */
-    (function init() { loadState(); renderAll() })();
+
+    (function init() { loadState(); applyInitialTheme(); renderAll() })();
   </script>
 
-  <footer
-    style="margin-top:40px;font-size:13px;color:#333;text-align:center;border-top:1px solid #ccc;padding:16px 20px;line-height:1.6;background:#f5f7fa">
-    <strong style="font-size:14px;color:#222;">© 2026 Mahmood Mohammed Ali</strong><br>
-    <span style="font-size:13px;color:#666;display:block;margin-top:4px;">Grenoble Alpes University – Institute of
-      Advanced Bioscience – Epigenetics of Regeneration and Cancer Group</span>
-    <em style="color:#555;">Cite as:</em> Mahmood Mohammed Ali. <strong><em>qPCR Plate Planner</em></strong> (v2.0.0,
-    2026). <a href="https://doi.org/10.5281/zenodo.17410644" target="_blank" style="color:#3B82F6;text-decoration:none;">DOI: 10.5281/zenodo.17410644</a>
+  <footer style="background: url('footer_banner.jpg') no-repeat center center; background-size: cover; padding: 60px 20px; color: #fff; position: relative; margin-top: 40px;">
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(4px);"></div>
+    <div style="position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; text-align: left;">
+      <div>
+        <h4 style="margin: 0 0 16px; font-size: 18px; color: #60a5fa;">Academic Affiliation</h4>
+        <p style="margin: 0; line-height: 1.6; opacity: 0.9;">Grenoble Alpes University<br>Institute of Advanced Bioscience (IAB)<br>Epigenetics of Regeneration and Cancer Group</p>
+      </div>
+      <div>
+        <h4 style="margin: 0 0 16px; font-size: 18px; color: #60a5fa;">Citation</h4>
+        <p style="margin: 0; line-height: 1.6; opacity: 0.9;">Mahmood Mohammed Ali. <em>WellCraft</em> (v3.0.0, 2026).<br>DOI: <a href="https://doi.org/10.5281/zenodo.17410644" target="_blank" style="color: #93c5fd;">10.5281/zenodo.17410644</a></p>
+      </div>
+      <div style="text-align: right;">
+        <h4 style="margin: 0 0 16px; font-size: 18px; color: #60a5fa;">Connect</h4>
+        <div style="display: flex; gap: 20px; justify-content: flex-end; margin-bottom: 20px;">
+          <a href="https://www.linkedin.com/in/mahmood-mohammed-ali-20334b205" target="_blank" style="color: #fff; text-decoration: none; transition: color 0.3s;" title="LinkedIn"><svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
+          <a href="https://github.com/Mahmood-M-Ali/qPCR-plate-planner" target="_blank" style="color: #fff; text-decoration: none; transition: color 0.3s;" title="GitHub"><svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.841 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
+          <a href="mailto:mahmood.mohammed-ali@univ-grenoble-alpes.fr" style="color: #fff; text-decoration: none; transition: color 0.3s;" title="Email"><svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12.713l-11.985-9.713h23.97l-11.985 9.713zm0 2.574l12-9.725v15.438h-24v-15.438l12 9.725z"/></svg></a>
+        </div>
+        <p style="margin: 0; font-size: 14px; opacity: 0.7;">&copy; 2026 Mahmood Mohammed Ali</p>
+      </div>
+    </div>
   </footer>
 </body>
 
