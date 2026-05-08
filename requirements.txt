@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+pydantic
+llama-cpp-python
+huggingface_hub
+python-multipart
+requests
+jinja2
