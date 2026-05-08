@@ -924,19 +924,32 @@
         <div
           style="margin-top: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
 
-          <div class="help-card"
-            style="grid-column: 1/-1; background: rgba(16, 185, 129, 0.05); border-left-color: #10b981;">
+          <div class="help-card" style="grid-column: 1/-1; background: rgba(16, 185, 129, 0.05); border-left-color: #10b981;">
             <strong class="title" style="color: #059669;">🚀 Quick Start Workflow</strong>
             <ol style="margin: 0; padding-left: 20px; color: var(--text-secondary); font-size: 13px;">
               <li><strong>Metadata:</strong> Enter experiment name and date.</li>
-              <li><strong>Sample Setup:</strong> Add samples with Name, Target, and Role (Control/Condition/Standard).
-              </li>
-              <li><strong>Plate A:</strong> Select a sample color and click/paint wells to assign positions (typically
-                technical triplicates).</li>
+              <li><strong>Sample Setup:</strong> Add samples with Name, Target, and Role (Control/Condition/Standard).</li>
+              <li><strong>Plate A:</strong> Select a sample color and click/paint wells to assign positions (typically technical triplicates).</li>
               <li><strong>Plate B:</strong> Enter or paste Ct values directly from your qPCR machine export.</li>
               <li><strong>Analysis:</strong> View dynamic charts and export your results (PDF/JPEG/JSON).</li>
             </ol>
           </div>
+
+          <div class="help-card" style="background: rgba(59, 130, 246, 0.05); border-left-color: #3b82f6;">
+            <strong class="title" style="color: #1d4ed8;">💡 Confused? Try a Template</strong>
+            <p style="margin-bottom: 8px;">Want to see a fully filled plate with standard curves and analysis? Load our "Golden Standard" example to explore all features instantly.</p>
+            <button id="loadExampleBtn" class="btn-primary" style="font-size: 12px; padding: 6px 12px;">🚀 Load Example Project</button>
+          </div>
+
+          <div class="help-card" style="background: rgba(139, 92, 246, 0.05); border-left-color: #8b5cf6;">
+            <strong class="title" style="color: #7c3aed;">🤖 How to Prompt the AI</strong>
+            <p style="margin-bottom: 8px;">To get a perfect plate design, explain your experiment dimensions clearly to Gemma:</p>
+            <div style="background: var(--surface); padding: 10px; border-radius: 6px; border: 1px solid var(--border-light); font-family: monospace; font-size: 11px; color: var(--text-secondary); line-height: 1.4;">
+              "I have 2 cell lines (HeLa and MCF7) treated with DrugX or DMSO. I am measuring HOXA1 expression and using GAPDH as my reference gene. I also need a 5-point standard curve for all targets starting at 100ng."
+            </div>
+            <p class="note" style="margin-top: 8px;">The AI will then design a symmetrical matrix and assign the correct roles (Control, Condition, Standard) for you.</p>
+          </div>
+
 
           <div class="help-card">
             <strong class="title">1. RT‑qPCR (2^-ΔΔCt)</strong>
@@ -2446,41 +2459,55 @@
       document.addEventListener('click', e => { if (!expMenu.contains(e.target) && e.target !== expBtn) closeMenu() });
       function buildPerFigureExportList() { const host = document.getElementById('perFigureExports'); host.innerHTML = ''; state.groups.forEach(g => { const panel = document.querySelector(`#groupsPanels .controls[data-group-id="${g.id}"]`), canvas = panel?.querySelector('canvas.group-chart'); if (!canvas) return; const base = safeFilename(state.meta?.name || 'qpcr'), cond = safeFilename(state.groupSettings[g.id]?.chartCond || 'cond'), mode = safeFilename(getModeForGroup(g.id)), gname = safeFilename(g.name || 'group'), fname = `${base}_${cond}_${mode}_${gname}`; const p = document.createElement('button'); p.className = 'menu-item'; p.textContent = `${g.name} chart (PNG)`; p.onclick = () => exportCanvasAsPNG(canvas, fname + '.png'); const d = document.createElement('button'); d.className = 'menu-item'; d.textContent = `${g.name} chart (PDF)`; d.onclick = () => exportCanvasAsPDF(canvas, fname + '.pdf', 'p'); host.appendChild(p); host.appendChild(d) }) }
 
-      /* ===== Import JSON (Sample setup) and Delete All ===== */
-      document.getElementById('importJsonBtnTop').onclick = () => { document.getElementById('importJsonInputTop').click() }
-      document.getElementById('importJsonInputTop').addEventListener('change', async e => {
-        const f = e.target.files?.[0]; if (!f) return;
-        try {
-          const txt = await f.text(), p = JSON.parse(txt), next = p && p.state ? p.state : p;
-          if (!next || !Array.isArray(next.wellsA) || !Array.isArray(next.wellsB)) throw new Error('Invalid JSON');
-          Object.keys(state).forEach(k => delete state[k]);
-          Object.assign(state, next);
-          sanitizeColors();
-          state.groups = state.groups || [{ id: 'g1', name: 'Group 1' }];
-          state.groupSettings = state.groupSettings || {};
-          state.perGroupMode = state.perGroupMode || {};
-          state.qc = state.qc || { enabled: false, rule: 'z', zThresh: 2.5 };
-          state.chart = state.chart || { errorBars: 'sd', yScale: 'linear' };
-          state.stats = state.stats || { test: 'ttest', fdr: 'BH', starCuts: [0.05, 0.01, 0.001] };
-          state.plate = state.plate || { showHeatmap: 'off' };
-          state.layout = state.layout || { enableHelpers: false };
-          state.calibrator = state.calibrator || { enabled: false, mode: 'manual', sampleName: '', shiftPerTarget: {}, globalShift: 0 };
-          state.reagents = state.reagents || [];
-          state.extraWellsPerTarget = state.extraWellsPerTarget || {};
-          state.export = state.export || { includeAnalysisStamp: true };
-          state.ui = state.ui || { ctCompact: true };
-          state.groups.forEach(g => { if (!state.groupSettings[g.id]) state.groupSettings[g.id] = { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3', useMultiRef: false, refTargets: [] } });
-          state.history = []; state.redo = [];
-          saveState();
-          renderAll();
-          // Robust refresh for calculations and charts
-          setTimeout(() => {
-            renderAllGroups();
-            showErrorToast('JSON imported and analyzed.');
-          }, 100);
-        } catch (err) { console.error(err); showErrorToast('JSON import failed.') };
-        e.target.value = ''
-      })
+    /* ===== Import JSON (Sample setup) and Delete All ===== */
+    function applyImportedState(p) {
+      const next = p && p.state ? p.state : p;
+      if (!next || !Array.isArray(next.wellsA) || !Array.isArray(next.wellsB)) throw new Error('Invalid JSON structure');
+      Object.keys(state).forEach(k => delete state[k]);
+      Object.assign(state, next);
+      sanitizeColors();
+      state.groups = state.groups || [{ id: 'g1', name: 'Group 1' }];
+      state.groupSettings = state.groupSettings || {};
+      state.perGroupMode = state.perGroupMode || {};
+      state.qc = state.qc || { enabled: false, rule: 'z', zThresh: 2.5 };
+      state.chart = state.chart || { errorBars: 'sd', yScale: 'linear' };
+      state.stats = state.stats || { test: 'ttest', fdr: 'BH', starCuts: [0.05, 0.01, 0.001] };
+      state.plate = state.plate || { showHeatmap: 'off' };
+      state.layout = state.layout || { enableHelpers: false };
+      state.calibrator = state.calibrator || { enabled: false, mode: 'manual', sampleName: '', shiftPerTarget: {}, globalShift: 0 };
+      state.reagents = state.reagents || [];
+      state.extraWellsPerTarget = state.extraWellsPerTarget || {};
+      state.export = state.export || { includeAnalysisStamp: true };
+      state.ui = state.ui || { ctCompact: true };
+      state.groups.forEach(g => { if (!state.groupSettings[g.id]) state.groupSettings[g.id] = { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3', useMultiRef: false, refTargets: [] } });
+      state.history = []; state.redo = [];
+      saveState();
+      renderAll();
+      setTimeout(() => { renderAllGroups(); }, 100);
+    }
+
+    document.getElementById('importJsonBtnTop').onclick = () => { document.getElementById('importJsonInputTop').click() }
+    document.getElementById('importJsonInputTop').addEventListener('change', async e => {
+      const f = e.target.files?.[0]; if (!f) return;
+      try {
+        const txt = await f.text();
+        applyImportedState(JSON.parse(txt));
+        showErrorToast('JSON imported and analyzed.');
+      } catch (err) { console.error(err); showErrorToast('JSON import failed.') };
+      e.target.value = ''
+    })
+
+    document.getElementById('loadExampleBtn').onclick = async () => {
+      try {
+        const resp = await fetch('json/Import%20Json%20example.json');
+        if (!resp.ok) throw new Error('Could not fetch example file.');
+        const data = await resp.json();
+        applyImportedState(data);
+        showErrorToast('Example template loaded successfully!');
+        document.getElementById('masterUserGuide').open = false; // Close guide after loading
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch (err) { console.error(err); showErrorToast('Failed to load example.') }
+    }
       document.getElementById('deleteAllBtn').onclick = () => { if (!confirm('Delete all data (samples, plates, settings)? This cannot be undone.')) return; try { localStorage.removeItem(STORAGE_KEY); try { localStorage.removeItem('qpcr_allinone_v2') } catch (e) { } Object.keys(state).forEach(k => delete state[k]); Object.assign(state, { experimentType: 'qpcr', meta: { name: '', date: '', notes: '' }, wellsA: [], wellsB: [], selectedColor: null, samples: [], reagents: [], extraWellsPerTarget: {}, groups: [{ id: 'g1', name: 'Group 1' }], groupSettings: { 'g1': { controlType: 'IgG', ctrlTarget: '', chartCond: 'me3', useMultiRef: false, refTargets: [] } }, calcMode: 'ddct', perGroupMode: {}, qc: { enabled: false, rule: 'z', zThresh: 2.5 }, chart: { errorBars: 'sd', yScale: 'linear' }, stats: { test: 'ttest', fdr: 'BH', starCuts: [0.05, 0.01, 0.001] }, plate: { showHeatmap: 'off' }, layout: { enableHelpers: false }, calibrator: { enabled: false, mode: 'manual', sampleName: '', shiftPerTarget: {}, globalShift: 0 }, export: { includeAnalysisStamp: true }, ui: { ctCompact: true }, history: [], redo: [] }); initEmptyPlate(); initEmptyCtTable(); saveState(); renderAll(); showErrorToast('All data cleared.') } catch (e) { console.error(e); showErrorToast('Delete All failed.') } }
 
       /* ===== Render orchestration ===== */
